@@ -58,6 +58,7 @@ when two triples are in use. `V 4` is the auxiliary voltage output.
 | 850-FDR feeder | 27 | 124 | 753 | 79, CLPU |
 | 869-MTR motor | 20 | 92 | 548 | 48, 66, 19 |
 | 889-GEN generator | 27 | 137 | 1147 | — |
+| 7SJ85-SIP Siemens | 26 | 125 | 754 | 79 |
 
 Elements marked `sequence (assemble from these steps)` are ones where the tool lists the
 states as ordinary points but the test only means anything run in order — 50BF and 68 on the

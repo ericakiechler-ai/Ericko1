@@ -18,7 +18,8 @@ const RELAYS = {
   '850': { file: '850.html', tag: '850-FDR', title: 'Multilin 850 feeder protection' },
   '869': { file: '869.html', tag: '869-MTR', title: 'Multilin 869 motor protection' },
   '889': { file: '889.html', tag: '889-GEN', title: 'Multilin 889 generator protection' },
-  '845': { file: 'index.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' }
+  '845': { file: 'index.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
+  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' }
 };
 
 /* Which Test Universe module each element is built in, and how it is driven.
@@ -71,6 +72,13 @@ const MODULE = {
   '32': ['Quick CMC', 'points', 'Balanced three-phase; a single-phase injection reads a third of the power.'],
   '55': ['Quick CMC', 'points', 'Current angle carries the test; voltage stays at nominal.']
 };
+Object.assign(MODULE, {
+  '67Ns':  ['Quick CMC', 'points', 'Displacement voltage on V4 and the residual on the core-balance input. Milliamp resolution matters more than headroom.'],
+  '50-1':  MODULE['50P'], '50-2': MODULE['50P'], '51': MODULE['51P'],
+  '50N-1': MODULE['50N'], '50N-2': MODULE['50N'],
+  '74TC':  ['—', 'binary / DC', 'Not an analogue test: trip-circuit continuity at the terminal block, evidenced by the device alarm.'],
+  'Inrush': ['Harmonics', 'points', 'Fundamental and 2nd harmonic superimposed on the same output.']
+});
 const DEFAULT_MODULE = ['Quick CMC', 'points', ''];
 
 const csvCell = v => {

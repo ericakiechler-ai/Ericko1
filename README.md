@@ -9,11 +9,14 @@ values: magnitude, angle and frequency, per output channel, ready to type into T
 | `889.html` | **Multilin 889** generator protection | 27 elements, machine differential plus the impedance plane |
 | `850.html` | **Multilin 850** feeder protection | 27 elements, autoreclose sequences, distance zones and fault location |
 | `869.html` | **Multilin 869** motor protection | 20 elements, thermal model checked against the motor's own damage curve |
+| `7SJ85.html` | **Siemens 7SJ85** SIPROTEC 5 overcurrent | 26 functions, compensated-network directional ground fault |
 
 Open either in any browser. No install, no network, no dependencies beyond a web font that
 falls back cleanly when there is no connection — they work on a locked-down field laptop.
-All four share the same core, the same conventions and the same layout, and differ by accent
-colour so they are never confused on screen: 845 teal, 889 indigo, 850 plum, 869 copper.
+All five share the same core, the same conventions and the same layout. The four GE tools differ
+by accent colour so they are never confused on screen — 845 teal, 889 indigo, 850 plum, 869 copper
+— and the Siemens one is deliberately achromatic, which is both a nod to SIPROTEC's austere
+hardware and a way of marking it as a different platform rather than a fifth Multilin.
 
 ---
 
@@ -323,3 +326,79 @@ supervision**, and setting-file import.
 
 Sample on load: 1500 hp, 4.16 kV induction motor, 180 A FLA, 6.0 ×FLA locked rotor, 20 s cold
 stall. Not your machine — enter the real data first.
+
+
+---
+
+# 7SJ85-SIP — Siemens SIPROTEC 5 overcurrent
+
+A different platform, not a relabelled Multilin. Settings are entered as DIGSI 5 sees them, each
+function carries its function-group path, and the two places Siemens genuinely differs are built
+out rather than glossed.
+
+Covered: 67Ns, 59N, 50-1, 50-2, 51, 50N-1, 50N-2, 51N, 46, Inrush, 21, FLOC, 67, 49, 37, 51V,
+79, 50BF, 74TC, 25, 27, 59, 47, 81, 81R, 32.
+
+## What is specific to this device
+
+**Directional ground fault on a compensated network — 67Ns.** The signature function, and the one
+none of the GE tools have. On an isolated or resonant-earthed system every healthy feeder carries
+residual current too, so magnitude says nothing and only the component in phase with the
+displacement voltage identifies the faulted circuit:
+
+```
+φ        = angle of 3I0 measured against −3V0
+active   = |3I0| · cos φ        reactive = |3I0| · sin φ
+```
+
+Which component is measured follows the neutral treatment, and getting that pairing wrong is the
+commonest setting error on these systems: **cos φ** for resonant earthed, where the Petersen coil
+has cancelled the capacitive current and left a small resistive residual; **sin φ** for isolated,
+where the residual is capacitive and the faulted feeder carries the sum of every other feeder's
+capacitance. The tool checks the pairing against the network type on the Setup tab and says so.
+
+The signature view is a polar plot of 3I₀ against −3V₀ with the operate sector drawn. **The sector
+does not close at ±90°** — the component threshold cuts it in first, at `arccos(comp/|3I0|)`, so
+with the sample values it runs to ±75.5°. Change the test current and the edge moves. Verified:
+every point's stated verdict agrees with an independent recomputation from the generated channel
+values.
+
+**RE/RL and XE/XL instead of k0.** Siemens splits the ground return into two separate real ratios
+where most devices take one complex factor:
+
+```
+RE/RL = (R0 − R1) / (3·R1)      XE/XL = (X0 − X1) / (3·X1)
+k0    = (Z0 − Z1) / (3·Z1)
+```
+
+The forms agree only when R0/R1 equals X0/X1, which on a real overhead line they rarely do — the
+sample gives 0.946 against 0.696. That is the point of the split: it lets the device compensate
+resistance and reactance independently. The tool derives all three, shows them side by side and
+flags the divergence.
+
+**Inrush restraint, disk-emulation reset, CT star-point direction.** All three change how you
+test rather than what you inject, and all three are called out where they bite: a clean
+fundamental injection can never prove 2nd-harmonic blocking; disk emulation makes consecutive
+timing shots interact; and a star point set the wrong way in DIGSI inverts every directional
+decision with no angle adjustment able to compensate.
+
+**74TC trip-circuit supervision** is included with an empty channel table and says why — it is a
+DC continuity test at the terminal block, not an injection. It is in the list because it is the
+function most often left off a commissioning record.
+
+## Verify before you rely on it
+
+1. **RE/RL, XE/XL and k0** against both the line-constants sheet and DIGSI.
+2. **CT star-point direction** in DIGSI against the drawing, before any directional test.
+3. **Characteristic constants** — one 51 timing point against the device's own prediction.
+4. **67Ns forward and reverse** before spending time on sector edges: a reversed core-balance CT
+   fails both and looks like a threshold problem.
+
+## Scope
+
+Not covered: CFC logic charts, transient ground-fault detection (it works on the first
+microseconds of the fault, which a steady-state test set cannot reproduce — 67Ns here is the
+steady-state directional function), and setting-file import.
+
+Sample on load: 20 kV, 12 km, resonant earthed, 0.12 Ω/km ∠72°, 400:1 CTs, 100 V VT secondary,
+50 Hz. Not your feeder — enter the real data first.
