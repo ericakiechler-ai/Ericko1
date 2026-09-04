@@ -8,11 +8,12 @@ values: magnitude, angle and frequency, per output channel, ready to type into T
 | `index.html` | **Multilin 845** transformer protection | 21 elements, two-winding differential with vector-group compensation |
 | `889.html` | **Multilin 889** generator protection | 27 elements, machine differential plus the impedance plane |
 | `850.html` | **Multilin 850** feeder protection | 27 elements, autoreclose sequences, distance zones and fault location |
+| `869.html` | **Multilin 869** motor protection | 20 elements, thermal model checked against the motor's own damage curve |
 
 Open either in any browser. No install, no network, no dependencies beyond a web font that
 falls back cleanly when there is no connection — they work on a locked-down field laptop.
-All three share the same core, the same conventions and the same layout, and differ by accent
-colour so they are never confused on screen: 845 teal, 889 indigo, 850 plum.
+All four share the same core, the same conventions and the same layout, and differ by accent
+colour so they are never confused on screen: 845 teal, 889 indigo, 850 plum, 869 copper.
 
 ---
 
@@ -239,3 +240,86 @@ supervision**, non-homogeneous lines, and setting-file import.
 
 Sample on load: 13.8 kV, 8 mile overhead feeder, 0.65 Ω/mi ∠68° positive sequence, solidly
 grounded. Not your circuit — enter the real data first.
+
+
+---
+
+# 869-MTR — motor protection
+
+Same shell again. Enter the motor nameplate, the thermal-limit data and the CT/VT schedule; pick
+an ANSI device from the rail; get the test points and the CMC channel table.
+
+Covered: 49, 49TC, 48, 51LR, 66, 19, 46, 37, 87M, 50P, 50G, 51G, 50SG, 50BF, 27, 59, 47, 81,
+55, 32.
+
+## What is new versus the other three
+
+A motor relay's subject is **thermal capacity and the start**, so the signature view here is the
+log–log time–current curve with the machine's own locked-rotor damage points drawn on it.
+
+**Equivalent heating current.** The one calculation that makes a motor relay different:
+
+```
+Ieq = √( I1² + K · I2² )
+```
+
+Negative-sequence current induces double-frequency rotor currents that heat several times
+harder than balanced current, so K weights them. Every thermal calculation runs on Ieq, not on
+the applied current — a modestly unbalanced supply trips far sooner than its measured phase
+current suggests.
+
+**The overload curve, fitted rather than assumed.** Published motor overload families differ
+between products and firmware revisions, so the constant is exposed instead of guessed. The
+honest way to set it is the **fit mode**: read one point off the relay's own curve display — a
+current multiple and the time it shows — and the tool solves
+
+```
+t = CM · A / (Iⁿ − 1)          A = t · (Iⁿ − 1) / CM
+```
+
+Verified: fit mode reproduces its own fit point exactly. Check a second point at a different
+multiple afterwards to confirm the exponent as well as the constant. An IEC 60255-8 replica is
+offered as an alternative model.
+
+**Thermal capacity has memory.** Capacity accumulates at `100% ÷ t(Ieq)` and decays as
+`TCU·e^(−t/τ)`, with separate running and stopped time constants. This is the element that
+ruins an unplanned test day — a point run on a warm model reads short, so the tool gives the
+decay checkpoints and the notes push you to plan the order and record the starting capacity.
+
+**It checks the settings against the machine.** A motor relay is the one place where the tool
+can tell you the protection does not fit, not just that it does not match itself. Three
+comparisons run on the Setup tab, and any failing one is a setting finding rather than a test
+failure:
+
+1. **Curve under the damage point** — at locked rotor the cold curve must trip before the safe
+   stall time, or a stalled rotor burns before the relay operates.
+2. **Curve above the start** — if the hot curve is shorter than the acceleration time, a warm
+   restart trips before the machine finishes starting.
+3. **Short circuit above locked rotor** — a 50P pickup at or below LRA trips on every start.
+
+The sample motor deliberately fails the second one (hot curve 7.49 s against 8.0 s
+acceleration) so the check is visible on load.
+
+**Unbalance inverts exactly**, same algebra as the 850's broken-conductor element:
+`I2/I1 = (1−f)/(2+f)`, so `f = (1−2r)/(1+r)`. Verified to hit every target ratio to three
+decimals, with 50.000% at a fully open phase.
+
+## Verify before you rely on it
+
+1. **Fit the overload curve** from a point off the relay, then confirm with a second point.
+2. **Read the Setup checks** before touching the test set — they say whether the settings fit
+   the machine.
+3. **Plan the thermal run** as one ordered sequence with resets, and write the starting thermal
+   capacity next to every recorded time.
+4. **Run the start-inhibit points** on 51LR, 37 and 27. The elements that must *not* operate
+   during a start are the ones that strand a motor in service.
+
+## Scope
+
+Not covered: **RTD inputs** (tested with resistance boxes, not a current source), **40 loss of
+excitation** on synchronous machines (an offset-mho characteristic — the 889 tool in this family
+does that arithmetic; the 55 power-factor element here is the coarser substitute), **60 CT/VT
+supervision**, and setting-file import.
+
+Sample on load: 1500 hp, 4.16 kV induction motor, 180 A FLA, 6.0 ×FLA locked rotor, 20 s cold
+stall. Not your machine — enter the real data first.
