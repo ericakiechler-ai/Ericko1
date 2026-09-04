@@ -7,11 +7,12 @@ values: magnitude, angle and frequency, per output channel, ready to type into T
 |------|-------|-------|
 | `index.html` | **Multilin 845** transformer protection | 21 elements, two-winding differential with vector-group compensation |
 | `889.html` | **Multilin 889** generator protection | 27 elements, machine differential plus the impedance plane |
+| `850.html` | **Multilin 850** feeder protection | 27 elements, autoreclose sequences, distance zones and fault location |
 
 Open either in any browser. No install, no network, no dependencies beyond a web font that
 falls back cleanly when there is no connection — they work on a locked-down field laptop.
-Both share the same core, the same conventions and the same layout; the 889 carries an indigo
-accent so the two are never confused on screen.
+All three share the same core, the same conventions and the same layout, and differ by accent
+colour so they are never confused on screen: 845 teal, 889 indigo, 850 plum.
 
 ---
 
@@ -161,3 +162,80 @@ saturation or burden.
 
 Sample on load: 100 MVA, 13.8 kV, Xd 1.8 / X'd 0.25 pu, high-resistance grounded. Not your
 machine — enter the real data first.
+
+
+---
+
+# 850-FDR — feeder protection
+
+Same shell again. Enter the circuit, the line constants and the CT/VT schedule; pick an ANSI
+device from the rail; get the test points and the CMC channel table.
+
+Covered: 79, CLPU, FLOC, 50BF, 21, 68, 50P, 51P, 50G, 51G, 50N, 51N, 50SG, 51SG, 50_2, 46,
+46BC, 37, 67, 32, 27, 59, 59N, 47, 81U/81O, 81R, 25.
+
+## What is new versus the 845 and 889
+
+The 845's subject is phasors and the 889's is the impedance plane. A feeder relay's subject is
+**distance along a line and elapsed time**, so this tool grows two things neither of the others
+needed: a reclose timeline and a feeder line diagram.
+
+**Placing a fault on the line.** Every distance and fault-location test is a position, not a
+current. A fault a fraction x of the way to the remote end is presented by making the relay's
+own measuring loop come out at x·Z1:
+
+```
+phase loop    Z = (V L2 − V L3) / (I L2 − I L3)      no k0
+ground loop   Z = V L1 / (I L1 + k0 · 3I0)           with k0
+k0 = (Z0 − Z1) / (3 · Z1)
+
+hold current: V = I · |Z loop|      angles: ∠V = 0°, ∠I = −∠Z loop
+```
+
+A single-phase injection makes 3I0 equal to the phase current, so the ground-loop denominator
+becomes I·(1 + k0) and the applied voltage is the line impedance times |1 + k0|. That one
+factor is why ground reaches can measure wrong while every phase reach measures right — it is
+k0 or Z0 at fault, not the reach setting. The tool computes k0 from the line constants (or
+takes an override) and shows the resulting factor on the Setup tab.
+
+**Autoreclose is a sequence, not a magnitude.** Two runs are built and every test point is one
+state of one of them: a permanent fault that must spend every shot and reach lockout, and a
+transient fault that must reclose once and reset. The timeline shows where the selected state
+sits. Reclaim and reset are the usual confusion — reclaim is the window after a successful
+close during which a new fault counts as the *next* shot; reset is the longer idle period that
+returns the counter to zero.
+
+**Cold load pickup** turns on one current placed between the normal pickup and the lifted one:
+it must not trip while the window is open and must trip once it closes. If the relay behaves
+the same in both states the element is doing nothing.
+
+**Broken conductor** inverts exactly. Reducing one phase to a fraction f of the other two gives
+`I1 = (2+f)/3`, `I2 = (1−f)/3`, so `I2/I1 = (1−f)/(2+f)` and the fraction needed for a target
+ratio r is `f = (1−2r)/(1+r)`. A fully open conductor is f = 0, giving 50% — the ceiling for
+this method and the most a single break can produce.
+
+**The vector calculator** works the fault backwards: enter V and I and it reports all six
+measuring loops plus positive sequence, picks the faulted loop by residual content the way a
+phase selector does, and puts the implied fault position on the line diagram.
+
+## Verify before you rely on it
+
+1. **Line constants** — confirm the derived Z1, Z0 and k0 against the line-constants sheet
+   *and* against what is actually entered in the relay. Both can be wrong together.
+2. **Curve constants** — run one 51P timing point against the relay's own prediction.
+3. **k0** — run the fault locator at 25% and 75% for both an A–G and a B–C fault. Matching
+   phase results with drifting ground results points at k0, not at the relay.
+4. **ECA sign** — prove forward and reverse once; the boundary points follow.
+
+Then run the full permanent-fault reclose sequence with the breaker simulated. An element that
+tests fine in isolation and behaves differently inside a reclose cycle is worth finding on a
+bench rather than on the circuit.
+
+## Scope
+
+Not covered: coordination (the tool gives operate time at a multiple; whether that sits under
+the upstream relay and over every downstream fuse is read off the study), **60 CT/VT
+supervision**, non-homogeneous lines, and setting-file import.
+
+Sample on load: 13.8 kV, 8 mile overhead feeder, 0.65 Ω/mi ∠68° positive sequence, solidly
+grounded. Not your circuit — enter the real data first.
