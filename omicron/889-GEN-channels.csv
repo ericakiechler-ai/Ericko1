@@ -1,0 +1,1153 @@
+# 889-GEN — Multilin 889 generator protection
+# generated 2026-09-04 13:27 from 889.html
+# configuration: mva=100; kv=13.8; pf=0.85; freq=60; rot=ABC; poles=2; xd=1.8; xdp=0.25; xdpp=0.18; x2=0.2; cttp=5000; ctts=5; ctnp=5000; ctns=5; ctgp=200; ctgs=5; vtp=13800; vts=120; vtc=wye; zsrc=I; zhold=5; ngtp=7970; ngts=240; gnd=hr; cmc=6x; imax=12.5; vmax=300
+# All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
+# Values shown are for the tool's sample configuration — re-generate after entering real station data.
+Element,ElementName,Group,TU_Module,DriveAs,Step,StepName,SeqRun,SeqState,SeqLabel,StateDuration_s,Channel,Magnitude,Unit,Angle_deg,Frequency_Hz,ChannelNote,Expected,ExpectedDetail,Verdict
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I A-L1,2.0918,A,0.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I A-L2,2.0918,A,-120.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I A-L3,2.0918,A,120.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I B-L1,1.6316,A,180.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I B-L2,1.6316,A,60.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,1,Irest 0.50 pu — above slope,,,,,I B-L3,1.6316,A,-60.00,60.000,,OPERATE,IT 0.500 pu · IN 0.390 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I A-L1,2.0918,A,0.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I A-L2,2.0918,A,-120.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I A-L3,2.0918,A,120.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I B-L1,1.7153,A,180.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I B-L2,1.7153,A,60.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,2,Irest 0.50 pu — below slope,,,,,I B-L3,1.7153,A,-60.00,60.000,,RESTRAIN,IT 0.500 pu · IN 0.410 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I A-L1,4.1837,A,0.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I A-L2,4.1837,A,-120.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I A-L3,4.1837,A,120.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I B-L1,3.7235,A,180.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I B-L2,3.7235,A,60.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,3,Irest 1.00 pu — above slope,,,,,I B-L3,3.7235,A,-60.00,60.000,,OPERATE,IT 1.000 pu · IN 0.890 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I A-L1,4.1837,A,0.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I A-L2,4.1837,A,-120.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I A-L3,4.1837,A,120.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I B-L1,3.8072,A,180.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I B-L2,3.8072,A,60.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,4,Irest 1.00 pu — below slope,,,,,I B-L3,3.8072,A,-60.00,60.000,,RESTRAIN,IT 1.000 pu · IN 0.910 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I A-L1,12.5511,A,0.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I A-L2,12.5511,A,-120.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I A-L3,12.5511,A,120.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I B-L1,11.1705,A,180.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I B-L2,11.1705,A,60.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,5,Irest 3.00 pu — above slope,,,,,I B-L3,11.1705,A,-60.00,60.000,,OPERATE,IT 3.000 pu · IN 2.670 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I A-L1,12.5511,A,0.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I A-L2,12.5511,A,-120.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I A-L3,12.5511,A,120.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I B-L1,11.4215,A,180.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I B-L2,11.4215,A,60.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,6,Irest 3.00 pu — below slope,,,,,I B-L3,11.4215,A,-60.00,60.000,,RESTRAIN,IT 3.000 pu · IN 2.730 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I A-L1,29.2859,A,0.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I A-L2,29.2859,A,-120.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I A-L3,29.2859,A,120.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I B-L1,24.2236,A,180.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I B-L2,24.2236,A,60.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,7,Irest 7.00 pu — above slope,,,,,I B-L3,24.2236,A,-60.00,60.000,,OPERATE,IT 7.000 pu · IN 5.790 pu,op
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I A-L1,29.2859,A,0.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I A-L2,29.2859,A,-120.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I A-L3,29.2859,A,120.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I B-L1,25.1440,A,180.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I B-L2,25.1440,A,60.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87G,Generator differential,Differential & ground,Differential,characteristic,8,Irest 7.00 pu — below slope,,,,,I B-L3,25.1440,A,-60.00,60.000,,RESTRAIN,IT 7.000 pu · IN 6.010 pu,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate time 0.00 s,op
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate time 0.00 s,op
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate time 0.00 s,op
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,1,Sensitivity — above pickup,,,,,I A-L1,0.5500,A,0.00,60.000,ground / neutral CT input,OPERATE,Operate time 0.00 s,op
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,Operate time 0.00 s,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,Operate time 0.00 s,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,Operate time 0.00 s,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,2,Sensitivity — below pickup,,,,,I A-L1,0.4500,A,0.00,60.000,ground / neutral CT input,RESTRAIN,Operate time 0.00 s,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,I A-L1,20.0000,A,0.00,60.000,terminal phase L1,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation anywhere on the ramp,no
+87GN,Restricted ground fault,Differential & ground,Quick CMC,points,3,Through-fault stability,,,,,I B-L1,20.0000,A,180.00,60.000,"ground CT input, reversed polarity",RESTRAIN,No operation anywhere on the ramp,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,V 4,5.500,V,0.00,60.000,grounding transformer secondary,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,V 4,4.500,V,0.00,60.000,grounding transformer secondary,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,V 4,239.923,V,0.00,60.000,grounding transformer secondary,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,3,Fault 100% from neutral,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,V 4,119.961,V,0.00,60.000,grounding transformer secondary,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,4,Fault 50% from neutral,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,V 4,23.992,V,0.00,60.000,grounding transformer secondary,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,5,Fault 10% from neutral,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,V 4,11.996,V,0.00,60.000,grounding transformer secondary,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+59N,Stator ground — fundamental,Differential & ground,Quick CMC,points,6,Fault 5% from neutral,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Detected by 59N,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,V 4,0.550,V,0.00,180.000,third harmonic at the neutral input,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I A-L1,0.4184,A,0.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I A-L2,0.4184,A,-120.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I A-L3,0.4184,A,120.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,1,Above threshold — healthy,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,Element must not operate,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,V 4,0.450,V,0.00,180.000,third harmonic at the neutral input,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I A-L1,0.4184,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I A-L2,0.4184,A,-120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I A-L3,0.4184,A,120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,2,Below threshold — fault,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,V 4,0.000,V,0.00,180.000,third harmonic at the neutral input,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I A-L1,0.4184,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I A-L2,0.4184,A,-120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I A-L3,0.4184,A,120.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,3,Third harmonic removed,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.0 s,op
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,V 4,0.000,V,0.00,60.000,third harmonic removed,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I A-L1,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I A-L2,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I A-L3,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I B-L1,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I B-L2,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27TN,Stator ground — third harmonic,Differential & ground,Harmonics,points,4,Supervision withdrawn,,,,,I B-L3,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,V L1,51.750,V,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,V L2,51.750,V,-120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,V L3,51.750,V,120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I A-L1,5.0000,A,90.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I A-L2,5.0000,A,-30.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I A-L3,5.0000,A,-150.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,1,Circle centre,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,V L1,13.662,V,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,V L2,13.662,V,-120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,V L3,13.662,V,120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I A-L1,5.0000,A,90.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I A-L2,5.0000,A,-30.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I A-L3,5.0000,A,-150.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,2,Boundary top — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,V L1,7.038,V,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,V L2,7.038,V,-120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,V L3,7.038,V,120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I A-L1,5.0000,A,90.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I A-L2,5.0000,A,-30.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I A-L3,5.0000,A,-150.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,3,Boundary top — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,V L1,89.838,V,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,V L2,89.838,V,-120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,V L3,89.838,V,120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I A-L1,5.0000,A,90.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I A-L2,5.0000,A,-30.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I A-L3,5.0000,A,-150.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,4,Boundary bottom — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,V L1,96.462,V,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,V L2,96.462,V,-120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,V L3,96.462,V,120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I A-L1,5.0000,A,90.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I A-L2,5.0000,A,-30.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I A-L3,5.0000,A,-150.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,5,Boundary bottom — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,V L1,64.255,V,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,V L2,64.255,V,-120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,V L3,64.255,V,120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I A-L1,5.0000,A,53.65,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I A-L2,5.0000,A,-66.35,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I A-L3,5.0000,A,173.65,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,6,Boundary right — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,V L1,68.390,V,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,V L2,68.390,V,-120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,V L3,68.390,V,120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I A-L1,5.0000,A,49.17,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I A-L2,5.0000,A,-70.83,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I A-L3,5.0000,A,169.17,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,7,Boundary right — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,V L1,64.255,V,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,V L2,64.255,V,-120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,V L3,64.255,V,120.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I A-L1,5.0000,A,126.35,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I A-L2,5.0000,A,6.35,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I A-L3,5.0000,A,-113.65,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,8,Boundary left — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.10 s,op
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,V L1,68.390,V,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,V L2,68.390,V,-120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,V L3,68.390,V,120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I A-L1,5.0000,A,130.83,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I A-L2,5.0000,A,10.83,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I A-L3,5.0000,A,-109.17,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,9,Boundary left — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,V L1,82.800,V,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,V L2,82.800,V,-120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,V L3,82.800,V,120.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I A-L1,5.0000,A,-90.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I A-L2,5.0000,A,150.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I A-L3,5.0000,A,30.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+40,Loss of excitation,Machine,Advanced Distance,shots,10,Normal excitation,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L1,1.1045,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Very long operate time at this level,op
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L1,0.9037,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,V L1,69.282,V,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,V L2,69.282,V,-120.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,V L3,69.282,V,120.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I A-L1,1.8827,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I A-L2,0.0000,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I A-L3,0.0000,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I B-L1,0.0000,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I B-L2,0.0000,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,3,Timing at I2 = 0.15 pu,,,,,I B-L3,0.0000,A,0.00,60.000,,444.4 s,7.41 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,V L1,69.282,V,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,V L2,69.282,V,-120.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,V L3,69.282,V,120.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I A-L1,2.5102,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I A-L2,0.0000,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I A-L3,0.0000,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I B-L1,0.0000,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I B-L2,0.0000,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,4,Timing at I2 = 0.20 pu,,,,,I B-L3,0.0000,A,0.00,60.000,,250.0 s,4.17 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,V L1,69.282,V,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,V L2,69.282,V,-120.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,V L3,69.282,V,120.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I A-L1,3.7653,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I A-L2,0.0000,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I A-L3,0.0000,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I B-L1,0.0000,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I B-L2,0.0000,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,5,Timing at I2 = 0.30 pu,,,,,I B-L3,0.0000,A,0.00,60.000,,111.1 s,1.85 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,V L1,69.282,V,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,V L2,69.282,V,-120.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,V L3,69.282,V,120.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I A-L1,6.2755,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I A-L2,0.0000,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I A-L3,0.0000,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I B-L1,0.0000,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I B-L2,0.0000,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+46,Negative-sequence capability,Machine,Overcurrent,characteristic,6,Timing at I2 = 0.50 pu,,,,,I B-L3,0.0000,A,0.00,60.000,,40.0 s,0.67 minutes,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I A-L1,0.0427,A,180.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I A-L2,0.0427,A,60.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I A-L3,0.0427,A,-60.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,1,Above threshold — motoring,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Balanced 3φ · current at +180.0° · 1.0200 MW primary,op
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I A-L1,0.0284,A,180.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I A-L2,0.0284,A,60.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I A-L3,0.0284,A,-60.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,2,Below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,Balanced 3φ · current at +180.0° · 0.6800 MW primary,no
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,V L1,69.282,V,0.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,V L2,69.282,V,-120.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,V L3,69.282,V,120.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I A-L1,0.0711,A,180.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I A-L2,0.0711,A,60.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I A-L3,0.0711,A,-60.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+32,Reverse / low forward power,Machine,Quick CMC,points,3,Timing at 2× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,10.0 s,Balanced 3φ · current at +180.0° · 1.7000 MW primary,nu
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,V L2,91.411,V,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,V L3,91.411,V,180.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I A-L2,5.0000,A,-85.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I A-L3,5.0000,A,95.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,1,Reach at MTA — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,V L2,107.309,V,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,V L3,107.309,V,180.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I A-L2,5.0000,A,-85.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I A-L3,5.0000,A,95.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,2,Reach at MTA — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,V L2,79.164,V,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,V L3,79.164,V,180.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I A-L2,5.0000,A,-115.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I A-L3,5.0000,A,65.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,3,Reach at MTA +30° — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,V L2,92.932,V,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,V L3,92.932,V,180.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I A-L2,5.0000,A,-115.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I A-L3,5.0000,A,65.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,4,Reach at MTA +30° — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,V L2,79.164,V,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,V L3,79.164,V,180.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I A-L2,5.0000,A,-55.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I A-L3,5.0000,A,125.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,5,Reach at MTA −30° — inside,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 0.50 s,op
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,V L1,69.282,V,90.00,60.000,"healthy phase, held at nominal",RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,V L2,92.932,V,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,V L3,92.932,V,180.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I A-L2,5.0000,A,-55.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I A-L3,5.0000,A,125.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+21,Distance backup,Machine,Advanced Distance,shots,6,Reach at MTA −30° — outside,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,V L1,62.100,V,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,V L2,62.100,V,-120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,V L3,62.100,V,120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I A-L1,5.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I A-L2,5.0000,A,-120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I A-L3,5.0000,A,120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I B-L1,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I B-L2,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,1,Right of the right blinder,,,,,I B-L3,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,V L1,37.260,V,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,V L2,37.260,V,-120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,V L3,37.260,V,120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I A-L1,5.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I A-L2,5.0000,A,-120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I A-L3,5.0000,A,120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I B-L1,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I B-L2,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,2,Inside the right blinder,,,,,I B-L3,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,V L1,37.260,V,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,V L2,37.260,V,-120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,V L3,37.260,V,120.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I A-L1,5.0000,A,180.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I A-L2,5.0000,A,60.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I A-L3,5.0000,A,-60.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I B-L1,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I B-L2,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,3,Inside the left blinder,,,,,I B-L3,0.0000,A,0.00,60.000,,INSIDE,Inside the blinder pair,op
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,V L1,62.100,V,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,V L2,62.100,V,-120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,V L3,62.100,V,120.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I A-L1,5.0000,A,180.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I A-L2,5.0000,A,60.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I A-L3,5.0000,A,-60.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I B-L1,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I B-L2,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+78,Out of step,Machine,Advanced Distance,shots,4,Left of the left blinder,,,,,I B-L3,0.0000,A,0.00,60.000,,OUTSIDE,Outside the blinder pair,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,V L1,69.282,V,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,V L2,69.282,V,-120.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,V L3,69.282,V,120.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I A-L1,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I A-L2,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I A-L3,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I B-L1,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I B-L2,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),1,"Step 1 — machine on line, disarmed",,,,,I B-L3,0.0000,A,0.00,60.000,,DISARMED,Arming flag must stay dropped,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I A-L1,5.0000,A,-75.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I A-L2,5.0000,A,165.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I A-L3,5.0000,A,45.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I B-L1,0.0000,A,0.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I B-L2,0.0000,A,0.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),2,Step 2 — current while disarmed,,,,,I B-L3,0.0000,A,0.00,60.000,,NO TRIP,This is the step that catches a scheme armed by mistake,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,V L1,27.713,V,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,V L2,27.713,V,-120.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,V L3,27.713,V,120.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I A-L1,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I A-L2,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I A-L3,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I B-L1,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I B-L2,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),3,"Step 3 — machine off line, arming",,,,,I B-L3,0.0000,A,0.00,60.000,,ARMS,Arming flag picks up after 5.0 s,op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,V L1,27.713,V,0.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,V L2,27.713,V,-120.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,V L3,27.713,V,120.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I A-L1,2.2500,A,-75.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I A-L2,2.2500,A,165.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I A-L3,2.2500,A,45.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),4,Step 4 — current below pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,NO TRIP,90% of pickup,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,V L1,27.713,V,0.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,V L2,27.713,V,-120.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,V L3,27.713,V,120.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I A-L1,2.7500,A,-75.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I A-L2,2.7500,A,165.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I A-L3,2.7500,A,45.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),5,Step 5 — current above pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,TRIP,"Instantaneous, no intentional delay",op
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I A-L1,5.0000,A,-75.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I A-L2,5.0000,A,165.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I A-L3,5.0000,A,45.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I B-L1,0.0000,A,0.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I B-L2,0.0000,A,0.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+50/27,Inadvertent energization,Machine,State Sequencer,sequence (assemble from these steps),6,Step 6 — disarm and re-apply,,,,,I B-L3,0.0000,A,0.00,60.000,,NO TRIP,Proves the scheme disarms on restoration,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I A-L1,7.8750,A,-75.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,1,V = 1.00 ×VT — above pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I A-L1,7.1250,A,-75.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,2,V = 1.00 ×VT — below pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,V L1,69.282,V,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,V L2,69.282,V,-120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,V L3,69.282,V,120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I A-L1,15.0000,A,-75.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,3,V = 1.00 ×VT — timing at 2× effective,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,V L1,51.962,V,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,V L2,51.962,V,-120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,V L3,51.962,V,120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I A-L1,5.9063,A,-75.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,4,V = 0.75 ×VT — above pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,V L1,51.962,V,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,V L2,51.962,V,-120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,V L3,51.962,V,120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I A-L1,5.3438,A,-75.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,5,V = 0.75 ×VT — below pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,V L1,51.962,V,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,V L2,51.962,V,-120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,V L3,51.962,V,120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I A-L1,11.2500,A,-75.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,6,V = 0.75 ×VT — timing at 2× effective,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,V L1,34.641,V,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,V L2,34.641,V,-120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,V L3,34.641,V,120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I A-L1,3.9375,A,-75.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,7,V = 0.50 ×VT — above pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,V L1,34.641,V,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,V L2,34.641,V,-120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,V L3,34.641,V,120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I A-L1,3.5625,A,-75.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,8,V = 0.50 ×VT — below pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,V L1,34.641,V,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,V L2,34.641,V,-120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,V L3,34.641,V,120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I A-L1,7.5000,A,-75.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,9,V = 0.50 ×VT — timing at 2× effective,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,V L1,17.321,V,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,V L2,17.321,V,-120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,V L3,17.321,V,120.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I A-L1,1.9688,A,-75.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,10,V = 0.25 ×VT — above pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Curve runs from here,op
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,V L1,17.321,V,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,V L2,17.321,V,-120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,V L3,17.321,V,120.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I A-L1,1.7813,A,-75.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,11,V = 0.25 ×VT — below pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,V L1,17.321,V,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,V L2,17.321,V,-120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,V L3,17.321,V,120.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I A-L1,3.7500,A,-75.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+51V,Voltage-restrained OC,Machine,Quick CMC,points,12,V = 0.25 ×VT — timing at 2× effective,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,"Multiple is of the effective pickup, not the nominal one",nu
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,V L1,80.021,V,0.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,V L2,80.021,V,-120.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,V L3,80.021,V,120.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,1,60.0 Hz — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,V L1,72.400,V,0.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,V L2,72.400,V,-120.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,V L3,72.400,V,120.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,2,60.0 Hz — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,V L1,76.020,V,0.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,V L2,76.020,V,-120.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,V L3,76.020,V,120.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,I A-L1,0.0000,A,0.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,I A-L2,0.0000,A,0.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,3,57.0 Hz — above threshold,,,,,I A-L3,0.0000,A,0.00,57.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,V L1,68.780,V,0.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,V L2,68.780,V,-120.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,V L3,68.780,V,120.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,I A-L1,0.0000,A,0.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,I A-L2,0.0000,A,0.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,4,57.0 Hz — below threshold,,,,,I A-L3,0.0000,A,0.00,57.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,V L1,72.019,V,0.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,V L2,72.019,V,-120.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,V L3,72.019,V,120.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,I A-L1,0.0000,A,0.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,I A-L2,0.0000,A,0.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,5,54.0 Hz — above threshold,,,,,I A-L3,0.0000,A,0.00,54.000,,OPERATE,Operate after 20.00 s,op
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,V L1,65.160,V,0.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,V L2,65.160,V,-120.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,V L3,65.160,V,120.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,I A-L1,0.0000,A,0.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,I A-L2,0.0000,A,0.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,6,54.0 Hz — below threshold,,,,,I A-L3,0.0000,A,0.00,54.000,,RESTRAIN,No operation,no
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,V L1,91.452,V,0.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,V L2,91.452,V,-120.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,V L3,91.452,V,120.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,I A-L1,0.0000,A,0.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,7,Timing at 1.20× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,5.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,V L1,114.315,V,0.00,60.000,,2.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,V L2,114.315,V,-120.00,60.000,,2.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,V L3,114.315,V,120.00,60.000,,2.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,I A-L1,0.0000,A,0.00,60.000,,2.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,2.00 s,From the inverse characteristic,nu
+24,Volts per hertz,Machine,Quick CMC,points,8,Timing at 1.50× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,2.00 s,From the inverse characteristic,nu
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I A-L1,2.0918,A,23.19,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I A-L2,2.0918,A,-96.81,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I A-L3,2.0918,A,143.19,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,1,Past the limit,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,pf = 0.919 leading,op
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I A-L1,2.0918,A,13.19,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I A-L2,2.0918,A,-106.81,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I A-L3,2.0918,A,133.19,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,2,Short of the limit,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,pf = 0.974 leading,no
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,V L1,69.282,V,0.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,V L3,69.282,V,120.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I A-L1,2.0918,A,90.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I A-L2,2.0918,A,-30.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I A-L3,2.0918,A,-150.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,3,"Full VAR, no watts",,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I A-L1,0.6694,A,23.19,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I A-L2,0.6694,A,-96.81,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I A-L3,0.6694,A,143.19,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I B-L1,0.0000,A,0.00,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I B-L2,0.0000,A,0.00,60.000,,BLOCKED,pf = 0.919 leading,no
+55,Power factor,Machine,Quick CMC,points,4,Below minimum current,,,,,I B-L3,0.0000,A,0.00,60.000,,BLOCKED,pf = 0.919 leading,no
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,V L1,69.282,V,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,V L2,69.282,V,-120.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,V L3,69.282,V,120.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I A-L1,5.2715,A,-25.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I A-L2,0.0000,A,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I A-L3,0.0000,A,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I B-L1,0.0000,A,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I B-L2,0.0000,A,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,1,Operate at 1.20× thermal setting,,,,,I B-L3,0.0000,A,0.00,60.000,,602.6 s,10.04 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,V L1,69.282,V,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,V L2,69.282,V,-120.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,V L3,69.282,V,120.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I A-L1,6.5893,A,-25.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I A-L2,0.0000,A,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I A-L3,0.0000,A,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I B-L1,0.0000,A,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I B-L2,0.0000,A,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,2,Operate at 1.50× thermal setting,,,,,I B-L3,0.0000,A,0.00,60.000,,260.4 s,4.34 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,V L1,69.282,V,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,V L2,69.282,V,-120.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,V L3,69.282,V,120.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I A-L1,8.7858,A,-25.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I A-L2,0.0000,A,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I A-L3,0.0000,A,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I B-L1,0.0000,A,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I B-L2,0.0000,A,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,3,Operate at 2.00× thermal setting,,,,,I B-L3,0.0000,A,0.00,60.000,,117.8 s,1.96 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,V L1,69.282,V,0.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,V L2,69.282,V,-120.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,V L3,69.282,V,120.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I A-L1,13.1786,A,-25.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I A-L2,0.0000,A,0.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I A-L3,0.0000,A,0.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I B-L1,0.0000,A,0.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I B-L2,0.0000,A,0.00,60.000,,46.0 s,0.77 minutes,nu
+49,Stator thermal overload,Machine,Overcurrent,characteristic,4,Operate at 3.00× thermal setting,,,,,I B-L3,0.0000,A,0.00,60.000,,46.0 s,0.77 minutes,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L1,21.0000,A,-75.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L1,19.0000,A,-75.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L1,40.0000,A,-75.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L1,5.7750,A,-75.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L1,5.2250,A,-75.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L1,11.0000,A,-75.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L1,16.5000,A,-75.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L1,27.5000,A,-75.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51P,Phase time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L1,2.6250,A,-75.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L1,2.3750,A,-75.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L1,5.0000,A,-75.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50G,Ground instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L1,1.0500,A,-75.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L1,0.9500,A,-75.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L1,2.0000,A,-75.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L1,3.0000,A,-75.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L1,5.0000,A,-75.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51G,Ground time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L1,2.6250,A,-75.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L1,2.3750,A,-75.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L1,5.0000,A,-75.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+50N,Neutral instantaneous OC,Overcurrent,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.050 s,Measured from application of current to trip,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L1,1.0500,A,-75.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L1,0.9500,A,-75.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L1,2.0000,A,-75.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,1.406 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L1,3.0000,A,-75.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.588 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L1,5.0000,A,-75.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+51N,Neutral time OC,Overcurrent,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,0.262 s,Predicted from the curve equation,nu
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,V L1,69.282,V,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,V L2,69.282,V,-120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,V L3,69.282,V,120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I A-L1,11.0000,A,-45.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I A-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I A-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I B-L1,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I B-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,1,Forward maximum torque,,,,,I B-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,V L1,69.282,V,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,V L2,69.282,V,-120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,V L3,69.282,V,120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I A-L1,11.0000,A,135.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I A-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I A-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I B-L1,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I B-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,2,Reverse maximum torque,,,,,I B-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,V L1,69.282,V,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,V L2,69.282,V,-120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,V L3,69.282,V,120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I A-L1,11.0000,A,40.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I A-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I A-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I B-L1,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I B-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,3,"Boundary, leading side (inside)",,,,,I B-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,V L1,69.282,V,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,V L2,69.282,V,-120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,V L3,69.282,V,120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I A-L1,11.0000,A,50.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I A-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I A-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I B-L1,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I B-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,4,"Boundary, leading side (outside)",,,,,I B-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,V L1,69.282,V,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,V L2,69.282,V,-120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,V L3,69.282,V,120.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I A-L1,11.0000,A,-130.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I A-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I A-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I B-L1,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I B-L2,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,5,"Boundary, lagging side (inside)",,,,,I B-L3,0.0000,A,0.00,60.000,,FORWARD,Current held at 2.0× pickup,op
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,V L1,69.282,V,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,V L2,69.282,V,-120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,V L3,69.282,V,120.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I A-L1,11.0000,A,-140.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I A-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I A-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I B-L1,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I B-L2,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+67,Directional supervision,Overcurrent,Ramping,points,6,"Boundary, lagging side (outside)",,,,,I B-L3,0.0000,A,0.00,60.000,,REVERSE,Current held at 2.0× pickup,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L1,55.945,V,0.00,60.000,depressed phase,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L1,61.834,V,0.00,60.000,depressed phase,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,V L1,35.334,V,0.00,60.000,depressed phase,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,V L2,69.282,V,-120.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,V L3,69.282,V,120.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I A-L1,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.60× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,2.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L1,4.000,V,0.00,60.000,depressed phase,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I A-L1,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I A-L2,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I A-L3,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I B-L1,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I B-L2,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I B-L3,0.0000,A,0.00,60.000,,BLOCKED,Element inhibited,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L1,80.021,V,0.00,60.000,raised phase,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 1.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L1,72.400,V,0.00,60.000,raised phase,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I B-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I B-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I B-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L1,95.263,V,0.00,60.000,raised phase,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L2,69.282,V,-120.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L3,69.282,V,120.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I A-L1,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I A-L2,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I A-L3,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I B-L1,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I B-L2,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I B-L3,0.0000,A,0.00,60.000,,1.00 s,Definite time,nu
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L1,46.419,V,0.00,60.000,depressed by 22.86 V,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.0 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L1,50.576,V,0.00,60.000,depressed by 18.71 V,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L2,69.282,V,120.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L3,69.282,V,-120.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I A-L1,0.0000,A,0.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I A-L2,0.0000,A,0.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I A-L3,0.0000,A,0.00,60.000,,OPERATE,"V2 = 69.28 V, far above any sensible setting",op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L1,69.282,V,0.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L2,69.282,V,-120.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L3,69.282,V,120.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I A-L1,0.0000,A,0.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I A-L2,0.0000,A,0.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I A-L3,0.0000,A,0.00,59.300,,OPERATE,Operate after 0.30 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L1,69.282,V,0.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L2,69.282,V,-120.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L3,69.282,V,120.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I A-L1,0.0000,A,0.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I A-L2,0.0000,A,0.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I A-L3,0.0000,A,0.00,59.500,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L1,69.282,V,0.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L2,69.282,V,-120.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L3,69.282,V,120.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I A-L1,0.0000,A,0.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I A-L2,0.0000,A,0.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I A-L3,0.0000,A,0.00,59.300,,0.300 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L1,24.000,V,0.00,59.300,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L2,24.000,V,-120.00,59.300,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L3,24.000,V,120.00,59.300,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I A-L1,0.0000,A,0.00,59.300,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I A-L2,0.0000,A,0.00,59.300,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I A-L3,0.0000,A,0.00,59.300,,BLOCKED,Element inhibited,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,V L1,69.282,V,0.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,V L2,69.282,V,-120.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,V L3,69.282,V,120.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,I A-L1,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,1,Rate above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 1.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,V L1,69.282,V,0.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,V L2,69.282,V,-120.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,V L3,69.282,V,120.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,I A-L1,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,I A-L2,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,2,Rate below pickup,,,,,I A-L3,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 2.50 s,RESTRAIN,No operation,no
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,V L1,69.282,V,0.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,V L2,69.282,V,-120.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,V L3,69.282,V,120.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,I A-L1,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,I A-L2,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+81R,Rate of change of frequency,Voltage & frequency,Ramping,ramp,3,Well above pickup,,,,,I A-L3,0.0000,A,0.00,60.000,ramp to 57.00 Hz over 0.67 s,OPERATE,Operate after 0.20 s of sustained rate,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,V L1,69.282,V,0.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,V L2,69.282,V,-120.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,V L3,69.282,V,120.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,V 4,69.282,V,0.00,60.000,running bus,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,I A-L1,0.0000,A,0.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,I A-L2,0.0000,A,0.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,1,In synchronism,,,,,I A-L3,0.0000,A,0.00,60.000,,CLOSE PERMITTED,"Δθ 0°, ΔV 0 V, Δf 0 Hz",op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,V L1,69.282,V,0.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,V L2,69.282,V,-120.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,V L3,69.282,V,120.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,V 4,69.282,V,8.00,60.000,running bus,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,I A-L1,0.0000,A,0.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,I A-L2,0.0000,A,0.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,2,Angle just inside limit,,,,,I A-L3,0.0000,A,0.00,60.000,,CLOSE PERMITTED,Δθ 8.0°,op
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,V 4,69.282,V,12.00,60.000,running bus,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,I A-L1,0.0000,A,0.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,I A-L2,0.0000,A,0.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,3,Angle just outside limit,,,,,I A-L3,0.0000,A,0.00,60.000,,BLOCKED,Δθ 12.0°,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,V 4,63.282,V,0.00,60.000,running bus,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,I A-L1,0.0000,A,0.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,I A-L2,0.0000,A,0.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,4,Voltage difference outside limit,,,,,I A-L3,0.0000,A,0.00,60.000,,BLOCKED,ΔV 6.00 V,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,V 4,69.282,V,0.00,60.060,running bus — 60.060 Hz,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,I A-L1,0.0000,A,0.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,I A-L2,0.0000,A,0.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,5,Slip outside limit,,,,,I A-L3,0.0000,A,0.00,60.000,,BLOCKED,Δf 0.060 Hz,no
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,V L1,69.282,V,0.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,V L2,69.282,V,-120.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,V L3,69.282,V,120.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,V 4,10.000,V,0.00,60.000,running bus,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,I A-L1,0.0000,A,0.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,I A-L2,0.0000,A,0.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu
+25,Synchrocheck,Voltage & frequency,Synchronizer,points,6,"Dead bus, live machine",,,,,I A-L3,0.0000,A,0.00,60.000,,PER DEAD-BUS LOGIC,Depends on the dead/live scheme enabled,nu

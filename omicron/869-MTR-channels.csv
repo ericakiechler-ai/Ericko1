@@ -1,0 +1,554 @@
+# 869-MTR — Multilin 869 motor protection
+# generated 2026-09-04 13:27 from 869.html
+# configuration: kv=4.16; fla=180; sf=1.15; hp=1500; pf=0.89; freq=60; rot=ABC; type=ind; lra=6; lrtc=20; lrth=15; acc=8; start=3; tbs=20; cmode=std; cm=4; ca=87.4; cn=2; cref=fla; fitI=6; fitT=10; k=6; hcr=0.75; taur=15; taus=30; tau_i=20; kf=1.05; ctp=200; cts=5; ctgp=50; ctgs=5; vtp=4160; vts=120; vtc=wye; diff=cb; cmc=3x; imax=32; vmax=300
+# All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
+# Values shown are for the tool's sample configuration — re-generate after entering real station data.
+Element,ElementName,Group,TU_Module,DriveAs,Step,StepName,SeqRun,SeqState,SeqLabel,StateDuration_s,Channel,Magnitude,Unit,Angle_deg,Frequency_Hz,ChannelNote,Expected,ExpectedDetail,Verdict
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L1,5.4337,A,-27.13,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L2,5.4337,A,-147.13,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L3,5.4337,A,92.87,60.000,,OPERATE,Very long — 12.72 min from the curve,op
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L1,4.9162,A,-27.13,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L2,4.9162,A,-147.13,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L3,4.9162,A,92.87,60.000,,RESTRAIN,No accumulation,no
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,I L1,6.7500,A,-27.13,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,I L2,6.7500,A,-147.13,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,3,Timing at 1.50 ×FLA,,,,,I L3,6.7500,A,92.87,60.000,,4.66 min,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,I L1,9.0000,A,-27.13,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,I L2,9.0000,A,-147.13,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,4,Timing at 2.00 ×FLA,,,,,I L3,9.0000,A,92.87,60.000,,116.5 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,I L1,13.5000,A,-27.13,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,I L2,13.5000,A,-147.13,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,5,Timing at 3.00 ×FLA,,,,,I L3,13.5000,A,92.87,60.000,,43.7 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,I L1,18.0000,A,-27.13,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,I L2,18.0000,A,-147.13,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,6,Timing at 4.00 ×FLA,,,,,I L3,18.0000,A,92.87,60.000,,23.3 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,9.99 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,9.99 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,9.99 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,I L1,27.0000,A,-27.13,60.000,,9.99 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,I L2,27.0000,A,-147.13,60.000,,9.99 s,From the cold overload curve,nu
+49,Thermal overload model,Thermal,Overcurrent,characteristic,7,Timing at 6.00 ×FLA,,,,,I L3,27.0000,A,92.87,60.000,,9.99 s,From the cold overload curve,nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,I L1,9.0000,A,-27.13,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,I L2,9.0000,A,-147.13,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,1,Accumulate at 2.0 ×FLA,,,,,I L3,9.0000,A,92.87,60.000,,87.4 s to alarm,"Trip at 116.5 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,I L1,18.0000,A,-27.13,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,I L2,18.0000,A,-147.13,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,2,Accumulate at 4.0 ×FLA,,,,,I L3,18.0000,A,92.87,60.000,,17.5 s to alarm,"Trip at 23.3 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,V L1,69.282,V,0.00,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,V L2,69.282,V,-120.00,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,V L3,69.282,V,120.00,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,I L1,27.0000,A,-27.13,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,I L2,27.0000,A,-147.13,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,3,Accumulate at 6.0 ×FLA,,,,,I L3,27.0000,A,92.87,60.000,,7.49 s to alarm,"Trip at 9.99 s · hold the current, do not interrupt it",nu
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,V L1,0.000,V,0.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,V L2,0.000,V,-120.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,V L3,0.000,V,120.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,I L1,0.0000,A,0.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,I L2,0.0000,A,0.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,4,Decay — 5 min stopped,,,,,I L3,0.0000,A,0.00,60.000,,84.6% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,V L1,0.000,V,0.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,V L2,0.000,V,-120.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,V L3,0.000,V,120.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,I L1,0.0000,A,0.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,I L2,0.0000,A,0.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,5,Decay — 15 min stopped,,,,,I L3,0.0000,A,0.00,60.000,,60.7% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,V L1,0.000,V,0.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,V L2,0.000,V,-120.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,V L3,0.000,V,120.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,I L1,0.0000,A,0.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,I L2,0.0000,A,0.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,6,Decay — 30 min stopped,,,,,I L3,0.0000,A,0.00,60.000,,36.8% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,V L1,0.000,V,0.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,V L2,0.000,V,-120.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,V L3,0.000,V,120.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,I L1,0.0000,A,0.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,I L2,0.0000,A,0.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+49TC,Thermal capacity and lockout,Thermal,Quick CMC,points,7,Decay — 60 min stopped,,,,,I L3,0.0000,A,0.00,60.000,,13.5% remaining,Restart permitted below 100%,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,V L1,0.000,V,0.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,V L2,0.000,V,-120.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,V L3,0.000,V,120.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,I L1,0.0000,A,0.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,I L2,0.0000,A,0.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,1,Stopped,1,1/3,Stopped,3.000,I L3,0.0000,A,0.00,60.000,,READY,Start supervision idle,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,V L1,58.890,V,0.00,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,V L2,58.890,V,-120.00,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,V L3,58.890,V,120.00,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,I L1,27.0000,A,-27.13,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,I L2,27.0000,A,-147.13,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,2,Successful start — acceleration,1,2/3,Accelerating,8.000,I L3,27.0000,A,92.87,60.000,,NO TRIP,Inside the 10.0 s limit,no
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,V L1,69.282,V,0.00,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,V L2,69.282,V,-120.00,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,V L3,69.282,V,120.00,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,I L1,4.5000,A,-27.13,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,I L2,4.5000,A,-147.13,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,3,Successful start — running,1,3/3,Running,10.000,I L3,4.5000,A,92.87,60.000,,START COMPLETE,Acceleration timer resets,op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,V L1,0.000,V,0.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,V L2,0.000,V,-120.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,V L3,0.000,V,120.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,I L1,0.0000,A,0.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,I L2,0.0000,A,0.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,4,Stalled start — stopped,2,1/2,Stopped,3.000,I L3,0.0000,A,0.00,60.000,,READY,,nu
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,V L1,58.890,V,0.00,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,V L2,58.890,V,-120.00,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,V L3,58.890,V,120.00,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,I L1,27.0000,A,-27.13,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,I L2,27.0000,A,-147.13,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+48,Acceleration time / incomplete sequence,Starting,State Sequencer,sequence,5,Stalled start — current never drops,2,2/2,Stalled,13.000,I L3,27.0000,A,92.87,60.000,,TRIP AT 10.0 s,"Incomplete sequence, or the thermal curve first — see the note below",op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,V L1,69.282,V,0.00,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,V L2,69.282,V,-120.00,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,V L3,69.282,V,120.00,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,I L1,11.8125,A,-27.13,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,I L2,11.8125,A,-147.13,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,1,Jam — above pickup,,,,,I L3,11.8125,A,92.87,60.000,,TRIP,Operate after 1.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,I L1,10.6875,A,-27.13,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,I L2,10.6875,A,-147.13,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,2,Jam — below pickup,,,,,I L3,10.6875,A,92.87,60.000,,NO TRIP,No operation,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,V L1,69.282,V,0.00,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,V L2,69.282,V,-120.00,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,V L3,69.282,V,120.00,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,I L1,21.2625,A,-27.13,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,I L2,21.2625,A,-147.13,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,3,Locked rotor — above pickup,,,,,I L3,21.2625,A,92.87,60.000,,TRIP,Operate after 2.00 s,op
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,V L1,69.282,V,0.00,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,V L2,69.282,V,-120.00,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,V L3,69.282,V,120.00,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,I L1,27.0000,A,-27.13,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,I L2,27.0000,A,-147.13,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+51LR,Locked rotor and mechanical jam,Starting,Overcurrent,pickup+time,4,Jam blocked during start,,,,,I L3,27.0000,A,92.87,60.000,,JAM BLOCKED,A normal start must not look like a jam,no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,V L1,58.890,V,0.00,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,V L2,58.890,V,-120.00,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,V L3,58.890,V,120.00,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,I L1,27.0000,A,-27.13,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,I L2,27.0000,A,-147.13,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,1,Start 1 of 3,1,1/10,Start 1,8.000,I L3,27.0000,A,92.87,60.000,,PERMITTED,Counter advances to 1,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,V L1,69.282,V,0.00,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,V L2,69.282,V,-120.00,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,V L3,69.282,V,120.00,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,I L1,4.5000,A,-27.13,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,I L2,4.5000,A,-147.13,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,2,Run after start 1,1,2/10,Run 1,30.000,I L3,4.5000,A,92.87,60.000,,RUNNING,2 starts left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,V L1,0.000,V,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,V L2,0.000,V,-120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,V L3,0.000,V,120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,I L1,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,I L2,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,3,Stopped after start 1,1,3/10,Stopped 1,5.000,I L3,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,V L1,58.890,V,0.00,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,V L2,58.890,V,-120.00,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,V L3,58.890,V,120.00,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,I L1,27.0000,A,-27.13,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,I L2,27.0000,A,-147.13,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,4,Start 2 of 3,1,4/10,Start 2,8.000,I L3,27.0000,A,92.87,60.000,,PERMITTED,Counter advances to 2,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,V L1,69.282,V,0.00,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,V L2,69.282,V,-120.00,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,V L3,69.282,V,120.00,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,I L1,4.5000,A,-27.13,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,I L2,4.5000,A,-147.13,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,5,Run after start 2,1,5/10,Run 2,30.000,I L3,4.5000,A,92.87,60.000,,RUNNING,1 start left in the hour,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,V L1,0.000,V,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,V L2,0.000,V,-120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,V L3,0.000,V,120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,I L1,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,I L2,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,6,Stopped after start 2,1,6/10,Stopped 2,5.000,I L3,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,V L1,58.890,V,0.00,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,V L2,58.890,V,-120.00,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,V L3,58.890,V,120.00,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,I L1,27.0000,A,-27.13,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,I L2,27.0000,A,-147.13,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,7,Start 3 of 3,1,7/10,Start 3,8.000,I L3,27.0000,A,92.87,60.000,,PERMITTED,Counter advances to 3,op
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,V L1,69.282,V,0.00,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,V L2,69.282,V,-120.00,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,V L3,69.282,V,120.00,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,I L1,4.5000,A,-27.13,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,I L2,4.5000,A,-147.13,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,8,Run after start 3,1,8/10,Run 3,30.000,I L3,4.5000,A,92.87,60.000,,RUNNING,No starts left,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,V L1,0.000,V,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,V L2,0.000,V,-120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,V L3,0.000,V,120.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,I L1,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,I L2,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,9,Stopped after start 3,1,9/10,Stopped 3,5.000,I L3,0.0000,A,0.00,60.000,,STOPPED,Restart delay of 60.0 s begins,nu
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,V L1,58.890,V,0.00,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,V L2,58.890,V,-120.00,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,V L3,58.890,V,120.00,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,I L1,27.0000,A,-27.13,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,I L2,27.0000,A,-147.13,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+66,Starts per hour / time between starts,Starting,State Sequencer,sequence,10,Start 4 — refused,1,10/10,Blocked,60.000,I L3,27.0000,A,92.87,60.000,,START INHIBITED,"The relay must block the close, not trip after it",no
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,I L1,4.5000,A,-27.13,60.000,,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,I L2,4.5000,A,-147.13,60.000,,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,1,Ratio — above threshold,,,,,I L3,2.5880,A,92.87,60.000,reduced to 57.5% of the others,OPERATE,Operate after 5.00 s,op
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,I L1,4.5000,A,-27.13,60.000,,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,I L2,4.5000,A,-147.13,60.000,,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,2,Ratio — below threshold,,,,,I L3,2.8943,A,92.87,60.000,reduced to 64.3% of the others,RESTRAIN,No operation,no
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,V L1,69.282,V,0.00,60.000,,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,V L2,69.282,V,-120.00,60.000,,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,V L3,69.282,V,120.00,60.000,,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,I L1,4.5000,A,-27.13,60.000,,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,I L2,4.5000,A,-147.13,60.000,,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,3,Alarm threshold,,,,,I L3,3.2727,A,92.87,60.000,reduced to 72.7% of the others,ALARM ONLY,"Alarm asserts, trip does not",wn
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,I L1,4.5000,A,-27.13,60.000,,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,I L2,4.5000,A,-147.13,60.000,,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,4,Single phasing,,,,,I L3,0.0000,A,92.87,60.000,reduced to 0.0% of the others,OPERATE,"I2/I1 = 50%, the ceiling for this method",op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,I L1,4.5000,A,-27.13,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,I L2,4.5000,A,92.87,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+46,Current unbalance,Current,Overcurrent,characteristic,5,Reverse rotation,,,,,I L3,4.5000,A,-147.13,60.000,,OPERATE,I2/I1 is undefined with I1 at zero; the element should see full unbalance,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,I L1,2.5650,A,-27.13,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,I L2,2.5650,A,-147.13,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,1,Pickup — below threshold,,,,,I L3,2.5650,A,92.87,60.000,,TRIP,Operate after 5.00 s,op
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,I L1,2.8350,A,-27.13,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,I L2,2.8350,A,-147.13,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,2,Pickup — above threshold,,,,,I L3,2.8350,A,92.87,60.000,,NO TRIP,No operation,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,V L1,69.282,V,0.00,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,V L2,69.282,V,-120.00,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,V L3,69.282,V,120.00,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,I L1,1.3500,A,-27.13,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,I L2,1.3500,A,-147.13,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,3,Timing at half pickup,,,,,I L3,1.3500,A,92.87,60.000,,5.00 s,Definite time,nu
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,Element supervised by the run status,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,Element supervised by the run status,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,Element supervised by the run status,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,I L1,0.0000,A,-27.13,60.000,,NO TRIP,Element supervised by the run status,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,I L2,0.0000,A,-147.13,60.000,,NO TRIP,Element supervised by the run status,no
+37,Undercurrent / loss of load,Current,Overcurrent,pickup+time,4,Motor stopped,,,,,I L3,0.0000,A,92.87,60.000,,NO TRIP,Element supervised by the run status,no
+87M,Motor differential,Current,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.03 s,op
+87M,Motor differential,Current,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.03 s,op
+87M,Motor differential,Current,Quick CMC,points,1,Sensitivity — above pickup,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.03 s,op
+87M,Motor differential,Current,Quick CMC,points,1,Sensitivity — above pickup,,,,,I L1,0.0220,A,0.00,60.000,single conductor through the differential window,OPERATE,Operate within 0.03 s,op
+87M,Motor differential,Current,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+87M,Motor differential,Current,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+87M,Motor differential,Current,Quick CMC,points,2,Sensitivity — below pickup,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+87M,Motor differential,Current,Quick CMC,points,2,Sensitivity — below pickup,,,,,I L1,0.0180,A,0.00,60.000,single conductor through the differential window,RESTRAIN,No operation,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,I L1,18.0000,A,0.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,I L2,18.0000,A,-120.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+87M,Motor differential,Current,Quick CMC,points,3,Through-current stability,,,,,I L3,18.0000,A,120.00,60.000,,RESTRAIN,A balanced set through the window sums to zero,no
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L1,37.8000,A,-30.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L1,34.2000,A,-30.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L1,72.0000,A,-30.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50P,Short circuit,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L1,0.5250,A,-30.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L1,0.4750,A,-30.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L1,1.0000,A,-30.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50G,Ground instantaneous,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L1,0.3150,A,-30.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,1,Pickup — above threshold,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,Long operate time — let the curve run out,op
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L1,0.2850,A,-30.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,2,Pickup — below threshold,,,,,I L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I L1,0.6000,A,-30.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,3,Timing at 2.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,2.01 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I L1,0.9000,A,-30.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,4,Timing at 3.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,1.26 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.86 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.86 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.86 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I L1,1.5000,A,-30.00,60.000,,0.86 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,0.86 s,Predicted from the curve equation,nu
+51G,Ground time OC,Current,Overcurrent,characteristic,5,Timing at 5.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,0.86 s,Predicted from the curve equation,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L1,0.0525,A,-30.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,Operate within 0.05 s,op
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L1,0.0475,A,-30.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,2,Pickup — below threshold,,,,,I L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L1,69.282,V,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L2,69.282,V,-120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,V L3,69.282,V,120.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L1,0.1000,A,-30.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L2,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50SG,Sensitive ground,Current,Overcurrent,pickup+time,3,Timing at 2.0× pickup,,,,,I L3,0.0000,A,0.00,60.000,,0.05 s,Measured from application of current to trip,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,V L1,69.282,V,0.00,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,V L3,69.282,V,120.00,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,I L1,0.9450,A,-27.13,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,I L2,0.9450,A,-147.13,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),1,Detector — above threshold,,,,,I L3,0.9450,A,92.87,60.000,,DETECTOR PICKED UP,"Flag only, no trip without initiate",op
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,V L1,69.282,V,0.00,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,V L2,69.282,V,-120.00,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,V L3,69.282,V,120.00,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,I L1,0.8550,A,-27.13,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,I L2,0.8550,A,-147.13,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),2,Detector — below threshold,,,,,I L3,0.8550,A,92.87,60.000,,NO PICKUP,Detector must drop out,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,V L1,69.282,V,0.00,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,V L2,69.282,V,-120.00,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,V L3,69.282,V,120.00,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,I L1,2.7000,A,-27.13,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,I L2,2.7000,A,-147.13,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),3,Retrip timing,,,,,I L3,2.7000,A,92.87,60.000,,0.10 s,Timer 1,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,V L1,69.282,V,0.00,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,V L2,69.282,V,-120.00,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,V L3,69.282,V,120.00,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,I L1,2.7000,A,-27.13,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,I L2,2.7000,A,-147.13,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),4,Upstream trip timing,,,,,I L3,2.7000,A,92.87,60.000,,0.25 s,Timer 2 — trips the feeding breaker,nu
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,V L1,69.282,V,0.00,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,V L2,69.282,V,-120.00,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,V L3,69.282,V,120.00,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,I L1,0.0000,A,-27.13,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,I L2,0.0000,A,-147.13,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+50BF,Breaker or contactor failure,Current,State Sequencer,sequence (assemble from these steps),5,Reset check,,,,,I L3,0.0000,A,92.87,60.000,,NO TRIP,Proves the detector reset stops the scheme,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L1,52.654,V,0.00,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L2,52.654,V,-120.00,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,V L3,52.654,V,120.00,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I L1,4.5000,A,-27.13,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I L2,4.5000,A,-147.13,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — below threshold,,,,,I L3,4.5000,A,92.87,60.000,,OPERATE,Operate after 3.00 s,op
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L1,58.197,V,0.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L2,58.197,V,-120.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,V L3,58.197,V,120.00,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I L1,4.5000,A,-27.13,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I L2,4.5000,A,-147.13,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — above threshold,,,,,I L3,4.5000,A,92.87,60.000,,RESTRAIN,No operation,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,V L1,27.713,V,0.00,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,V L2,27.713,V,-120.00,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,V L3,27.713,V,120.00,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,I L1,4.5000,A,-27.13,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,I L2,4.5000,A,-147.13,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 0.50× pickup,,,,,I L3,4.5000,A,92.87,60.000,,3.00 s,Definite time,nu
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L1,4.000,V,0.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L2,4.000,V,-120.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,V L3,4.000,V,120.00,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I L1,4.5000,A,-27.13,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I L2,4.5000,A,-147.13,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,4,Below minimum operating voltage,,,,,I L3,4.5000,A,92.87,60.000,,BLOCKED,Element inhibited,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,V L1,55.426,V,0.00,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,V L2,55.426,V,-120.00,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,V L3,55.426,V,120.00,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,I L1,4.5000,A,-27.13,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,I L2,4.5000,A,-147.13,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+27,Undervoltage,Voltage & frequency,Voltage,pickup+time,5,During a start,,,,,I L3,4.5000,A,92.87,60.000,,NO TRIP,A healthy start must not trip on undervoltage,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L1,80.021,V,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L2,80.021,V,-120.00,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,V L3,80.021,V,120.00,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I L1,4.5000,A,-27.13,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I L2,4.5000,A,-147.13,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,1,Pickup — above threshold,,,,,I L3,4.5000,A,92.87,60.000,,OPERATE,Operate after 2.00 s,op
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L1,72.400,V,0.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L2,72.400,V,-120.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,V L3,72.400,V,120.00,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I L1,4.5000,A,-27.13,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I L2,4.5000,A,-147.13,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,2,Pickup — below threshold,,,,,I L3,4.5000,A,92.87,60.000,,RESTRAIN,No operation,no
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L1,95.263,V,0.00,60.000,,2.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L2,95.263,V,-120.00,60.000,,2.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,V L3,95.263,V,120.00,60.000,,2.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I L1,4.5000,A,-27.13,60.000,,2.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I L2,4.5000,A,-147.13,60.000,,2.00 s,Definite time,nu
+59,Overvoltage,Voltage & frequency,Voltage,pickup+time,3,Timing at 1.25× pickup,,,,,I L3,4.5000,A,92.87,60.000,,2.00 s,Definite time,nu
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L1,6.097,V,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L2,6.097,V,120.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,V L3,6.097,V,-120.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I L1,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,1,Pickup — above threshold,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,Operate after 2.00 s,op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L1,4.988,V,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L2,4.988,V,120.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,V L3,4.988,V,-120.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I L1,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,2,Pickup — below threshold,,,,,I L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation,no
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L2,69.282,V,120.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,V L3,69.282,V,-120.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I L1,0.0000,A,0.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I L2,0.0000,A,0.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+47,Voltage unbalance / phase reversal,Voltage & frequency,Quick CMC,points,3,Full phase reversal,,,,,I L3,0.0000,A,0.00,60.000,,OPERATE,"Must block the start, not trip after it",op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L1,69.282,V,0.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L2,69.282,V,-120.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,V L3,69.282,V,120.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I L1,0.0000,A,0.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I L2,0.0000,A,0.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,1,Pickup — past threshold,,,,,I L3,0.0000,A,0.00,56.900,,OPERATE,Operate after 2.00 s,op
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L1,69.282,V,0.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L2,69.282,V,-120.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,V L3,69.282,V,120.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I L1,0.0000,A,0.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I L2,0.0000,A,0.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,2,Pickup — short of threshold,,,,,I L3,0.0000,A,0.00,57.100,,RESTRAIN,No operation,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L1,69.282,V,0.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L2,69.282,V,-120.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,V L3,69.282,V,120.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I L1,0.0000,A,0.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I L2,0.0000,A,0.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,3,Timing,,,,,I L3,0.0000,A,0.00,56.900,,2.00 s,Definite time,nu
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L1,24.000,V,0.00,56.900,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L2,24.000,V,-120.00,56.900,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,V L3,24.000,V,120.00,56.900,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I L1,0.0000,A,0.00,56.900,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I L2,0.0000,A,0.00,56.900,,BLOCKED,Element inhibited,no
+81,Under / over frequency,Voltage & frequency,Quick CMC,points,4,Below minimum voltage,,,,,I L3,0.0000,A,0.00,56.900,,BLOCKED,Element inhibited,no
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,I L1,4.5000,A,50.57,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,I L2,4.5000,A,-69.43,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,1,Past the limit,,,,,I L3,4.5000,A,170.57,60.000,,OPERATE,pf = 0.635 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,I L1,4.5000,A,40.57,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,I L2,4.5000,A,-79.43,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,2,Short of the limit,,,,,I L3,4.5000,A,160.57,60.000,,RESTRAIN,pf = 0.760 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,V L1,69.282,V,0.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,V L3,69.282,V,120.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,I L1,4.5000,A,90.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,I L2,4.5000,A,-30.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,3,"Full VAR, no watts",,,,,I L3,4.5000,A,-150.00,60.000,,OPERATE,pf = 0.000 leading,op
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,V L1,69.282,V,0.00,60.000,,BLOCKED,pf = 0.635 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,V L2,69.282,V,-120.00,60.000,,BLOCKED,pf = 0.635 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,V L3,69.282,V,120.00,60.000,,BLOCKED,pf = 0.635 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,I L1,1.0800,A,50.57,60.000,,BLOCKED,pf = 0.635 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,I L2,1.0800,A,-69.43,60.000,,BLOCKED,pf = 0.635 leading,no
+55,Power factor,Voltage & frequency,Quick CMC,points,4,Below minimum current,,,,,I L3,1.0800,A,170.57,60.000,,BLOCKED,pf = 0.635 leading,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,I L1,0.6598,A,0.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,I L2,0.6598,A,-120.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,1,Below threshold — load lost,,,,,I L3,0.6598,A,120.00,60.000,,OPERATE,190.2 kW primary · 0.147 ×FLA,op
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,V L1,69.282,V,0.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,V L2,69.282,V,-120.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,V L3,69.282,V,120.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,I L1,0.8926,A,0.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,I L2,0.8926,A,-120.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,2,Above threshold,,,,,I L3,0.8926,A,120.00,60.000,,RESTRAIN,257.3 kW primary · 0.198 ×FLA,no
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,V L1,69.282,V,0.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,V L2,69.282,V,-120.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,V L3,69.282,V,120.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,I L1,0.3881,A,0.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,I L2,0.3881,A,-120.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+32,Underpower / reverse power,Voltage & frequency,Quick CMC,points,3,Timing at half pickup,,,,,I L3,0.3881,A,120.00,60.000,,5.00 s,111.9 kW primary · 0.086 ×FLA,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,V L1,0.000,V,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,V L2,0.000,V,-120.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,V L3,0.000,V,120.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,I L1,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,I L2,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,1,Normal — stopped,1,1/4,Stopped,3.000,I L3,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,V L1,45.033,V,0.00,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,V L2,45.033,V,-120.00,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,V L3,45.033,V,120.00,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,I L1,17.5500,A,-27.13,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,I L2,17.5500,A,-147.13,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,2,Normal — on the reduced-voltage tap,1,2/4,On tap,6.000,I L3,17.5500,A,92.87,60.000,,NO TRIP,Inside the 10.0 s tap limit,no
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,V L1,69.282,V,0.00,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,V L2,69.282,V,-120.00,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,V L3,69.282,V,120.00,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,I L1,12.1500,A,-27.13,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,I L2,12.1500,A,-147.13,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,3,Normal — transition to full voltage,1,3/4,Full volts,3.000,I L3,12.1500,A,92.87,60.000,,TRANSITION,Transition contact operates,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,V L1,69.282,V,0.00,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,V L2,69.282,V,-120.00,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,V L3,69.282,V,120.00,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,I L1,4.5000,A,-27.13,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,I L2,4.5000,A,-147.13,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,4,Normal — running,1,4/4,Running,8.000,I L3,4.5000,A,92.87,60.000,,RUNNING,Start supervision resets,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,V L1,0.000,V,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,V L2,0.000,V,-120.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,V L3,0.000,V,120.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,I L1,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,I L2,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,5,Failed — stopped,2,1/2,Stopped,3.000,I L3,0.0000,A,0.00,60.000,,READY,,nu
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,V L1,45.033,V,0.00,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,V L2,45.033,V,-120.00,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,V L3,45.033,V,120.00,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,I L1,17.5500,A,-27.13,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,I L2,17.5500,A,-147.13,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
+19,Reduced voltage start transition,Starting,State Sequencer,sequence,6,Failed — transition never happens,2,2/2,Stuck on tap,13.000,I L3,17.5500,A,92.87,60.000,,TRIP AT 10.0 s,The starter winding is not rated to sit there,op
