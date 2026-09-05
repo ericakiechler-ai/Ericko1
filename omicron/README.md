@@ -21,7 +21,9 @@ What it contains instead is everything the OCC needs, in formats that carry no s
 | `<relay>-steps.csv` | One row per test step — the test-record skeleton, with every channel value laid out in columns and empty `Measured` / `PassFail` columns to fill in |
 | `<relay>-channels.csv` | One row per channel per step — the long form, for pasting into module tables |
 | `<relay>-TestUniverse-build-guide.md` | Module-by-module instructions for assembling that relay's OCC from those values — one per device |
+| `xlsx/<relay>-test-plan.xlsx` | The same plan as an Excel workbook — a front sheet, the steps ready to fill in, the channel long form and the build guide, in one file per relay |
 | `build-testplan.js` | The generator |
+| `build-workbooks.py` | Turns the CSVs into the workbooks |
 
 There is a build guide for every device:
 
@@ -48,7 +50,25 @@ the CSVs cannot drift from the calculations that were verified in the tools.
 node build-testplan.js 850      # one relay
 node build-testplan.js 7sd82    # both stagings of the line differential
 node build-testplan.js all      # everything
+python3 build-workbooks.py      # then rebuild the Excel workbooks from the CSVs
 ```
+
+## The workbooks
+
+`xlsx/` is what goes onto the job. One file per relay, four sheets (six for the line
+differential, which carries both stagings):
+
+| Sheet | What it is |
+|---|---|
+| Start here | Where the values came from, a record-identification block to fill in, and live counters for passed / failed / outstanding |
+| Test steps | The record. Every channel value in columns, and two shaded columns — MEASURED and PASS / FAIL — which are the only cells anyone should type into |
+| Channels | One row per channel per step, for pasting into a Test Universe module table |
+| Build guide | The same guide as the Markdown file, so one file carries everything for that relay |
+
+The workbooks are built from the CSVs, which are built from the tools. Nothing is retyped
+at any step, so a setting change flows through to the injected values without anyone
+editing a number by hand. If a setting changes: change it in the tool, re-run the
+generator, rebuild the workbooks. Do not edit the workbook.
 
 Requires Node and Playwright's Chromium. Re-run it after entering real station data in a
 tool — the CSVs currently carry each tool's **sample** configuration, which is written into
