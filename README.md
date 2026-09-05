@@ -19,8 +19,9 @@ by accent colour so they are never confused on screen — 845 teal, 889 indigo, 
 — and the two Siemens ones are deliberately achromatic, which is both a nod to SIPROTEC's austere
 hardware and a way of marking them as a different platform rather than more Multilins.
 
-`omicron/` holds the generated Test Universe test plans, built from these tools rather than
-typed alongside them.
+`omicron/` holds the generated Test Universe test plans — CSVs built from these tools
+rather than typed alongside them, plus a build guide per device covering the module map,
+the amplifier arrangement and the thing about that relay most likely to be got wrong.
 
 ---
 

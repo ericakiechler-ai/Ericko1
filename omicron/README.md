@@ -20,9 +20,19 @@ What it contains instead is everything the OCC needs, in formats that carry no s
 |------|------------|
 | `<relay>-steps.csv` | One row per test step — the test-record skeleton, with every channel value laid out in columns and empty `Measured` / `PassFail` columns to fill in |
 | `<relay>-channels.csv` | One row per channel per step — the long form, for pasting into module tables |
-| `850-TestUniverse-build-guide.md` | Module-by-module instructions for assembling the OCC from those values |
-| `7SD82-TestUniverse-build-guide.md` | The same for the line differential, where the staging decides what a test proves |
+| `<relay>-TestUniverse-build-guide.md` | Module-by-module instructions for assembling that relay's OCC from those values — one per device |
 | `build-testplan.js` | The generator |
+
+There is a build guide for every device:
+
+| Guide | The thing it exists to stop you getting wrong |
+|---|---|
+| `845-TestUniverse-build-guide.md` | Vector-group compensation, and a differential that looks balanced because both windings were built from the same angle |
+| `850-TestUniverse-build-guide.md` | k0, the 32 A channel limit on 50P, and reclose sequences driven from fixed times instead of the relay's own outputs |
+| `869-TestUniverse-build-guide.md` | Thermal memory — a string of short operate times that all look like a fast relay |
+| `889-TestUniverse-build-guide.md` | An amplifier conflict: 87G and 50P cannot share a hardware configuration with the rest of the plan |
+| `7SJ85-TestUniverse-build-guide.md` | A 67Ns sector placed at ±90°, and V 4 asked to be two different things at once |
+| `7SD82-TestUniverse-build-guide.md` | Staging — a local-end test that proves the minimum pickup and is recorded as proving the scheme |
 
 You build the OCC once in Test Universe from the guide, save it as a template, and reuse
 it. That is the normal workflow for a relay family anyway — the first one takes an hour,
