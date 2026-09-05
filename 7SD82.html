@@ -809,7 +809,21 @@ const sel = (k, l, d, o, u) => ({ k, l, d, u, t: 'sel', opts: o });
 const txt = (k, l, d, u) => ({ k, l, d, u, t: 'txt' });
 const multiplesOf = s => String(s || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
 const ELEMENTS = [];
-const reg = e => { ELEMENTS.push(e); return e; };
+/* Any step that puts current into an end-B output needs a second infeed,
+   whether or not the function bothered to say so. Deriving it here means the
+   screen and the generated plan can never disagree about what is reachable. */
+const reg = e => {
+  const inner = e.compute.bind(e);
+  e.compute = (s, o) => {
+    const R = inner(s, o);
+    (R.points || []).forEach(p => {
+      if (!p.needsB && (p.channels || []).some(c => /^I B-/.test(c.ch) && Math.abs(c.mag) > 1e-9))
+        p.needsB = true;
+    });
+    return R;
+  };
+  ELEMENTS.push(e); return e;
+};
 const bothEnds = () => CFG.stage !== 'local';
 
 function ocPickup(s, b) {

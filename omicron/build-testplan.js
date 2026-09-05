@@ -6,7 +6,7 @@
    back the channel tables the tool computed. Whatever the tool produces
    is what lands in the CSV, so the two can never drift apart.
 
-   Usage:  node build-testplan.js [850|869|889|845|all]
+   Usage:  node build-testplan.js [850|869|889|845|7sj85|7sd82|all]
    ------------------------------------------------------------------ */
 'use strict';
 const fs = require('fs');
@@ -19,7 +19,13 @@ const RELAYS = {
   '869': { file: '869.html', tag: '869-MTR', title: 'Multilin 869 motor protection' },
   '889': { file: '889.html', tag: '889-GEN', title: 'Multilin 889 generator protection' },
   '845': { file: 'index.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
-  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' }
+  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' },
+  '7sd82': { file: '7SD82.html', tag: '7SD82-DIF', title: 'Siemens 7SD82 SIPROTEC 5 line differential',
+    /* A differential plan is not one plan. What can be injected depends on how
+       the two ends are staged, so the same tool is read twice: once as the
+       device is found on a first visit, and once looped back at the local end,
+       which is how a single test set reaches the slope and the stability point. */
+    variants: [{ suffix: '', cfg: {} }, { suffix: '-loopback', cfg: { stage: 'loop' } }] }
 };
 
 /* Which Test Universe module each element is built in, and how it is driven.
@@ -77,7 +83,16 @@ Object.assign(MODULE, {
   '50-1':  MODULE['50P'], '50-2': MODULE['50P'], '51': MODULE['51P'],
   '50N-1': MODULE['50N'], '50N-2': MODULE['50N'],
   '74TC':  ['—', 'binary / DC', 'Not an analogue test: trip-circuit continuity at the terminal block, evidenced by the device alarm.'],
-  'Inrush': ['Harmonics', 'points', 'Fundamental and 2nd harmonic superimposed on the same output.']
+  'Inrush': ['Harmonics', 'points', 'Fundamental and 2nd harmonic superimposed on the same output.'],
+  /* --- 7SD82 line differential ------------------------------------------
+     Every two-ended step needs six current outputs, so the 6 x 12.5 A
+     arrangement is mandatory unless a second set is standing at the far end. */
+  '87L':   ['Differential', 'characteristic', 'Two current triples: I A-* is the local end, I B-* the remote. Slope points cannot be reached with one triple.'],
+  '87N':   ['Quick CMC', 'points', 'Residual sensitivity on one phase; the stability point still needs both ends.'],
+  'Ich':   ['Quick CMC', 'points', 'Both ends at nominal load with the difference set deliberately. Read the standing differential off the device, not off a trip.'],
+  'PI':    ['—', 'link / no injection', 'Protection-interface tests are link work, not injection: read the measured delay and asymmetry in DIGSI, then break and restore the fibre.'],
+  '85':    ['State Sequencer', 'sequence', 'Intertrip travels over the same interface as the differential. Time it from the sending-end initiate, with a binary input at the receiving end.'],
+  'Stub':  ['Overcurrent', 'pickup+time', 'Stub logic is released by the isolator auxiliary contact — assert that binary input first or the element never arms.']
 });
 const DEFAULT_MODULE = ['Quick CMC', 'points', ''];
 
@@ -94,12 +109,16 @@ const csv = rows => rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n
   for (const key of keys) {
     const R = RELAYS[key];
     if (!R) { console.error('unknown relay: ' + key); continue; }
+    for (const variant of (R.variants || [{ suffix: '', cfg: {} }])) {
+    const tag = R.tag + variant.suffix;
     const page = await browser.newPage();
     const errs = [];
     page.on('pageerror', e => errs.push(e.message));
     await page.goto('file://' + path.join(REPO, R.file));
     await page.waitForTimeout(1200);
     await page.evaluate(() => { try { localStorage.clear(); } catch (e) {} });
+    if (Object.keys(variant.cfg).length)
+      await page.evaluate(c => { Object.assign(CFG, c); }, variant.cfg);
 
     const data = await page.evaluate(() => {
       const out = { cfg: JSON.parse(JSON.stringify(CFG)), elements: [] };
@@ -118,6 +137,7 @@ const csv = rows => rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n
             run: p.tl ? run : '',
             idx: i + 1, name: p.name, detail: p.detail,
             expect: p.expect, expectSub: p.expectSub || '', verdict: p.verdict || '',
+            needsB: !!p.needsB,
             seq: p.tl ? (p.tlIdx + 1) + '/' + p.tl.length : '',
             seqLabel: p.tl ? p.tl[p.tlIdx].lab : '',
             dur: p.tl ? p.tl[p.tlIdx].dur : '',
@@ -128,51 +148,69 @@ const csv = rows => rows.map(r => r.map(csvCell).join(',')).join('\r\n') + '\r\n
       return out;
     });
     await page.close();
-    if (errs.length) console.error(R.tag + ' page errors: ' + errs.join(' | '));
+    if (errs.length) console.error(tag + ' page errors: ' + errs.join(' | '));
 
     const wrapAng = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
     const cfgLine = Object.keys(data.cfg).map(k => k + '=' + data.cfg[k]).join('; ');
+    /* on a two-ended scheme the staging decides which steps can be run at all */
+    const twoEnded = data.cfg.stage != null && data.cfg.stage !== 'local';
 
     /* ---- long form: one row per channel per step -------------------- */
     const chRows = [['Element', 'ElementName', 'Group', 'TU_Module', 'DriveAs', 'Step', 'StepName',
       'SeqRun', 'SeqState', 'SeqLabel', 'StateDuration_s', 'Channel', 'Magnitude', 'Unit', 'Angle_deg',
-      'Frequency_Hz', 'ChannelNote', 'Expected', 'ExpectedDetail', 'Verdict']];
+      'Frequency_Hz', 'ChannelNote', 'Expected', 'ExpectedDetail', 'Verdict', 'CurrentNeededAt']];
     /* ---- step form: the test-record skeleton ------------------------ */
     const stRows = [['Element', 'ElementName', 'TU_Module', 'DriveAs', 'Step', 'StepName', 'WhatIsApplied',
       'SeqRun', 'SeqState', 'StateDuration_s', 'V_L1', 'V_L2', 'V_L3', 'V_4', 'I_L1', 'I_L2', 'I_L3',
-      'I_B_L1', 'I_B_L2', 'I_B_L3', 'Freq_Hz', 'Expected', 'ExpectedDetail', 'Measured', 'PassFail']];
+      'I_B_L1', 'I_B_L2', 'I_B_L3', 'Freq_Hz', 'CurrentNeededAt', 'Reachable', 'Expected', 'ExpectedDetail',
+      'Measured', 'PassFail']];
 
     data.elements.forEach(el => {
-      if (el.error) { console.error(R.tag + ' ' + el.ansi + ' threw: ' + el.error); return; }
+      if (el.error) { console.error(tag + ' ' + el.ansi + ' threw: ' + el.error); return; }
       const M = MODULE[el.ansi] || DEFAULT_MODULE;
       const hasSeq = el.points.some(x => x.seq);
       const driveAs = (M[1] === 'sequence' && !hasSeq) ? 'sequence (assemble from these steps)' : M[1];
       el.points.forEach(p => {
+        if (!p.channels.length)
+          chRows.push([el.ansi, el.name, el.group, M[0], driveAs, p.idx, p.name,
+            p.run, p.seq, p.seqLabel, p.dur === '' ? '' : (+p.dur).toFixed(3),
+            '(no injection)', '', '', '', '', p.detail, p.expect, p.expectSub, p.verdict,
+            p.needsB ? 'both ends' : '']);
         p.channels.forEach(c => chRows.push([el.ansi, el.name, el.group, M[0], driveAs, p.idx, p.name,
           p.run, p.seq, p.seqLabel, p.dur === '' ? '' : (+p.dur).toFixed(3),
           c.ch, c.mag.toFixed(c.unit === 'A' ? 4 : 3), c.unit, wrapAng(c.ang).toFixed(2),
-          c.freq.toFixed(3), c.note, p.expect, p.expectSub, p.verdict]));
+          c.freq.toFixed(3), c.note, p.expect, p.expectSub, p.verdict,
+          p.needsB ? 'both ends' : '']));
         const g = nm => { const c = p.channels.find(x => x.ch === nm); return c ? c.mag.toFixed(c.unit === 'A' ? 4 : 3) + '@' + wrapAng(c.ang).toFixed(1) : ''; };
         const f = p.channels.length ? p.channels[0].freq.toFixed(3) : '';
         stRows.push([el.ansi, el.name, M[0], driveAs, p.idx, p.name, p.detail, p.run, p.seq,
           p.dur === '' ? '' : (+p.dur).toFixed(3),
           g('V L1'), g('V L2'), g('V L3'), g('V 4'),
           g('I L1') || g('I A-L1'), g('I L2') || g('I A-L2'), g('I L3') || g('I A-L3'),
-          g('I B-L1'), g('I B-L2'), g('I B-L3'), f, p.expect, p.expectSub, '', '']);
+          g('I B-L1'), g('I B-L2'), g('I B-L3'), f,
+          p.needsB ? 'both ends' : '', p.needsB ? (twoEnded ? 'yes' : 'NO — staging is local end only') : 'yes',
+          p.expect, p.expectSub, '', '']);
       });
     });
 
-    const hdr = '# ' + R.tag + ' — ' + R.title + '\r\n# generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+    const hdr = '# ' + tag + ' — ' + R.title + '\r\n# generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
       ' from ' + R.file + '\r\n# configuration: ' + cfgLine + '\r\n' +
       '# All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.\r\n' +
-      '# Values shown are for the tool\'s sample configuration — re-generate after entering real station data.\r\n';
-    fs.writeFileSync(path.join(__dirname, R.tag + '-channels.csv'), hdr + csv(chRows));
-    fs.writeFileSync(path.join(__dirname, R.tag + '-steps.csv'), hdr + csv(stRows));
+      '# Values shown are for the tool\'s sample configuration — re-generate after entering real station data.\r\n' +
+      (data.cfg.stage != null
+        ? '# Staging is ' + data.cfg.stage + '. Steps marked "both ends" in CurrentNeededAt need current at the remote end;\r\n' +
+          '# at local-end staging they cannot be run and must be recorded as untested, not as passed.\r\n'
+        : '');
+    fs.writeFileSync(path.join(__dirname, tag + '-channels.csv'), hdr + csv(chRows));
+    fs.writeFileSync(path.join(__dirname, tag + '-steps.csv'), hdr + csv(stRows));
 
     const seqEls = data.elements.filter(e => !e.error && e.points.some(p => p.seq));
-    console.log(R.tag + ': ' + data.elements.filter(e => !e.error).length + ' elements, ' +
+    const unreach = stRows.slice(1).filter(r => r[22] !== 'yes').length;
+    console.log(tag + ': ' + data.elements.filter(e => !e.error).length + ' elements, ' +
       (chRows.length - 1) + ' channel rows, ' + (stRows.length - 1) + ' steps, ' +
-      seqEls.length + ' sequence elements (' + seqEls.map(e => e.ansi).join(', ') + ')');
+      seqEls.length + ' sequence elements (' + seqEls.map(e => e.ansi).join(', ') + ')' +
+      (data.cfg.stage != null ? ', staging ' + data.cfg.stage + ', ' + unreach + ' steps not reachable' : ''));
+    }
   }
   await browser.close();
 })();

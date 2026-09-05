@@ -1,6 +1,6 @@
 # Relay test-value calculators
 
-Single-file tools that turn GE Multilin relay settings into **Omicron CMC 356** injection
+Single-file tools that turn protective-relay settings into **Omicron CMC 356** injection
 values: magnitude, angle and frequency, per output channel, ready to type into Test Universe.
 
 | File | Relay | Scope |
@@ -10,13 +10,17 @@ values: magnitude, angle and frequency, per output channel, ready to type into T
 | `850.html` | **Multilin 850** feeder protection | 27 elements, autoreclose sequences, distance zones and fault location |
 | `869.html` | **Multilin 869** motor protection | 20 elements, thermal model checked against the motor's own damage curve |
 | `7SJ85.html` | **Siemens 7SJ85** SIPROTEC 5 overcurrent | 26 functions, compensated-network directional ground fault |
+| `7SD82.html` | **Siemens 7SD82** SIPROTEC 5 line differential | 16 functions, two-ended, with the staging that decides what a test proves |
 
-Open either in any browser. No install, no network, no dependencies beyond a web font that
-falls back cleanly when there is no connection — they work on a locked-down field laptop.
-All five share the same core, the same conventions and the same layout. The four GE tools differ
+Open any of them in any browser. No install, no network, no dependencies beyond a web font
+that falls back cleanly when there is no connection — they work on a locked-down field laptop.
+All six share the same core, the same conventions and the same layout. The four GE tools differ
 by accent colour so they are never confused on screen — 845 teal, 889 indigo, 850 plum, 869 copper
-— and the Siemens one is deliberately achromatic, which is both a nod to SIPROTEC's austere
-hardware and a way of marking it as a different platform rather than a fifth Multilin.
+— and the two Siemens ones are deliberately achromatic, which is both a nod to SIPROTEC's austere
+hardware and a way of marking them as a different platform rather than more Multilins.
+
+`omicron/` holds the generated Test Universe test plans, built from these tools rather than
+typed alongside them.
 
 ---
 
@@ -402,3 +406,70 @@ steady-state directional function), and setting-file import.
 
 Sample on load: 20 kV, 12 km, resonant earthed, 0.12 Ω/km ∠72°, 400:1 CTs, 100 V VT secondary,
 50 Hz. Not your feeder — enter the real data first.
+
+---
+
+# 7SD82-DIF — Siemens SIPROTEC 5 line differential
+
+`7SD82.html` — 16 functions, two ends, one test set.
+
+Same core and conventions as the rest, and the same achromatic Siemens identity as the 7SJ85.
+What is different is that a differential scheme has two devices and the test set is only ever
+at one of them.
+
+## What is specific to this device
+
+**Staging is a setting.** The Line setup tab carries a staging selector — local end only,
+loop-back at the local end, or true end to end — and it changes what every test point means
+rather than what it injects. With the remote end quiescent the operating point can only move
+along Idiff = Irest, so a local-end test finds the minimum pickup and says nothing at all
+about the slope. Points that need current at both ends are marked, on screen and in the
+generated plan, and stay in the list marked untested rather than quietly disappearing.
+
+**The 87L solver inverts the restraint definition.** To place the device at an exact
+(Irest, Idiff) point the tool solves the pair of end currents that produce it, for all three
+definitions offered in DIGSI:
+
+| Definition | End A | End B |
+|---|---|---|
+| \|IA\| + \|IB\| | (Ir + Id) / 2 | (Ir − Id) / 2, opposed |
+| max(\|IA\|,\|IB\|) | Ir | Ir − Id, opposed |
+| (\|IA\| + \|IB\|) / 2 | Ir + Id / 2 | Ir − Id / 2, opposed |
+
+Where a requested restraint point cannot hold the required differential — |IA + IB| can never
+exceed |IA| + |IB| — the point is dropped and the reason given, rather than injected under a
+label that does not match what is applied.
+
+**Charging current is treated as a measurement, not a nuisance.** On the sample 15 km cable it
+is 0.0417 pu, 14 % of the differential threshold, and it appears as a standing differential on
+a healthy energised line. Three points set the difference between the ends deliberately so
+compensation can be seen working, over-compensating and switched off.
+
+**The protection interface has no channels.** Its five steps are link work — measured delay,
+asymmetry, break, restore, and an injected internal fault while the link is down to prove the
+backup actually takes over. Injecting current proves nothing about a fibre, so the tool does
+not pretend otherwise.
+
+**Two extra views.** A two-ended line schematic showing what each device measures for the
+selected point, and the Idiff/Irest plane with the dual-slope characteristic and every point
+plotted on it.
+
+## Verify before you rely on it
+
+1. **The restraint definition** in DIGSI, before any slope point. Get it wrong and every point
+   lands on the wrong part of the characteristic while still looking plausible.
+2. **Both CT ratios as they are set in both devices**, not as the switchyard nameplates read.
+3. **Through-current stability first if you can reach it.** It proves ratio agreement, polarity
+   at both ends and the sign convention across the interface at once, and it is the one that
+   fails when something is genuinely wrong.
+4. **The measured charging current**, not a cable datasheet figure.
+
+## Scope
+
+Not covered: CFC logic charts, distance protection where the 7SD82 is ordered with it, the
+setting file itself, and GPS synchronisation of two test sets — the plan says when an end-to-end
+test is needed but arranging it is a site matter, not a calculation.
+
+Sample on load: 110 kV, 15 km cable, 600 A reference, 600:1 CTs at both ends, 110000:100 VT,
+direct fibre at 0.5 ms, ping-pong synchronisation, staged local-end only. Not your line — enter
+the real data first.
