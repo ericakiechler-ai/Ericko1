@@ -1,0 +1,380 @@
+<title>845-VEC Setup Guide</title>
+<style>/*__FONTS__*/</style>
+<style>
+:root{
+  --ground:#F1F4F4;--surface:#fff;--surface-2:#E9EEEE;--surface-3:#DFE6E6;
+  --line:#D0D9D9;--line-strong:#AEBBBB;--ink:#0F1A1C;--ink-2:#41504F;--ink-3:#6D7C7C;
+  --accent:#0F6F78;--accent-ink:#fff;--accent-soft:#DCEEF0;--accent-line:#8FC6CB;
+  --warn:#8E5A05;--warn-bg:#FAEBD2;--fail:#AC2A2A;--fail-bg:#F6DEDE;--pass:#1C7340;--pass-bg:#DCEFE2;
+  --f-disp:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0C1214;--surface:#141D1F;--surface-2:#1A2528;--surface-3:#223034;
+  --line:#263437;--line-strong:#3A4C50;--ink:#E2EAEA;--ink-2:#A3B2B2;--ink-3:#788787;
+  --accent:#48B3BC;--accent-ink:#04191B;--accent-soft:#0F3339;--accent-line:#2A6D76;
+  --warn:#E0A63C;--warn-bg:#33260D;--fail:#F0736E;--fail-bg:#361718;--pass:#57C282;--pass-bg:#10301F;
+  color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --ground:#0C1214;--surface:#141D1F;--surface-2:#1A2528;--surface-3:#223034;
+  --line:#263437;--line-strong:#3A4C50;--ink:#E2EAEA;--ink-2:#A3B2B2;--ink-3:#788787;
+  --accent:#48B3BC;--accent-ink:#04191B;--accent-soft:#0F3339;--accent-line:#2A6D76;
+  --warn:#E0A63C;--warn-bg:#33260D;--fail:#F0736E;--fail-bg:#361718;--pass:#57C282;--pass-bg:#10301F;
+  color-scheme:dark;}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);
+  font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:0 26px 90px}
+h1,h2,h3{font-family:var(--f-disp);font-weight:600;margin:0;text-wrap:balance;letter-spacing:.01em}
+h1{font-size:38px;line-height:1.05}
+h2{font-size:15px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);
+  margin:40px 0 14px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+h3{font-size:18px;margin:26px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{margin:0 0 14px;padding-left:22px;max-width:66ch}li{margin:5px 0}
+code,kbd{font-family:var(--f-num);font-size:.87em;background:var(--surface-2);
+  padding:1.5px 5px;border-radius:3px}
+kbd{border:1px solid var(--line-strong);box-shadow:0 1px 0 var(--line-strong)}
+b,strong{font-weight:600}
+.hero{background:var(--accent);color:#fff;padding:44px 0 34px;margin-bottom:6px}
+.hero .wrap{padding-bottom:0}
+.hero .eyebrow{font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.18em;
+  font-size:11.5px;opacity:.82;margin-bottom:12px}
+.hero h1{color:#fff}
+.hero p{color:rgba(255,255,255,.9);margin-top:12px;font-size:16.5px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.hero .meta span{font-family:var(--f-num);font-size:11.5px;background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:3px 11px}
+/* Steps carry real sequence — this is a procedure, so they are numbered. */
+.step{display:grid;grid-template-columns:44px 1fr;gap:18px;margin:0 0 4px;padding:20px 0;
+  border-top:1px solid var(--line)}
+.step:first-of-type{border-top:0}
+.step .n{font-family:var(--f-num);font-size:19px;font-weight:600;color:var(--accent);
+  background:var(--accent-soft);border-radius:6px;height:38px;display:grid;place-items:center}
+.step h3{margin-top:2px}
+.step>div:last-child>*:last-child{margin-bottom:0}
+.note{border-left:3px solid var(--line-strong);background:var(--surface-2);
+  padding:11px 14px;border-radius:0 5px 5px 0;margin:14px 0;font-size:14px;max-width:68ch}
+.note.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+.note.bad{border-left-color:var(--fail);background:var(--fail-bg)}
+.note.good{border-left-color:var(--pass);background:var(--pass-bg)}
+.note .lb{display:block;font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.11em;
+  font-size:10.5px;font-weight:700;margin-bottom:4px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:5px;margin:16px 0;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-family:var(--f-disp);font-size:10.5px;text-transform:uppercase;letter-spacing:.11em;
+  text-align:left;padding:9px 13px;background:var(--surface-2);color:var(--ink-3);
+  border-bottom:1px solid var(--line-strong);white-space:nowrap}
+td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;
+  border:1px solid var(--line);border-radius:5px;padding:8px 12px;background:var(--surface-2);
+  margin:12px 0;font-family:var(--f-body)}
+.bar .tag{font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;font-weight:700;
+  font-size:10px;padding:2px 8px;border-radius:3px;background:var(--accent);color:var(--accent-ink)}
+.bar.evat{background:var(--warn-bg);border-color:var(--warn)}
+.bar.evat .tag{background:var(--warn);color:#fff}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+  color:var(--ink-3);font-size:12.5px}
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:5px;
+  padding:16px 20px;margin:26px 0 0}
+.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}
+.toc li{margin:3px 0;font-size:14px}
+.toc a{color:var(--ink-2);text-decoration:none}
+.toc a:hover{color:var(--accent);text-decoration:underline}
+a{color:var(--accent)}
+@media (max-width:640px){
+  .hero h1{font-size:29px}.wrap{padding:0 18px 60px}
+  .step{grid-template-columns:34px 1fr;gap:12px}.toc ol{columns:1}
+}
+@media print{
+  body{background:#fff;font-size:11pt}.hero{background:none;color:#000;border-bottom:2px solid #000}
+  .hero h1,.hero p{color:#000}.hero .meta span{border:1px solid #666;background:none}
+  .step{break-inside:avoid}h2{break-after:avoid}
+}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Relay Test-Value Calculators</div>
+    <h1>845&#8901;VEC — Setup and First Use</h1>
+    <p>Everything you need to get from the file we sent you to your first verified
+       set of injection values, in about twenty minutes.</p>
+    <div class="meta">
+      <span>Version __VERSION__</span><span>__BUILD__</span>
+      <span>GE Multilin 845</span><span>Omicron CMC 356</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="toc">
+  <ol>
+    <li><a href="#got">What you received</a></li>
+    <li><a href="#need">What you need</a></li>
+    <li><a href="#install">Installing it</a></li>
+    <li><a href="#licence">Checking your licence</a></li>
+    <li><a href="#station">Entering your station</a></li>
+    <li><a href="#prove">Proving it against your relay</a></li>
+    <li><a href="#daily">Using it on a job</a></li>
+    <li><a href="#offline">Working offline</a></li>
+    <li><a href="#seats">Your licence and your team</a></li>
+    <li><a href="#trouble">If something looks wrong</a></li>
+    <li><a href="#limits">Limits and responsibility</a></li>
+  </ol>
+</div>
+
+<h2 id="got">What you received</h2>
+<p>One file, named for your organisation — for example
+   <code>845-VEC-your-company.html</code>. That single file <em>is</em> the
+   application. There is no installer, no account, no licence key to type in, and
+   nothing to activate.</p>
+<p>Everything is inside it: the calculation engine, the fonts, the documentation,
+   and your signed licence. It never contacts a server, so it behaves identically
+   on a machine that has never been online.</p>
+
+<h2 id="need">What you need</h2>
+<div class="tw"><table>
+<thead><tr><th>Item</th><th>Detail</th></tr></thead>
+<tbody>
+<tr><td>A computer</td><td>Windows 10 or 11, macOS 12 or later, or any Linux desktop. A laptop screen is assumed — the layout is three columns wide.</td></tr>
+<tr><td>A browser</td><td>Chrome, Edge, Firefox or Safari, from roughly 2020 onward. Whatever is already on the machine is almost certainly fine.</td></tr>
+<tr><td>Admin rights</td><td><b>Not required.</b> Nothing is installed and nothing is written outside your own user profile.</td></tr>
+<tr><td>Internet</td><td><b>Not required</b>, at any point, including the first run.</td></tr>
+<tr><td>Disk space</td><td>About half a megabyte.</td></tr>
+</tbody></table></div>
+
+<h2 id="install">Installing it</h2>
+
+<div class="step"><span class="n">1</span><div>
+  <h3>Save the file somewhere permanent</h3>
+  <p>Move it out of your Downloads folder. Downloads gets cleared, and you will
+     lose the file at the least convenient moment. Somewhere like:</p>
+  <p><code>Documents\845-VEC\845-VEC-your-company.html</code></p>
+  <p>Keep the file name as it is. It identifies your licence, and support requests
+     are much faster when you can quote it.</p>
+</div></div>
+
+<div class="step"><span class="n">2</span><div>
+  <h3>Open it</h3>
+  <p>Double-click the file. It opens in your default browser and is immediately
+     ready to use.</p>
+  <p>If it opens in something that is not a browser, right-click it and choose
+     <b>Open with</b>, then Chrome, Edge, Firefox or Safari.</p>
+  <div class="note warn"><span class="lb">Do not open it from inside an email or a chat app</span>
+     Attachment previews in Outlook, Teams, Slack and similar strip out scripts for
+     safety, and every value in this tool is calculated as the page loads. You will
+     see the layout with an empty element list and an amber banner telling you the
+     same thing. Save the file to disk first, then open it from there.</div>
+</div></div>
+
+<div class="step"><span class="n">3</span><div>
+  <h3>Make it one click away</h3>
+  <p><b>Windows:</b> right-click the file, <b>Show more options</b> &rarr;
+     <b>Send to</b> &rarr; <b>Desktop (create shortcut)</b>. You can then drag that
+     shortcut onto the taskbar.</p>
+  <p><b>macOS:</b> drag the file onto the right-hand side of the Dock, next to the
+     Trash.</p>
+  <p>In Chrome or Edge you can also open the file, then use the browser menu
+     &rarr; <b>Cast, save and share</b> (or <b>More tools</b>) &rarr;
+     <b>Create shortcut</b>, and tick <b>Open as window</b>. That gives you a clean
+     window with no address bar, which is the closest thing to a native app.</p>
+</div></div>
+
+<h2 id="licence">Checking your licence</h2>
+<p>The bar across the very top of the page tells you the state of your copy. It
+   should look like this:</p>
+<div class="bar"><span class="tag">Licensed</span>
+  <span><b>Your Company</b> — Your Site</span><span>12 seats</span>
+  <span>Licence LIC-2026-XXXXXX</span><span>Perpetual</span></div>
+<p>If instead you see this, the copy you are running is not the one we issued to
+   you:</p>
+<div class="bar evat"><span class="tag">Evaluation</span>
+  <span><b>Not licensed for commissioning work.</b></span></div>
+<div class="note"><span class="lb">An evaluation copy still calculates correctly</span>
+  Every number it produces is identical to a licensed copy. We do not degrade
+  calculations — a tool whose output goes into live protection equipment must
+  never quietly give you a different answer. What changes is provenance: test
+  sheets exported from an evaluation copy are stamped as evaluation output, which
+  is not something you want on a commissioning record. If you have bought a
+  licence and see this bar, send us the file name and we will sort it out.</div>
+
+<h2 id="station">Entering your station</h2>
+<p>The tool opens on the <b>Setup</b> tab the first time you run it. This is the
+   step that everything else depends on.</p>
+
+<div class="step"><span class="n">4</span><div>
+  <h3>Replace the worked sample with your transformer</h3>
+  <p>The values loaded are a demonstration, not your plant. Working left to right,
+     enter from the nameplate, the CT/VT schedule and the relay's <em>System
+     Setup</em> pages:</p>
+  <ul>
+    <li>MVA ratings for each cooling stage, and <b>which one the protection is set against</b></li>
+    <li>Winding voltages, frequency, impedance and phase rotation</li>
+    <li>Winding connections and the clock number — together these give any vector group</li>
+    <li>Tap changer range and the position you found it in</li>
+    <li>Neutral earthing arrangement for each winding</li>
+    <li>CT primaries, secondaries and connections, plus the ground CT</li>
+    <li>VT primary, secondary, connection and which winding it sits on</li>
+    <li>How your CMC 356 is actually wired — the amplifier mode</li>
+  </ul>
+  <div class="note bad"><span class="lb">The CT and VT ratios are the whole ballgame</span>
+    Every injection value in every element is referred to these. A CT ratio entered
+    from the drawing rather than from the nameplate on the actual CT is the single
+    most common way to arrive on site with a table of confident, wrong numbers.</div>
+</div></div>
+
+<div class="step"><span class="n">5</span><div>
+  <h3>Read the configuration checks</h3>
+  <p>At the bottom of the Setup tab the tool tells you what it thinks of what you
+     entered — CT sizing against rated current, whether the differential slope
+     covers your tap range, how much earth fault current your earthing arrangement
+     actually allows, and whether your amplifier mode can drive the tests you are
+     about to run.</p>
+  <p>Red items are worth resolving before you go any further. They usually mean a
+     value has been entered against the wrong winding, or a rating has been read
+     off the wrong cooling stage.</p>
+</div></div>
+
+<div class="step"><span class="n">6</span><div>
+  <h3>Save the station to a file</h3>
+  <p>On the Setup tab, click <b>Save station to a file</b>. You get a small
+     <code>.json</code> file named after the transformer.</p>
+  <p>Do this. Your entries otherwise live only in this browser on this machine:
+     clearing browsing data erases them, and they do not follow you to another
+     laptop. With a station file you can reopen the setup anywhere, hand it to a
+     colleague on the same licence, or keep it in the job pack alongside the test
+     records.</p>
+</div></div>
+
+<h2 id="prove">Proving it against your relay</h2>
+<p>Do this once per relay type and firmware revision, before you rely on a single
+   number. It takes ten minutes and it is the difference between a tool you trust
+   and a tool you hope about.</p>
+
+<div class="step"><span class="n">7</span><div>
+  <h3>Check the derived currents against the relay's own metering</h3>
+  <p>With load on the transformer, compare the rated primary and secondary currents
+     on the Setup tab against what the relay is actually measuring. If they
+     disagree, a ratio is wrong — and it is wrong in the tool, not in the relay.</p>
+</div></div>
+
+<div class="step"><span class="n">8</span><div>
+  <h3>Run one timing point and compare it to the relay's prediction</h3>
+  <p>Pick a time-overcurrent element, take the first timing point, and compare the
+     predicted operate time against what the relay itself says it will do.</p>
+  <div class="note warn"><span class="lb">If the first point disagrees, stop</span>
+    Inverse-curve constants have moved between firmware revisions on more than one
+    product line. If the first predicted time is out, every other time in that
+    table is wrong by the same factor. Tell us the firmware revision and we will
+    check the constants.</div>
+</div></div>
+
+<div class="step"><span class="n">9</span><div>
+  <h3>Run the 87T through-fault point</h3>
+  <p>Confirm the relay reads near-zero differential. That single test proves the
+     vector group, both CT ratios and the relay's compensation all at once — and it
+     is the fastest way to find out that something in the setup is wrong before it
+     costs you an afternoon.</p>
+</div></div>
+
+<h2 id="daily">Using it on a job</h2>
+<div class="tw"><table>
+<thead><tr><th>Tab</th><th>What it is for</th></tr></thead>
+<tbody>
+<tr><td><b>Setup</b></td><td>The station. Entered once per transformer, then saved to a file.</td></tr>
+<tr><td><b>Elements</b></td><td>The working tab. Pick an element from the left rail, enter the relay's settings in the middle, and the right-hand pane gives you the test points, the CMC channel table for the selected point, the applied phasors, and the things to check before you inject.</td></tr>
+<tr><td><b>Vector calculator</b></td><td>A free-hand phasor workbench. Type in any set of voltages and currents and read back differential and restraint per phase, symmetrical components, power and apparent impedance. Useful for making sense of what the relay is telling you during a load check.</td></tr>
+<tr><td><b>Test sheet</b></td><td>Everything you sent over with <b>Add these test points to sheet</b>, as tab-separated text. Paste straight into Excel, a test record, or a Test Universe table.</td></tr>
+<tr><td><b>Method</b></td><td>Every equation the tool uses, written out so you can check the arithmetic by hand.</td></tr>
+</tbody></table></div>
+<p>A normal sequence is: pick the element, type in the settings you read off the
+   relay, click the test point you want in the <b>Test points</b> table, and copy
+   the <b>CMC 356 channels</b> table into your test set. Then
+   <b>Add these test points to sheet</b> and move to the next element.</p>
+<div class="note"><span class="lb">Read the notes under each element</span>
+  The block headed <em>Before you inject</em> is not filler. It carries the channel
+  limit checks for the point you have selected, the sign conventions that differ
+  between manufacturers, and the cases where a single-phase injection will not
+  behave the way you expect.</div>
+
+<h2 id="offline">Working offline</h2>
+<p>There is nothing to do. The tool makes no network requests of any kind — not on
+   the first run, not ever. Fonts, documentation and licence checking are all
+   inside the file.</p>
+<p>You can copy it to a USB stick, put it on a machine that has never touched a
+   network, and it will behave exactly as it does at your desk.</p>
+
+<h2 id="seats">Your licence and your team</h2>
+<p>Your licence covers the organisation and site named in the bar at the top, for
+   up to the stated number of named users at that location. Those users may install
+   it on the machines they work from.</p>
+<ul>
+  <li>Copy the file to as many machines as those users need.</li>
+  <li>Share station files freely inside the licensed site.</li>
+  <li>Do not pass the application file outside the licensed site. Every test sheet
+      it exports carries your organisation's name, so a copy that leaks is traceable
+      back to you.</li>
+  <li>Additional sites and additional seats are licensed separately — just ask.</li>
+</ul>
+
+<h2 id="trouble">If something looks wrong</h2>
+<div class="tw"><table>
+<thead><tr><th>What you see</th><th>What it means</th><th>What to do</th></tr></thead>
+<tbody>
+<tr><td>Amber banner: <em>this preview is not running the calculations</em></td>
+    <td>You opened the file inside an app that strips scripts — usually an email or chat preview.</td>
+    <td>Save the file to disk and open it from there.</td></tr>
+<tr><td>Red banner: <em>JavaScript is turned off</em></td>
+    <td>Scripting is disabled for local files in this browser.</td>
+    <td>Enable it, or open the file in a different browser.</td></tr>
+<tr><td>Red banner with a block of text and a <b>Copy this text</b> button</td>
+    <td>The tool hit an error it could not recover from.</td>
+    <td>Click the button and send us the text. It names the exact failure.</td></tr>
+<tr><td>Licence bar says <b>Evaluation</b></td>
+    <td>The licence is missing, damaged, expired, or this is not the file we issued you.</td>
+    <td>Send us the file name. Calculations are unaffected in the meantime.</td></tr>
+<tr><td>Your station has reverted to the sample</td>
+    <td>Browsing data was cleared, or you are on a different machine or browser profile.</td>
+    <td>Load your saved station file. This is what step 6 was for.</td></tr>
+<tr><td>A test point says it needs more current than your channel limit</td>
+    <td>Correct and deliberate. That point cannot be produced by the amplifier as configured.</td>
+    <td>Read the note — it usually gives you the largest value that <em>is</em> reachable, or tells you the test needs primary injection.</td></tr>
+<tr><td>Predicted operate times are all out by the same factor</td>
+    <td>The curve constants in the tool do not match your firmware revision.</td>
+    <td>Stop using the timing tables and tell us the revision.</td></tr>
+</tbody></table></div>
+
+<h2 id="limits">Limits and responsibility</h2>
+<p>This is a calculator, not a relay. It computes proposed injection values from
+   settings that you type in. It does not read the device, does not know its
+   firmware or its as-built wiring, and cannot tell whether what you entered
+   matches what is in service.</p>
+<p>What it does not do:</p>
+<ul>
+  <li>It does not read or write relay setting files.</li>
+  <li>It does not model CT saturation, burden or lead resistance. The channel
+      warnings are about your amplifier's limits, not about whether the CT circuit
+      will behave.</li>
+  <li>It does not cover CT/VT supervision logic, which varies too much between
+      firmware revisions for a generic model to be anything but misleading.</li>
+</ul>
+<div class="note bad"><span class="lb">Verify before you inject</span>
+  Confirm the CT and VT ratios, the curve constants and at least the first timing
+  point against the device's own prediction before you accept the rest of a table.
+  Commissioning protection equipment is hazardous work and remains the
+  responsibility of the competent person carrying it out.</div>
+
+<div class="foot">
+  <p><b>845-VEC __VERSION__</b> &nbsp;·&nbsp; build __BUILD__ &nbsp;·&nbsp;
+     &copy; 2026 Eric Kiechler. All rights reserved. Licensed per site — not for redistribution.</p>
+  <p>Multilin is a trademark of GE Vernova. CMC and Test Universe are trademarks of
+     OMICRON electronics GmbH. These names identify the equipment this tool is
+     designed to be used with. This is an independent work, not affiliated with,
+     endorsed by or a product of those companies.</p>
+</div>
+
+</div>

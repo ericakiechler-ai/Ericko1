@@ -1,0 +1,75 @@
+# Builds real Windows and macOS installers on real runners.
+#
+# Cross-compiling Tauri from Linux is not practical, so this workflow is the
+# supported way to produce something you can actually sell. It runs on a tag.
+name: Desktop installers
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npx playwright install --with-deps chromium
+      # A build that has not passed the calculation and licence tests must never
+      # reach a customer, so this gates everything below it.
+      - run: |
+          node tools/make-keys.mjs || true
+          node build.mjs
+          node tools/make-licence.mjs --org "CI Test Org" --site "CI" --seats 1
+          node tools/make-licence.mjs --org "Demo Expired" --seats 3 --expires 2020-01-01
+          node tests/run.mjs
+
+  bundle:
+    needs: verify
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, target: '' }
+          - { os: macos-latest,   target: '--target universal-apple-darwin' }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with: { workspaces: './desktop/src-tauri -> target' }
+
+      - name: Build the licensed HTML
+        shell: bash
+        run: |
+          node tools/make-keys.mjs || true
+          node build.mjs
+          node tools/make-licence.mjs --org "${{ vars.LICENCE_ORG || 'Evaluation' }}" \
+                                      --site "${{ vars.LICENCE_SITE || '' }}" \
+                                      --seats "${{ vars.LICENCE_SEATS || 1 }}"
+          cp dist/845-VEC-*.html desktop/frontend/index.html
+
+      - name: Icons and bundle
+        working-directory: desktop
+        run: |
+          npm install
+          npx tauri icon icon.png
+          npx tauri build ${{ matrix.target }}
+        # To sign, add these secrets and uncomment:
+        # env:
+        #   TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        #   APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+        #   APPLE_ID: ${{ secrets.APPLE_ID }}
+        #   APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ matrix.os }}
+          path: |
+            desktop/src-tauri/target/**/release/bundle/**/*.msi
+            desktop/src-tauri/target/**/release/bundle/**/*.exe
+            desktop/src-tauri/target/**/release/bundle/**/*.dmg

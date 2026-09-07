@@ -1,0 +1,14 @@
+{
+  "name": "845-vec",
+  "version": "1.1.0",
+  "private": true,
+  "description": "845-VEC — relay test-value calculator for GE Multilin 845 transformer protection with Omicron CMC 356",
+  "type": "module",
+  "scripts": {
+    "fonts": "node tools/fetch-fonts.mjs",
+    "build": "node build.mjs",
+    "keys": "node tools/make-keys.mjs",
+    "licence": "node tools/make-licence.mjs",
+    "test": "node tests/run.mjs"
+  }
+}

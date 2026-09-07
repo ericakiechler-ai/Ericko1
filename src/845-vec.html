@@ -1,0 +1,2494 @@
+<!doctype html>
+<!--
+  845-VEC — GE Multilin 845 transformer protection
+  Part of Relay Test-Value Calculators.
+
+  Copyright (c) 2026 Eric Kiechler. All rights reserved.
+  Licensed per-user. See the licence terms at the foot of the page.
+
+  NOT A SUBSTITUTE FOR ENGINEERING JUDGEMENT. This tool computes proposed
+  secondary injection values from settings entered by its user. It does not
+  read the relay, it cannot know the relay's firmware or its as-built wiring,
+  and the values it produces are a starting point to be verified against the
+  device and the drawings before any current or voltage is applied to plant.
+  The user remains responsible for the test and for the safety of it.
+
+  Not affiliated with, endorsed by, or a product of General Electric, GE
+  Vernova, Siemens AG, or OMICRON electronics. Product names are used to
+  identify the equipment this tool is designed to be used with.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>845 Vector Test Calculator</title>
+<style>/*__FONTS__*/</style>
+<style>
+/* ============================================================
+   TOKENS - light is the base; dark redefines tokens only.
+   ============================================================ */
+:root{
+  --ground:#F1F4F4; --surface:#FFFFFF; --surface-2:#E9EEEE; --surface-3:#DFE6E6;
+  --line:#D0D9D9; --line-strong:#AEBBBB;
+  --ink:#0F1A1C; --ink-2:#41504F; --ink-3:#6D7C7C;
+  --accent:#0F6F78; --accent-ink:#FFFFFF; --accent-soft:#DCEEF0; --accent-line:#8FC6CB;
+  --pass:#1C7340; --pass-bg:#DCEFE2; --fail:#AC2A2A; --fail-bg:#F6DEDE;
+  --warn:#8E5A05; --warn-bg:#FAEBD2;
+  --l1:#C93232; --l2:#2A8642; --l3:#3560C4; --l0:#7A6BB5;
+  --shadow:0 1px 2px rgba(15,26,28,.07), 0 6px 18px -10px rgba(15,26,28,.22);
+  --r:5px;
+  --f-disp:"Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1214; --surface:#141D1F; --surface-2:#1A2528; --surface-3:#223034;
+    --line:#263437; --line-strong:#3A4C50;
+    --ink:#E2EAEA; --ink-2:#A3B2B2; --ink-3:#788787;
+    --accent:#48B3BC; --accent-ink:#04191B; --accent-soft:#0F3339; --accent-line:#2A6D76;
+    --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+    --warn:#E0A63C; --warn-bg:#33260D;
+    --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#AA9BE8;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1214; --surface:#141D1F; --surface-2:#1A2528; --surface-3:#223034;
+  --line:#263437; --line-strong:#3A4C50;
+  --ink:#E2EAEA; --ink-2:#A3B2B2; --ink-3:#788787;
+  --accent:#48B3BC; --accent-ink:#04191B; --accent-soft:#0F3339; --accent-line:#2A6D76;
+  --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+  --warn:#E0A63C; --warn-bg:#33260D;
+  --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#AA9BE8;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+/* ============================================================ RESET / BASE */
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:13.5px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0; text-wrap:balance; font-family:var(--f-disp); font-weight:600; letter-spacing:.01em;}
+p{margin:0;}
+button,input,select{font:inherit; color:inherit;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px;}
+.num{font-family:var(--f-num); font-variant-numeric:tabular-nums;}
+
+/* ============================================================ SHELL */
+.shell{min-height:100vh; display:grid; grid-template-rows:auto auto 1fr;}
+
+.topbar{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:10px 18px; background:var(--surface); border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:baseline; gap:10px; margin-right:auto;}
+.brand .mark{
+  font-family:var(--f-disp); font-weight:700; font-size:22px; letter-spacing:.02em;
+  color:var(--ink); line-height:1;
+}
+.brand .mark em{font-style:normal; color:var(--accent);}
+.brand .sub{
+  font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.12em;
+  font-size:11px; color:var(--ink-3); font-weight:600;
+}
+.chipstrip{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+.chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:3px 9px; border:1px solid var(--line); border-radius:100px;
+  background:var(--surface-2); font-size:11.5px; color:var(--ink-2); white-space:nowrap;
+}
+.chip b{font-family:var(--f-num); font-weight:500; color:var(--ink); font-size:11.5px;}
+.chip .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;}
+.tbtn{
+  padding:5px 11px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:var(--r); cursor:pointer; font-size:12.5px; color:var(--ink-2);
+}
+.tbtn:hover{border-color:var(--accent); color:var(--accent);}
+
+/* Tabs */
+.tabs{
+  display:flex; gap:2px; padding:0 18px; background:var(--surface);
+  border-bottom:1px solid var(--line); overflow-x:auto;
+}
+.tab{
+  padding:9px 14px 8px; border:0; background:none; cursor:pointer;
+  font-family:var(--f-disp); font-weight:600; font-size:14px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-3);
+  border-bottom:2px solid transparent; white-space:nowrap;
+}
+.tab:hover{color:var(--ink);}
+.tab[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent);}
+
+.view{display:none; min-width:0;}
+.view.on{display:block;}
+
+/* ============================================================ ELEMENT WORKSPACE */
+.work{display:grid; grid-template-columns:212px minmax(300px,360px) 1fr; gap:0; align-items:start; min-height:0;}
+
+/* Device rail */
+.rail{
+  border-right:1px solid var(--line); background:var(--surface);
+  padding:12px 0 24px; position:sticky; top:0; align-self:stretch;
+}
+.rail-h{
+  font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.13em;
+  font-size:10.5px; font-weight:600; color:var(--ink-3);
+  padding:10px 16px 5px;
+}
+.rail-h:first-child{padding-top:0;}
+.rail-i{
+  display:grid; grid-template-columns:46px 1fr; align-items:center; gap:8px;
+  width:100%; text-align:left; padding:5px 16px; border:0; background:none;
+  cursor:pointer; border-left:2px solid transparent; color:var(--ink-2);
+}
+.rail-i:hover{background:var(--surface-2); color:var(--ink);}
+.rail-i[aria-current="true"]{
+  background:var(--accent-soft); border-left-color:var(--accent); color:var(--ink);
+}
+.rail-i .ansi{
+  font-family:var(--f-num); font-weight:600; font-size:12.5px; color:var(--accent);
+  letter-spacing:-.02em;
+}
+.rail-i[aria-current="true"] .ansi{color:var(--accent);}
+.rail-i .nm{font-size:11.5px; line-height:1.25;}
+
+/* Panels */
+.pane{padding:16px 18px 40px; min-width:0;}
+.pane.set{border-right:1px solid var(--line); background:var(--surface);}
+.pane.out{background:var(--ground);}
+
+.blk{margin-bottom:18px;}
+.blk-h{
+  display:flex; align-items:baseline; gap:8px; margin-bottom:9px;
+  padding-bottom:5px; border-bottom:1px solid var(--line);
+}
+.blk-h h3{
+  font-size:12px; text-transform:uppercase; letter-spacing:.13em;
+  color:var(--ink-3); font-weight:600;
+}
+.blk-h .hint{margin-left:auto; font-size:11px; color:var(--ink-3);}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:8px 10px;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px 10px;}
+.f{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.f > label{
+  font-family:var(--f-disp); font-size:11px; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:600; color:var(--ink-3); line-height:1.3;
+}
+.f input, .f select{
+  width:100%; padding:5px 7px; border:1px solid var(--line-strong);
+  background:var(--ground); border-radius:4px;
+  font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;
+}
+.f select{font-family:var(--f-body); font-size:12px;}
+.f input:focus, .f select:focus{border-color:var(--accent); outline:none; box-shadow:0 0 0 2px var(--accent-soft);}
+.f .u{
+  font-family:var(--f-num); font-size:10.5px; color:var(--ink-3);
+}
+.f.wide{grid-column:1/-1;}
+
+/* Element head */
+.ehead{display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;}
+.ehead .badge{
+  font-family:var(--f-num); font-weight:600; font-size:15px; color:var(--accent-ink);
+  background:var(--accent); padding:4px 10px; border-radius:4px; flex:none; letter-spacing:-.02em;
+}
+.ehead h2{font-size:21px; line-height:1.1; letter-spacing:.01em;}
+.ehead .desc{font-size:12px; color:var(--ink-2); margin-top:2px; max-width:62ch;}
+
+/* ============================================================ RESULT TABLES */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface);}
+table{border-collapse:collapse; width:100%; font-size:12.5px;}
+thead th{
+  font-family:var(--f-disp); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em;
+  font-weight:600; color:var(--ink-3); text-align:left;
+  padding:7px 10px; border-bottom:1px solid var(--line-strong); white-space:nowrap;
+  background:var(--surface-2); position:sticky; top:0;
+}
+tbody td{padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover td{background:var(--surface-2);}
+td.n, th.n{text-align:right; font-family:var(--f-num); font-variant-numeric:tabular-nums; white-space:nowrap;}
+td.key{font-weight:500;}
+td .sm{display:block; font-size:11px; color:var(--ink-3); font-family:var(--f-body); margin-top:1px;}
+tbody tr.grp td{
+  background:var(--surface-3); font-family:var(--f-disp); text-transform:uppercase;
+  letter-spacing:.1em; font-size:10.5px; font-weight:600; color:var(--ink-2); padding:5px 10px;
+}
+tbody tr.grp:hover td{background:var(--surface-3);}
+
+.pill{
+  display:inline-block; padding:1px 7px; border-radius:100px; font-size:11px;
+  font-family:var(--f-disp); font-weight:600; letter-spacing:.06em; white-space:nowrap;
+}
+.pill.nu{font-family:var(--f-num); font-size:10.5px; letter-spacing:0;}
+.pill.op{background:var(--pass-bg); color:var(--pass);}
+.pill.no{background:var(--fail-bg); color:var(--fail);}
+.pill.wn{background:var(--warn-bg); color:var(--warn);}
+.pill.nu{background:var(--surface-3); color:var(--ink-2);}
+
+/* Channel table - the deliverable */
+.chan{border:1px solid var(--accent-line); border-radius:var(--r); overflow:hidden; background:var(--surface);}
+.chan-h{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:8px 12px; background:var(--accent-soft); border-bottom:1px solid var(--accent-line);
+}
+.chan-h h3{font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--accent);}
+.chan-h .cfg{font-size:11px; color:var(--ink-2); margin-left:auto; font-family:var(--f-num);}
+.chan .tw{border:0; border-radius:0;}
+.ch-l1{color:var(--l1);} .ch-l2{color:var(--l2);} .ch-l3{color:var(--l3);} .ch-n{color:var(--ink-3);}
+td.chname{font-family:var(--f-num); font-weight:600; font-size:12px; white-space:nowrap;}
+
+/* Notes */
+.notes{display:flex; flex-direction:column; gap:6px;}
+.note{
+  display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:start;
+  padding:7px 10px; border-radius:4px; font-size:12px; line-height:1.45;
+  background:var(--surface-2); border-left:3px solid var(--line-strong); color:var(--ink-2);
+}
+.note.warn{background:var(--warn-bg); border-left-color:var(--warn); color:var(--ink);}
+.note.bad{background:var(--fail-bg); border-left-color:var(--fail); color:var(--ink);}
+.note.good{background:var(--pass-bg); border-left-color:var(--pass); color:var(--ink);}
+.note .lb{
+  font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.09em;
+  font-size:10px; font-weight:700; padding-top:2px; white-space:nowrap;
+}
+.note code{font-family:var(--f-num); font-size:11.5px; background:var(--surface-3); padding:0 3px; border-radius:2px;}
+
+/* Derived readout strip */
+.readout{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;
+}
+.readout div{background:var(--surface); padding:7px 10px;}
+.readout dt{
+  font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;
+}
+.readout dd{margin:1px 0 0; font-family:var(--f-num); font-size:14px; font-weight:500; letter-spacing:-.01em;}
+.readout dd small{font-size:10.5px; color:var(--ink-3); font-weight:400; margin-left:2px;}
+
+/* ============================================================ PHASOR */
+.phwrap{display:grid; grid-template-columns:minmax(240px,1fr) auto; gap:14px; align-items:start;}
+.phbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:8px;}
+svg.phasor{display:block; width:100%; height:auto;}
+.ph-grid{stroke:var(--line); fill:none; stroke-width:1;}
+.ph-axis{stroke:var(--line-strong); fill:none; stroke-width:1;}
+.ph-tick{fill:var(--ink-3); font-family:var(--f-num); font-size:9px;}
+.ph-lab{font-family:var(--f-num); font-size:10px; font-weight:600;}
+.v-l1,.i-l1{stroke:var(--l1);} .v-l2,.i-l2{stroke:var(--l2);}
+.v-l3,.i-l3{stroke:var(--l3);} .v-l0,.i-l0{stroke:var(--l0);}
+.f-l1{fill:var(--l1);} .f-l2{fill:var(--l2);} .f-l3{fill:var(--l3);} .f-l0{fill:var(--l0);}
+.vec-v{stroke-width:2.2; fill:none; stroke-linecap:round;}
+.vec-i{stroke-width:2.2; fill:none; stroke-linecap:round; stroke-dasharray:5 3.5;}
+.vec-i.alt{stroke-width:1.8; stroke-dasharray:1.5 3;}
+.legend .scale{font-size:10.5px; color:var(--ink-3); font-family:var(--f-num); padding-bottom:2px; border-bottom:1px solid var(--line); margin-bottom:2px;}
+.legend{display:flex; flex-direction:column; gap:5px; min-width:132px;}
+.legend .lgi{display:grid; grid-template-columns:16px 1fr; gap:7px; align-items:center; font-size:11px;}
+.legend .sw{height:0; border-top-width:2.4px; border-top-style:solid;}
+.legend .val{font-family:var(--f-num); font-size:11px; color:var(--ink-2);}
+
+/* ============================================================ VECTOR TAB */
+.vgrid{display:grid; grid-template-columns:minmax(280px,340px) minmax(280px,1fr) minmax(260px,340px); gap:0; align-items:start;}
+.vin-row{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; align-items:center; margin-bottom:6px;}
+.vin-row .lbl{font-family:var(--f-num); font-weight:600; font-size:12px; text-align:right;}
+.vin-row input{
+  width:100%; padding:4px 6px; border:1px solid var(--line-strong); background:var(--ground);
+  border-radius:4px; font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;
+}
+.vin-row input:focus{border-color:var(--accent); outline:none;}
+.colhead{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; margin-bottom:4px;}
+.colhead span{
+  font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;
+}
+.presets{display:flex; flex-wrap:wrap; gap:5px;}
+.pbtn{
+  padding:3px 9px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:100px; cursor:pointer; font-size:11.5px; color:var(--ink-2);
+}
+.pbtn:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+
+/* ============================================================ SHEET / DOC */
+.doc{max-width:78ch; margin:0 auto; padding:26px 22px 60px;}
+.doc h2{font-size:24px; margin-bottom:4px;}
+.doc h3{font-size:15px; text-transform:uppercase; letter-spacing:.11em; color:var(--accent); margin:22px 0 7px;}
+.doc p{margin:0 0 9px; color:var(--ink-2); max-width:66ch;}
+.doc ul{margin:0 0 10px; padding-left:19px; color:var(--ink-2);}
+.doc li{margin-bottom:4px;}
+.doc code{font-family:var(--f-num); font-size:12px; background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--ink);}
+.doc .eq{
+  font-family:var(--f-num); font-size:12.5px; background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:4px; padding:8px 11px; margin:0 0 10px;
+  overflow-x:auto; white-space:pre; color:var(--ink);
+}
+.sheet-tools{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+#sheetOut{
+  width:100%; min-height:300px; padding:10px; border:1px solid var(--line-strong);
+  background:var(--surface); border-radius:var(--r);
+  font-family:var(--f-num); font-size:11.5px; line-height:1.5; white-space:pre; overflow-x:auto;
+}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1180px){
+  .work{grid-template-columns:180px 1fr;}
+  .pane.out{grid-column:1/-1; border-top:1px solid var(--line);}
+  .vgrid{grid-template-columns:minmax(260px,320px) 1fr;}
+}
+@media (max-width:860px){
+  .work{grid-template-columns:1fr;}
+  .rail{position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .pane.set{border-right:0; border-bottom:1px solid var(--line);}
+  .pane.out{grid-column:auto;}
+  .vgrid{grid-template-columns:1fr;}
+  .phwrap{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+@media print{
+  .topbar,.tabs,.rail,.tbtn,.pbtn{display:none !important;}
+  .work{grid-template-columns:1fr;} .pane{padding:0 0 14px;} body{background:#fff;}
+  .tw,.chan{break-inside:avoid;}
+}
+
+/* ---- startup diagnostic -------------------------------------------- *
+   Shown only when the page cannot run. It is deliberately styled without
+   custom properties, so it is legible even if nothing else loaded.        */
+/* Visible by default and removed by the script below. If scripting is
+   blocked — an in-app file preview, a sanitising viewer, a strict policy —
+   nothing of ours runs, so a notice that JS must switch ON could never
+   appear. This one is already on, and only a working script takes it away. */
+#noRun{margin:0; padding:14px 18px; background:#8a5a00; color:#fff;
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+#noRun strong{display:block; font-size:14px; margin-bottom:3px;}
+#noRun ol{margin:7px 0 0; padding-left:20px;}
+#noRun li{margin-bottom:3px;}
+#bootMsg{display:none; margin:0; padding:14px 18px; background:#7f1d1d; color:#fff;
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+#bootMsg.on{display:block;}
+#bootMsg h4{margin:0 0 4px; font:600 14px/1.3 inherit;}
+#bootMsg code{display:block; margin:7px 0 0; padding:8px 10px; background:rgba(0,0,0,.32);
+  border-radius:4px; font:12px/1.5 ui-monospace,Consolas,monospace; white-space:pre-wrap; word-break:break-word;}
+#bootMsg button{margin-top:9px; padding:5px 11px; border:1px solid rgba(255,255,255,.5);
+  background:transparent; color:#fff; border-radius:4px; cursor:pointer; font:inherit;}
+#bootMsg a{color:#fff;}
+
+/* ---- licence bar ---------------------------------------------------- *
+   Always present, never dismissible. In evaluation it is the loudest thing
+   on the page; when licensed it is a quiet single line of provenance.      */
+.licbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:6px 18px; font-family:var(--f-body); font-size:11.5px;
+  border-bottom:1px solid var(--line); background:var(--surface-2); color:var(--ink-3);}
+.licbar .tag{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.1em;
+  font-weight:700; font-size:10px; padding:2px 7px; border-radius:3px;
+  background:var(--surface-3); color:var(--ink-2); white-space:nowrap;}
+.licbar b{color:var(--ink-2); font-weight:600;}
+.licbar.evat{background:var(--warn-bg); color:var(--ink); border-bottom-color:var(--warn);}
+.licbar.evat .tag{background:var(--warn); color:#fff;}
+.licbar.lic .tag{background:var(--accent); color:var(--accent-ink);}
+@media print{.licbar{background:none !important; border-bottom:1px solid #999; color:#000;}
+  .licbar .tag{border:1px solid #000; background:none !important; color:#000 !important;}}
+
+/* ---- product footer ------------------------------------------------ */
+.pfoot{max-width:1500px; margin:28px auto 0; padding:16px 18px 26px;
+  border-top:1px solid var(--line); color:var(--ink-3);
+  font-family:var(--f-body); font-size:11px; line-height:1.6;}
+.pfoot .prow{display:flex; flex-wrap:wrap; gap:10px 26px; align-items:baseline;}
+.pfoot .pname{font-family:var(--f-disp); font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+.pfoot .psep{color:var(--line-strong);}
+.pfoot details{margin-top:10px;}
+.pfoot summary{cursor:pointer; color:var(--ink-2); font-size:11px;
+  padding:3px 0; user-select:none;}
+.pfoot summary:hover{color:var(--ink);}
+.pfoot .pbody{margin-top:8px; padding:12px 14px; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); max-width:74ch;}
+.pfoot .pbody p{margin:0 0 9px;}
+.pfoot .pbody p:last-child{margin-bottom:0;}
+.pfoot .pbody strong{color:var(--ink-2);}
+@media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
+</style>
+</head>
+<body>
+
+<noscript>
+  <div style="margin:0;padding:14px 18px;background:#7f1d1d;color:#fff;
+       font:13px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+    <strong style="font-size:14px;">JavaScript is turned off, so this tool cannot calculate.</strong><br>
+    Every value here is computed in your browser when the page loads &mdash; nothing is
+    pre-baked into the file. With scripting disabled the layout still draws but the element
+    list stays empty and no control responds. Enable JavaScript for this page, or open the
+    file in a browser that allows it, and everything works offline from then on.
+  </div>
+</noscript>
+
+<div id="noRun">
+  <strong>This preview is not running the calculations.</strong>
+  The layout below has drawn, but the element list and every value are computed
+  by the page as it loads, and this viewer is not letting that happen &mdash; file
+  previews inside apps commonly strip scripts out for safety. Nothing is wrong
+  with the file.
+  <ol>
+    <li>Save it to your device, then open it in a browser &mdash; Safari, Chrome or Edge.</li>
+    <li>On iPhone: share the file to <em>Files</em>, then tap it there and choose to open in Safari.</li>
+    <li>It is built for a laptop screen; on a phone the three columns stack and it is cramped but usable.</li>
+  </ol>
+</div>
+<script>
+/* Runs while the page is still parsing, so the notice never flashes on a
+   normal load. If this script is blocked the notice simply stays. */
+(function () { var n = document.getElementById('noRun'); if (n) n.parentNode.removeChild(n); })();
+</script>
+
+<div id="bootMsg" role="alert"></div>
+
+<!-- Signed licence. Replaced per customer by tools/make-licence.mjs. The
+     signature covers the payload only; editing either invalidates it. -->
+<script type="application/json" id="licData">{"p":"","s":""}</script>
+
+<div class="licbar" id="licBar"><span class="tag">Checking licence</span></div>
+
+<div class="shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">845<em>&#8901;</em>VEC</span>
+      <span class="sub">Multilin 845 &nbsp;/&nbsp; Omicron CMC 356</span>
+    </div>
+    <div class="chipstrip" id="topChips"></div>
+    <button class="tbtn" id="themeBtn" type="button">Theme</button>
+    <button class="tbtn" id="resetBtn" type="button">Reset sample</button>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-view="v-setup" aria-selected="false">Setup</button>
+    <button class="tab" role="tab" data-view="v-elem" aria-selected="true">Elements</button>
+    <button class="tab" role="tab" data-view="v-vec" aria-selected="false">Vector calculator</button>
+    <button class="tab" role="tab" data-view="v-sheet" aria-selected="false">Test sheet</button>
+    <button class="tab" role="tab" data-view="v-meth" aria-selected="false">Method</button>
+  </nav>
+
+  <!-- ================================================= SETUP ================= -->
+  <section class="view" id="v-setup" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">CFG</span>
+        <div>
+          <h2>Station and test-set configuration</h2>
+          <p class="desc">Everything below comes off the transformer nameplate, the CT/VT schedule and the
+             relay's <em>System Setup</em> pages. Every element calculation is referred to these values, so get
+             them right once and the rest follows.</p>
+          <div class="note warn" style="margin-top:9px;"><span class="lb">Enter your station first</span>
+            <span>The values loaded are a worked sample, not your transformer. Change the CT primary and
+            secondary for each winding, the ground CT, and the VT primary and secondary to match your
+            schedule &mdash; every element, every injection value and every channel limit check follows
+            from them. Your entries are kept in this browser, so they are still here next time.</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:22px;">
+
+        <div class="blk">
+          <div class="blk-h"><h3>Power transformer</h3><span class="hint">nameplate</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_mva">ONAN rating</label><input id="cfg_mva" type="number" step="0.1" data-cfg="mva"><span class="u">MVA, self-cooled</span></div>
+            <div class="f"><label for="cfg_mva2">ONAF 1</label><input id="cfg_mva2" type="number" step="0.1" data-cfg="mva2"><span class="u">MVA, first fan stage</span></div>
+            <div class="f"><label for="cfg_mva3">ONAF 2</label><input id="cfg_mva3" type="number" step="0.1" data-cfg="mva3"><span class="u">MVA, second stage</span></div>
+            <div class="f wide"><label for="cfg_mvaBase">Protection base rating</label>
+              <select id="cfg_mvaBase" data-cfg="mvaBase">
+                <option value="onan">ONAN &mdash; self-cooled</option>
+                <option value="onaf1">ONAF 1</option>
+                <option value="onaf2">ONAF 2 &mdash; top rating</option>
+              </select><span class="u">every per-unit value and rated current follows this</span></div>
+            <div class="f"><label for="cfg_kv1">W1 voltage</label><input id="cfg_kv1" type="number" step="0.01" data-cfg="kv1"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_kv2">W2 voltage</label><input id="cfg_kv2" type="number" step="0.01" data-cfg="kv2"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="1" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_z">Impedance</label><input id="cfg_z" type="number" step="0.01" data-cfg="z"><span class="u">% on the base rating</span></div>
+            <div class="f"><label for="cfg_xr">X / R</label><input id="cfg_xr" type="number" step="0.1" data-cfg="xr"><span class="u">at the transformer</span></div>
+            <div class="f"><label for="cfg_rot">Phase rotation</label>
+              <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select>
+              <span class="u">as configured in relay</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Windings and vector group</h3><span class="hint">connection &amp; clock</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_w1c">W1 connection</label>
+              <select id="cfg_w1c" data-cfg="w1c">
+                <option value="D">Delta &mdash; D</option>
+                <option value="Y">Star, neutral not brought out &mdash; Y</option>
+                <option value="YN">Star, neutral available &mdash; YN</option>
+                <option value="Z">Zigzag &mdash; Z</option>
+                <option value="ZN">Zigzag, neutral available &mdash; ZN</option>
+              </select><span class="u">HV winding</span></div>
+            <div class="f"><label for="cfg_w2c">W2 connection</label>
+              <select id="cfg_w2c" data-cfg="w2c">
+                <option value="D">Delta &mdash; d</option>
+                <option value="Y">Star, neutral not brought out &mdash; y</option>
+                <option value="YN">Star, neutral available &mdash; yn</option>
+                <option value="Z">Zigzag &mdash; z</option>
+                <option value="ZN">Zigzag, neutral available &mdash; zn</option>
+              </select><span class="u">LV winding</span></div>
+            <div class="f"><label for="cfg_clk">Clock number</label>
+              <select id="cfg_clk" data-cfg="clk">
+                <option value="0">0 &mdash; in phase</option>
+                <option value="1">1 &mdash; LV lags 30&deg;</option>
+                <option value="2">2 &mdash; LV lags 60&deg;</option>
+                <option value="3">3 &mdash; LV lags 90&deg;</option>
+                <option value="4">4 &mdash; LV lags 120&deg;</option>
+                <option value="5">5 &mdash; LV lags 150&deg;</option>
+                <option value="6">6 &mdash; LV lags 180&deg;</option>
+                <option value="7">7 &mdash; LV lags 210&deg;</option>
+                <option value="8">8 &mdash; LV lags 240&deg;</option>
+                <option value="9">9 &mdash; LV lags 270&deg;</option>
+                <option value="10">10 &mdash; LV lags 300&deg;</option>
+                <option value="11">11 &mdash; LV leads 30&deg;</option>
+              </select><span class="u">any group, not a fixed list</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>On-load tap changer</h3><span class="hint">what the slope must absorb</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_oltcW">Tapped winding</label>
+              <select id="cfg_oltcW" data-cfg="oltcW">
+                <option value="1">W1</option><option value="2">W2</option><option value="0">None fitted</option>
+              </select><span class="u">where the OLTC sits</span></div>
+            <div class="f"><label for="cfg_oltcHi">Range, raise</label><input id="cfg_oltcHi" type="number" step="0.1" data-cfg="oltcHi"><span class="u">% above mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcLo">Range, lower</label><input id="cfg_oltcLo" type="number" step="0.1" data-cfg="oltcLo"><span class="u">% below mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcN">Steps</label><input id="cfg_oltcN" type="number" step="1" data-cfg="oltcN"><span class="u">total tap positions</span></div>
+            <div class="f"><label for="cfg_oltcPos">Present position</label><input id="cfg_oltcPos" type="number" step="0.1" data-cfg="oltcPos"><span class="u">% from mid-tap, as found</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Neutral earthing</h3><span class="hint">sets the ground fault current</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_gnd1">W1 neutral</label>
+              <select id="cfg_gnd1" data-cfg="gnd1">
+                <option value="none">Unearthed or delta</option>
+                <option value="solid">Solidly earthed</option>
+                <option value="ngrOhm">Earthing resistor &mdash; ohms</option>
+                <option value="ngrA">Earthing resistor &mdash; rated amps</option>
+                <option value="react">Earthing reactor &mdash; ohms</option>
+              </select><span class="u">HV star point</span></div>
+            <div class="f"><label for="cfg_gnd1v">W1 value</label><input id="cfg_gnd1v" type="number" step="0.1" data-cfg="gnd1v"><span class="u">&Omega; or A, per the choice</span></div>
+            <div class="f"><label for="cfg_gnd2">W2 neutral</label>
+              <select id="cfg_gnd2" data-cfg="gnd2">
+                <option value="none">Unearthed or delta</option>
+                <option value="solid">Solidly earthed</option>
+                <option value="ngrOhm">Earthing resistor &mdash; ohms</option>
+                <option value="ngrA">Earthing resistor &mdash; rated amps</option>
+                <option value="react">Earthing reactor &mdash; ohms</option>
+              </select><span class="u">LV star point</span></div>
+            <div class="f"><label for="cfg_gnd2v">W2 value</label><input id="cfg_gnd2v" type="number" step="0.1" data-cfg="gnd2v"><span class="u">&Omega; or A, per the choice</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Current transformers</h3><span class="hint">CT schedule</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_ct1p">W1 primary</label><input id="cfg_ct1p" type="number" step="1" data-cfg="ct1p"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct1s">W1 secondary</label>
+              <select id="cfg_ct1s" data-cfg="ct1s"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct1c">W1 connection</label>
+              <select id="cfg_ct1c" data-cfg="ct1c"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">at relay</span></div>
+            <div class="f"><label for="cfg_ct2p">W2 primary</label><input id="cfg_ct2p" type="number" step="1" data-cfg="ct2p"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct2s">W2 secondary</label>
+              <select id="cfg_ct2s" data-cfg="ct2s"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct2c">W2 connection</label>
+              <select id="cfg_ct2c" data-cfg="ct2c"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">at relay</span></div>
+            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="1" data-cfg="ctgp"><span class="u">A (50G/51G, REF)</span></div>
+            <div class="f"><label for="cfg_ctgs">Ground CT sec.</label>
+              <select id="cfg_ctgs" data-cfg="ctgs"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_refw">REF winding</label>
+              <select id="cfg_refw" data-cfg="refw"><option value="1">W1</option><option value="2">W2</option></select><span class="u">87G reference</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Voltage transformers</h3><span class="hint">VT schedule</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="1" data-cfg="vtp"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="0.1" data-cfg="vts"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vtc">VT connection</label>
+              <select id="cfg_vtc" data-cfg="vtc">
+                <option value="wye">Wye (4-wire)</option>
+                <option value="delta">Open / closed delta</option>
+              </select><span class="u">as wired to relay</span></div>
+            <div class="f"><label for="cfg_vtw">VT location</label>
+              <select id="cfg_vtw" data-cfg="vtw"><option value="1">W1 side</option><option value="2">W2 side</option></select><span class="u">bus reference</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>CMC 356 output configuration</h3><span class="hint">amplifier setup</span></div>
+          <div class="grid2">
+            <div class="f wide"><label for="cfg_cmc">Current amplifier mode</label>
+              <select id="cfg_cmc" data-cfg="cmc">
+                <option value="6x">6 &times; 12.5 A &mdash; two triples (needed for 3&phi; 87T)</option>
+                <option value="3x">3 &times; 32 A &mdash; one triple, high current</option>
+                <option value="1x">1 &times; 64 A &mdash; triples paralleled, single phase</option>
+              </select>
+              <span class="u">Set to match how the CMC is actually wired &mdash; the channel table and the limit checks follow this.</span></div>
+            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="0.1" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
+            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="1" data-cfg="vmax"><span class="u">V</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Station file</h3><span class="hint">move this setup between machines</span></div>
+        <div class="sheet-tools">
+          <button class="tbtn" id="saveCfg" type="button">Save station to a file</button>
+          <button class="tbtn" id="loadCfg" type="button">Load station from a file</button>
+          <input type="file" id="cfgFile" accept=".json,application/json" hidden>
+          <span class="chip"><span class="dot"></span><b id="cfgName">unsaved</b></span>
+        </div>
+        <div class="note" style="margin-top:8px;"><span class="lb">Why</span>
+          <span>Your entries live in this browser only. Clearing browsing data erases them, and they do
+          not follow you to another machine. Save a station file once per transformer and you can reopen
+          it anywhere, hand it to a colleague on the same licence, or keep it with the job pack.</span></div>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Derived base quantities</h3><span class="hint">used by every element below</span></div>
+        <dl class="readout" id="derived"></dl>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Configuration checks</h3></div>
+        <div class="notes" id="cfgNotes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= ELEMENTS ============== -->
+  <section class="view on" id="v-elem" role="tabpanel">
+    <div class="work">
+      <aside class="rail" id="rail"></aside>
+      <div class="pane set">
+        <div class="blk">
+          <div class="blk-h"><h3>Relay settings</h3><span class="hint" id="setHint"></span></div>
+          <div class="grid2" id="setForm"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Test options</h3></div>
+          <div class="grid2" id="optForm"></div>
+        </div>
+        <button class="tbtn" id="addSheet" type="button" style="width:100%; padding:8px;">Add these test points to sheet</button>
+      </div>
+      <div class="pane out" id="outPane"></div>
+    </div>
+  </section>
+
+  <!-- ================================================= VECTOR ================ -->
+  <section class="view" id="v-vec" role="tabpanel">
+    <div class="vgrid">
+      <div class="pane set">
+        <div class="ehead" style="margin-bottom:12px;">
+          <span class="badge">V/I</span>
+          <div><h2>Applied vectors</h2>
+          <p class="desc">Secondary quantities as they leave the test set.</p></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Fault presets</h3></div>
+          <div class="presets" id="presets"></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Voltage &mdash; V L1&ndash;L3</h3><span class="hint">V sec, L&ndash;N</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="vIn"></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Current &mdash; W1 triple A</h3><span class="hint">A sec</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="i1In"></div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Current &mdash; W2 triple B</h3><span class="hint">A sec</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="i2In"></div>
+        </div>
+      </div>
+
+      <div class="pane out">
+        <div class="blk">
+          <div class="blk-h"><h3>Phasor diagram</h3><span class="hint">CCW positive, L1 reference</span></div>
+          <div class="phwrap">
+            <div class="phbox"><div id="vecPhasor"></div></div>
+            <div class="legend" id="vecLegend"></div>
+          </div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Differential &amp; restraint per phase</h3><span class="hint">relay-referred, per unit</span></div>
+          <div class="tw"><table id="vecDiffTbl"></table></div>
+        </div>
+      </div>
+
+      <div class="pane" style="border-left:1px solid var(--line); background:var(--surface);">
+        <div class="blk">
+          <div class="blk-h"><h3>Symmetrical components</h3></div>
+          <div class="tw"><table id="vecSeqTbl"></table></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Power &amp; impedance</h3><span class="hint" id="pwrHint"></span></div>
+          <div class="tw"><table id="vecPwrTbl"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= SHEET ================= -->
+  <section class="view" id="v-sheet" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">REC</span>
+        <div><h2>Collected test points</h2>
+        <p class="desc">Everything you sent over from the Elements tab, in one tab-separated block.
+           Select all and copy, then paste straight into a test record or an XRIO/Test Universe table.</p></div>
+      </div>
+      <div class="sheet-tools">
+        <button class="tbtn" id="copySheet" type="button">Select all for copy</button>
+        <button class="tbtn" id="printSheet" type="button">Print</button>
+        <button class="tbtn" id="clearSheet" type="button">Clear</button>
+        <span class="chip"><span class="dot"></span>Rows <b id="sheetCount">0</b></span>
+      </div>
+      <textarea id="sheetOut" spellcheck="false" readonly></textarea>
+    </div>
+  </section>
+
+  <!-- ================================================= METHOD =============== -->
+  <section class="view" id="v-meth" role="tabpanel">
+    <div class="doc" id="methodDoc"></div>
+  </section>
+
+</div>
+
+<footer class="pfoot">
+  <div class="prow">
+    <span class="pname">845-VEC</span>
+    <span>GE Multilin 845 transformer protection</span>
+    <span class="psep">|</span>
+    <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
+    <span class="psep">|</span>
+    <span id="licFoot">Licensed per site &mdash; not for redistribution.</span>
+    <span class="psep">|</span>
+    <span id="verFoot">v__VERSION__ &middot; build __BUILD__</span>
+  </div>
+  <details>
+    <summary>Licence, disclaimer and trademark notice</summary>
+    <div class="pbody">
+      <p><strong>Licence.</strong> This copy is licensed to the organisation and site named
+      in the bar at the top of the page, for use by up to the stated number of named users at
+      that location. Those users may install it on the machines they work from. It may not be
+      redistributed, resold, sublicensed, published, or shared outside the licensed site.
+      Additional sites and additional seats are licensed separately. Nothing here transfers
+      ownership of the software.</p>
+      <p><strong>Provenance.</strong> The licence details shown above are cryptographically
+      signed and are reproduced on every test sheet this copy exports or prints. That is
+      deliberate: a test record should name the tool and the licence that produced it, so a
+      reviewer years later can tell where the numbers came from.</p>
+      <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
+      settings typed in by its user. The tool does not read the device, does not know its
+      firmware revision or its as-built wiring, and cannot tell whether the settings entered
+      match the ones in service. Treat what it produces as a proposal to be checked against
+      the relay and the drawings.</p>
+      <p><strong>Verify before you inject.</strong> Confirm the CT and VT ratios, the curve
+      constants and at least the first timing point against the device's own prediction before
+      accepting the rest of a table. Curve constants move between firmware revisions; if the
+      first point disagrees, every other time in that table is wrong by the same factor.</p>
+      <p><strong>No warranty.</strong> The software is provided as is, without warranty of any
+      kind, express or implied, including but not limited to the warranties of merchantability
+      and fitness for a particular purpose. To the maximum extent permitted by law the author is
+      not liable for any claim, damage, loss or other liability arising from the software or its
+      use &mdash; including damage to plant, loss of production, or injury. Commissioning
+      protection equipment is hazardous work and remains the responsibility of the competent
+      person carrying it out.</p>
+      <p><strong>Trademarks.</strong> Multilin is a trademark of GE Vernova. SIPROTEC and DIGSI
+      are trademarks of Siemens AG. CMC and Test Universe are trademarks of OMICRON electronics
+      GmbH. These names are used only to identify the equipment this tool is designed to be used
+      with. This tool is an independent work: it is not affiliated with, endorsed by, sponsored
+      by or a product of any of those companies, and no setting file, firmware or source
+      material of theirs is included in it.</p>
+      <p><strong>Fonts.</strong> Barlow Condensed and IBM Plex are used under the SIL Open Font
+      Licence 1.1 and are loaded from Google Fonts where a connection is available. With no
+      connection the page falls back to system fonts and every calculation is unaffected.</p>
+    </div>
+  </details>
+</footer>
+
+<script>/*__ED25519__*/</script>
+
+<script>
+/* ==========================================================================
+   LICENCE  —  offline verification of a signed site/team licence.
+
+   The signature is Ed25519 over the canonical JSON payload. The public key
+   below is embedded at build time; the private key exists only on the
+   publisher's machine, so a licence naming an organisation cannot be forged
+   without it.
+
+   Two deliberate design decisions:
+
+   1. Verification NEVER changes a computed value. An unlicensed copy performs
+      exactly the same arithmetic as a licensed one. Degrading numbers in a
+      tool whose output is injected into live protection equipment would be
+      dangerous, and no commercial argument outweighs that. What the licence
+      controls is provenance: what the page says about itself, and what every
+      exported or printed test sheet is stamped with.
+
+   2. Verification fails SAFE, not CLOSED. If the licence is absent, damaged,
+      expired, or the browser cannot do SHA-512, the tool still runs — as a
+      clearly marked evaluation copy. A licensed engineer standing in a
+      substation with no signal must never be locked out of their own tool by
+      a check that could not complete.
+   ========================================================================== */
+var LIC = (function () {
+  'use strict';
+  var PUBKEY = '__PUBKEY__';
+  var state = { ok: false, checked: false, reason: 'checking', d: null };
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (!m) return iso;
+    var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return Number(m[3]) + ' ' + M[Number(m[2]) - 1] + ' ' + m[1];
+  }
+
+  /* One-line provenance string. Goes in the bar, the footer, and the header of
+     every exported test sheet — the same words in all three places. */
+  function line() {
+    if (!state.ok) return 'EVALUATION COPY — not licensed for commissioning work';
+    var d = state.d;
+    return 'Licensed to ' + d.org + (d.site ? ' — ' + d.site : '') +
+           ' · ' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') +
+           ' · Licence ' + d.id +
+           (d.expires ? ' · expires ' + fmtDate(d.expires) : ' · perpetual');
+  }
+
+  function paint() {
+    var bar = document.getElementById('licBar');
+    if (bar) {
+      bar.className = 'licbar ' + (state.ok ? 'lic' : 'evat');
+      if (state.ok) {
+        var d = state.d;
+        bar.innerHTML = '<span class="tag">Licensed</span>' +
+          '<span><b>' + esc(d.org) + '</b>' + (d.site ? ' — ' + esc(d.site) : '') + '</span>' +
+          '<span>' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') + '</span>' +
+          '<span>Licence ' + esc(d.id) + '</span>' +
+          '<span>' + (d.expires ? 'Expires ' + fmtDate(d.expires) : 'Perpetual') + '</span>';
+      } else {
+        bar.innerHTML = '<span class="tag">Evaluation</span>' +
+          '<span><b>Not licensed for commissioning work.</b> Every calculation is live and correct, ' +
+          'but test sheets exported from this copy are stamped as evaluation output. ' +
+          (state.reason === 'expired'
+             ? 'This licence expired on ' + fmtDate(state.d && state.d.expires) + '.'
+             : state.reason === 'nocrypto'
+             ? 'The licence could not be checked in this browser — if you have bought a licence, this is a support issue, not a fault in your copy.'
+             : 'Contact the publisher for a site licence.') + '</span>';
+      }
+    }
+    var f = document.getElementById('licFoot');
+    if (f) f.textContent = line();
+  }
+
+  function boot() {
+    var el = document.getElementById('licData');
+    var blob;
+    try { blob = JSON.parse(el ? el.textContent : '{}'); } catch (e) { blob = {}; }
+    if (!blob || !blob.p || !blob.s) {
+      state.checked = true; state.reason = 'none'; paint(); return;
+    }
+    var payload, msg, sig, pub;
+    try {
+      msg = ED25519.b64ToBytes(blob.p);
+      sig = ED25519.b64ToBytes(blob.s);
+      pub = ED25519.b64ToBytes(PUBKEY);
+      payload = JSON.parse(new TextDecoder().decode(msg));
+    } catch (e) {
+      state.checked = true; state.reason = 'malformed'; paint(); return;
+    }
+    ED25519.verify(sig, msg, pub).then(function (good) {
+      state.checked = true;
+      if (!good) { state.reason = 'badsig'; paint(); return; }
+      state.d = payload;
+      /* Compare dates as strings — ISO dates sort correctly and this avoids
+         a timezone making a licence expire a day early somewhere. */
+      var today = new Date().toISOString().slice(0, 10);
+      if (payload.expires && payload.expires < today) { state.reason = 'expired'; paint(); return; }
+      if (payload.product !== '845-VEC') { state.reason = 'wrongproduct'; paint(); return; }
+      state.ok = true; state.reason = 'ok'; paint();
+    }).catch(function () {
+      state.checked = true; state.reason = 'nocrypto'; paint();
+    });
+  }
+
+  return {
+    boot: boot,
+    line: line,
+    isLicensed: function () { return state.ok; },
+    /* Banner for the top of an exported sheet. */
+    stamp: function () {
+      return state.ok
+        ? '# ' + line()
+        : '# EVALUATION COPY — NOT FOR COMMISSIONING USE\n# Values are correct, but this copy is not licensed to produce test records.';
+    }
+  };
+})();
+</script>
+
+<script>
+/* Report a failure on the page. A tool that silently does nothing is worse
+   than one that says what went wrong, especially on a machine where nobody
+   is going to open the developer console. */
+(function () {
+  var shown = false;
+  window.__bootFail = function (what, detail) {
+    if (shown) return; shown = true;
+    var el = document.getElementById('bootMsg');
+    if (!el) { alert(what + '\n\n' + detail); return; }
+    el.className = 'on';
+    el.innerHTML = '<h4>' + what + '</h4>' +
+      '<div>The page drew but the calculations could not start, so no control will respond. ' +
+      'Send the text below and it can be fixed \u2014 it names the exact failure.</div>' +
+      '<code id="bootDetail"></code>' +
+      '<button type="button" id="bootCopy">Copy this text</button>';
+    document.getElementById('bootDetail').textContent =
+      detail + '\n\nBrowser: ' + navigator.userAgent + '\nPage: ' + location.protocol;
+    document.getElementById('bootCopy').addEventListener('click', function () {
+      var t = document.getElementById('bootDetail'), r = document.createRange();
+      r.selectNodeContents(t);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      try { document.execCommand('copy'); this.textContent = 'Copied'; } catch (e) {}
+    });
+  };
+  window.addEventListener('error', function (e) {
+    window.__bootFail('This tool could not start in this browser',
+      (e.message || 'Script error') + '\nat line ' + (e.lineno || '?') + ', column ' + (e.colno || '?'));
+  });
+})();
+"use strict";
+const VERSION = 'v__VERSION__ (__BUILD__)';
+/* ==================================================================
+   845-VEC  -  vector / test-value calculator
+   GE Multilin 845 transformer protection  x  Omicron CMC 356
+   All internal work is in SECONDARY quantities unless a name says _pri.
+   ================================================================== */
+
+/* ---------------- complex arithmetic, angles in degrees ------------- */
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const cx  = (re, im) => ({ re, im });
+const pol = (m, a) => ({ re: m * Math.cos(a * D2R), im: m * Math.sin(a * D2R) });
+const add = (x, y) => cx(x.re + y.re, x.im + y.im);
+const sub = (x, y) => cx(x.re - y.re, x.im - y.im);
+const mul = (x, y) => cx(x.re * y.re - x.im * y.im, x.re * y.im + x.im * y.re);
+const div = (x, y) => { const d = y.re * y.re + y.im * y.im;
+  return d === 0 ? cx(0, 0) : cx((x.re * y.re + x.im * y.im) / d, (x.im * y.re - x.re * y.im) / d); };
+const conj  = x => cx(x.re, -x.im);
+const scale = (x, k) => cx(x.re * k, x.im * k);
+const mag   = x => Math.hypot(x.re, x.im);
+const ang   = x => (mag(x) < 1e-12 ? 0 : Math.atan2(x.im, x.re) * R2D);
+/* wrap to (-180, 180] */
+const wrap  = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
+
+/* symmetrical components, a = 1<120 */
+const A1 = pol(1, 120), A2 = pol(1, 240);
+function seq(ia, ib, ic) {
+  return {
+    z: scale(add(add(ia, ib), ic), 1 / 3),                               // I0
+    p: scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3),             // I1
+    n: scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3)              // I2
+  };
+}
+/* balanced positive-sequence set from a reference phasor */
+function balanced(m, a, rot) {
+  const s = rot === 'ACB' ? +120 : -120;
+  return [pol(m, a), pol(m, a + s), pol(m, a - s)];
+}
+
+const fmt = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d));
+const fmtA = v => (!isFinite(v) ? '—' : (wrap(v) >= 0 ? '+' : '−') + Math.abs(wrap(v)).toFixed(1) + '°');
+
+/* ---------------- inverse-time curve library ------------------------
+   IEEE C37.112 :  t = TDM * ( A/(M^p - 1) + B )
+   IEC 60255    :  t = TDM * ( K/(M^E - 1) )
+   IAC / ANSI   :  t = TDM * ( A + B/(M-C) + D/(M-C)^2 + E/(M-C)^3 )
+   Constants must be checked against the firmware revision in service. */
+const CURVES = {
+  'IEEE Mod Inv':   { f: 'ieee', A: 0.0515, B: 0.1140, p: 0.02 },
+  'IEEE Very Inv':  { f: 'ieee', A: 19.61,  B: 0.491,  p: 2.0  },
+  'IEEE Ext Inv':   { f: 'ieee', A: 28.2,   B: 0.1217, p: 2.0  },
+  'IEC Curve A (SI)':  { f: 'iec', K: 0.14, E: 0.02 },
+  'IEC Curve B (VI)':  { f: 'iec', K: 13.5, E: 1.0  },
+  'IEC Curve C (EI)':  { f: 'iec', K: 80.0, E: 2.0  },
+  'IEC Short Inverse': { f: 'iec', K: 0.05, E: 0.04 },
+  'IEC Long Inverse':  { f: 'iec', K: 120,  E: 1.0  },
+  'IAC Inverse':       { f: 'iac', A: 0.2078, B: 0.8630, C: 0.8000, D: -0.4180, E: 0.1947 },
+  'IAC Short Inverse': { f: 'iac', A: 0.0428, B: 0.0609, C: 0.6200, D: -0.0010, E: 0.0221 },
+  'IAC Very Inverse':  { f: 'iac', A: 0.0900, B: 0.7955, C: 0.1000, D: -1.2885, E: 7.9586 },
+  'IAC Ext Inverse':   { f: 'iac', A: 0.0040, B: 0.6379, C: 0.6200, D:  1.7872, E: -0.2461 },
+  'ANSI Mod Inv':   { f: 'iac', A: 0.1735, B: 0.6791, C: 0.8000, D: -0.0800, E: 0.1271 },
+  'ANSI Norm Inv':  { f: 'iac', A: 0.0274, B: 2.2614, C: 0.3000, D: -4.1899, E: 9.1272 },
+  'ANSI Very Inv':  { f: 'iac', A: 0.0615, B: 0.7989, C: 0.3400, D: -0.2840, E: 4.0505 },
+  'ANSI Ext Inv':   { f: 'iac', A: 0.0399, B: 0.2294, C: 0.5000, D:  3.0094, E: 0.7222 },
+  'Definite Time':  { f: 'def' }
+};
+/* operate time at multiple M of pickup; null when the curve cannot operate */
+function curveTime(name, M, tdm) {
+  const c = CURVES[name];
+  if (!c) return null;
+  if (c.f === 'def') return tdm;
+  if (M <= 1.0001) return null;
+  if (c.f === 'ieee') return tdm * (c.A / (Math.pow(M, c.p) - 1) + c.B);
+  if (c.f === 'iec')  return tdm * (c.K / (Math.pow(M, c.E) - 1));
+  if (c.f === 'iac') {
+    const d = M - c.C;
+    if (d <= 0) return null;
+    return tdm * (c.A + c.B / d + c.D / (d * d) + c.E / (d * d * d));
+  }
+  return null;
+}
+
+/* ==================================================================
+   CONFIGURATION
+   ================================================================== */
+const SAMPLE = {
+  /* ratings by cooling stage; the protection base is chosen separately */
+  mva: 20, mva2: 26.7, mva3: 33.3, mvaBase: 'onan',
+  kv1: 115, kv2: 13.8, freq: 60, rot: 'ABC',
+  /* connection and clock number, which together give any vector group */
+  w1c: 'D', w2c: 'YN', clk: 1,
+  /* short-circuit impedance on the base rating, and the X/R behind it */
+  z: 8.5, xr: 12,
+  /* on-load tap changer: which winding, its range, and where it sits now */
+  oltcW: '1', oltcHi: 10, oltcLo: 10, oltcN: 16, oltcPos: 0,
+  /* neutral earthing per winding */
+  gnd1: 'none', gnd1v: 0, gnd2: 'ngrA', gnd2v: 400,
+  ct1p: 150, ct1s: 5, ct1c: 'wye', ct2p: 1200, ct2s: 5, ct2c: 'wye',
+  ctgp: 200, ctgs: 5, refw: '2',
+  vtp: 13800, vts: 120, vtc: 'wye', vtw: '2',
+  cmc: '6x', imax: 12.5, vmax: 300
+};
+let CFG = Object.assign({}, SAMPLE);
+
+/* clock number -> phase shift of W2 relative to W1, degrees (lag negative) */
+/* Clock number n means the LV lags the HV by n x 30 degrees. Naming the
+   connections and the clock separately covers every group rather than the
+   handful a fixed list can hold. */
+const CONN = { D: 'D', Y: 'Y', YN: 'YN', Z: 'Z', ZN: 'ZN' };
+const vgName = c => (CONN[c.w1c] || 'Y') + (CONN[c.w2c] || 'yn').toLowerCase() + Number(c.clk);
+const clockShift = c => -30 * Number(c.clk || 0);
+const earthed = w => w === 'YN' || w === 'ZN';
+
+/* derived base quantities */
+function base() {
+  const c = CFG;
+  /* the rating protection is set against, not necessarily the nameplate top */
+  const mvaB = c.mvaBase === 'onaf2' ? (+c.mva3 || +c.mva) :
+               c.mvaBase === 'onaf1' ? (+c.mva2 || +c.mva) : +c.mva;
+  const Ir1p = mvaB * 1e6 / (Math.sqrt(3) * c.kv1 * 1e3);   // W1 rated primary A
+  const Ir2p = mvaB * 1e6 / (Math.sqrt(3) * c.kv2 * 1e3);   // W2 rated primary A
+  const ctr1 = c.ct1p / c.ct1s, ctr2 = c.ct2p / c.ct2s, ctrg = c.ctgp / c.ctgs;
+  const vtr  = c.vtr != null ? c.vtr : c.vtp / c.vts;
+  const vLLs = c.vts;                       // nominal secondary L-L
+  const vLNs = c.vtc === 'wye' ? c.vts / Math.sqrt(3) : c.vts;
+
+  /* Through-fault current from the short-circuit impedance. The infinite-bus
+     figure is the one relied on for stability and instantaneous grading; a
+     real source impedance only reduces it. */
+  const zpu = Math.max(0.001, (+c.z || 0.001) / 100);
+  const Ift1 = Ir1p / zpu, Ift2 = Ir2p / zpu;
+
+  /* The tap changer moves the ratio, and with it the current the relay sees on
+     the tapped winding. The spread across the range is what the differential
+     slope has to absorb before any CT error is counted. */
+  const hi = +c.oltcHi || 0, lo = +c.oltcLo || 0;
+  const tapNow = 1 + (+c.oltcPos || 0) / 100;
+  const tapMis = (hi + lo) / 2 / 100;          /* worst departure from mid-tap */
+
+  /* Earth-fault current available to the ground elements and to REF. */
+  const gfc = (mode, val, kv) => {
+    const vln = kv * 1000 / Math.sqrt(3);
+    /* base impedance in ohms is kV squared over MVA; both are already in
+       those units, so no further scaling belongs here */
+    if (mode === 'solid')  return vln / Math.max(1e-6, zpu * (kv * kv / mvaB));
+    if (mode === 'ngrA')   return +val || 0;
+    if (mode === 'ngrOhm') return (+val > 0) ? vln / +val : 0;
+    if (mode === 'react')  return (+val > 0) ? vln / +val : 0;
+    return 0;                                  /* unearthed or delta */
+  };
+  const conn1 = c.w1c, conn2 = c.w2c;
+  const Igf1 = earthed(conn1) ? gfc(c.gnd1, c.gnd1v, +c.kv1) : 0;
+  const Igf2 = earthed(conn2) ? gfc(c.gnd2, c.gnd2v, +c.kv2) : 0;
+
+  return {
+    Ir1p, Ir2p, ctr1, ctr2, ctrg, vtr, vLLs, vLNs, mvaB,
+    Ift1, Ift2, zpu, tapNow, tapMis, Igf1, Igf2,
+    vg: vgName(c),
+    Ir1s: Ir1p / ctr1,                      // W1 rated current, CT secondary A
+    Ir2s: Ir2p / ctr2,
+    shift: clockShift(c),
+    ctPri: w => (w === 1 ? c.ct1p : c.ct2p),
+    ctSec: w => (w === 1 ? c.ct1s : c.ct2s),
+    ctr:   w => (w === 1 ? ctr1 : ctr2),
+    IrS:   w => (w === 1 ? Ir1p / ctr1 : Ir2p / ctr2),
+    IrP:   w => (w === 1 ? Ir1p : Ir2p),
+    Ift:   w => (w === 1 ? Ift1 : Ift2),
+    Igf:   w => (w === 1 ? Igf1 : Igf2),
+    conn:  w => (w === 1 ? conn1 : conn2)
+  };
+}
+
+/* per-unit conversions used by 87T: pu of winding rated current */
+const secToPu  = (Isec, w) => { const b = base(); return Isec * b.ctr(w) / b.IrP(w); };
+const puToSec  = (Ipu,  w) => { const b = base(); return Ipu * b.IrP(w) / b.ctr(w); };
+
+/* ==================================================================
+   CHANNEL MAPPING  ->  Omicron CMC 356 outputs
+   ================================================================== */
+const PH = ['L1', 'L2', 'L3'], PHC = ['ch-l1', 'ch-l2', 'ch-l3'];
+
+/* v / i1 / i2 are arrays of {m,a,n} or null.  i1 = W1 triple, i2 = W2 triple. */
+function chans(v, i1, i2, f, v4) {
+  const F = f == null ? CFG.freq : f, out = [], mode = CFG.cmc;
+  if (v)  v.forEach((p, k) => p && out.push({ ch: 'V ' + PH[k], cls: PHC[k], mag: p.m, unit: 'V', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (v4) out.push({ ch: 'V 4', cls: 'ch-n', mag: v4.m, unit: 'V', ang: v4.a, freq: v4.f == null ? F : v4.f, note: v4.n || '' });
+  const p1 = mode === '6x' ? 'I A-' : 'I ';
+  if (i1) i1.forEach((p, k) => p && out.push({ ch: p1 + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (i2) i2.forEach((p, k) => p && out.push({ ch: 'I B-' + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  return out;
+}
+const P = (m, a, n) => ({ m, a, n });                       /* phasor shorthand */
+const P3 = (m, a, rot) => { const s = (rot || CFG.rot) === 'ACB' ? +120 : -120;
+  return [P(m, a), P(m, a + s), P(m, a - s)]; };
+const nullTriple = () => [P(0, 0), P(0, 0), P(0, 0)];
+
+/* limit / configuration checks applied to any channel list */
+function checkChannels(list) {
+  const n = [], mode = CFG.cmc;
+  const usesB = list.some(c => c.ch.startsWith('I B-'));
+  const iMax = Math.max(0, ...list.filter(c => c.unit === 'A').map(c => c.mag));
+  const vMax = Math.max(0, ...list.filter(c => c.unit === 'V').map(c => c.mag));
+  if (usesB && mode !== '6x')
+    n.push({ lvl: 'bad', lb: 'Amp mode', txt: 'This test drives two current triples. Switch the CMC to 6 × 12.5 A and re-check the values — the present mode has one triple only.' });
+  if (iMax > CFG.imax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak demand ' + fmt(iMax, 2) + ' A exceeds the ' + fmt(CFG.imax, 1) + ' A per-channel limit set for this amplifier mode. Drop the test multiple, use a higher-current mode, or test at reduced multiples and extrapolate the curve.' });
+  else if (iMax > 0.85 * CFG.imax)
+    n.push({ lvl: 'warn', lb: 'Near limit', txt: 'Peak demand ' + fmt(iMax, 2) + ' A is within 15% of the channel limit. Confirm the amplifier holds it into the relay burden for the full timing run.' });
+  if (vMax > CFG.vmax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak voltage ' + fmt(vMax, 1) + ' V exceeds the ' + fmt(CFG.vmax, 0) + ' V channel limit.' });
+  return n;
+}
+
+/* ==================================================================
+   ELEMENT LIBRARY
+   Each element:  fields[] -> setting inputs, opts[] -> test options,
+   compute(s,o) -> { readout[], points[], notes[] }
+   A point is one test step and carries its own channel list + phasors.
+   ================================================================== */
+const num = (k, l, d, u, st) => ({ k, l, d, u, t: 'num', step: st == null ? 0.01 : st });
+const sel = (k, l, d, o, u) => ({ k, l, d, u, t: 'sel', opts: o });
+const WSEL = (d) => sel('w', 'Winding', d || '1', [['1', 'W1'], ['2', 'W2']], 'CT input');
+
+/* ---- shared helpers ---------------------------------------------- */
+/* Overcurrent pickup expressed in secondary and primary amps. */
+function ocPickup(s, b) {
+  const w = Number(s.w || 1);
+  if (s.pu === 'A_sec') return { sec: s.pkp, pri: s.pkp * b.ctr(w), w, ctP: b.ctPri(w), ctS: b.ctSec(w) };
+  if (s.pu === 'A_pri') return { sec: s.pkp / b.ctr(w), pri: s.pkp, w, ctP: b.ctPri(w), ctS: b.ctSec(w) };
+  return { sec: s.pkp * b.ctSec(w), pri: s.pkp * b.ctPri(w), w, ctP: b.ctPri(w), ctS: b.ctSec(w) };  /* ×CT */
+}
+function vPickup(s, b) {
+  if (s.vu === 'V_sec') return { sec: s.vpkp, pri: s.vpkp * b.vtr };
+  if (s.vu === 'kV_pri') return { sec: s.vpkp * 1000 / b.vtr, pri: s.vpkp * 1000 };
+  return { sec: s.vpkp * b.vLNs, pri: s.vpkp * b.vLNs * b.vtr };                                     /* ×VT (L-N) */
+}
+const multiplesOf = str => String(str || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
+
+/* Build a standard overcurrent injection point. */
+function ocPoint(id, name, detail, Isec, iAng, w, expect, expectSub, vLevel) {
+  const b = base(), vm = vLevel == null ? b.vLNs : vLevel;
+  const v  = P3(vm, 0);
+  const trip = [P(Isec, iAng), P(0, 0), P(0, 0)];
+  const i1 = w === 1 ? trip : nullTriple();
+  const i2 = w === 2 ? trip : null;
+  return {
+    id, name, detail, expect, expectSub,
+    channels: chans(v, i1, CFG.cmc === '6x' ? (i2 || nullTriple()) : null),
+    phasor: {
+      v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+      i: [{ lab: 'I' + PH[0] + ' W' + w, cls: PHC[0], mag: Isec, ang: iAng }]
+    }
+  };
+}
+
+const ELEMENTS = [];
+const reg = e => { ELEMENTS.push(e); return e; };
+
+/* ================= 87T  PERCENT DIFFERENTIAL ====================== */
+reg({
+  ansi: '87T', name: 'Percent differential', group: 'Differential',
+  desc: 'Dual-slope restrained differential. Test points are placed on the published characteristic and then offset by the margin, so each restraint level yields one guaranteed-operate and one guaranteed-restrain injection.',
+  fields: [
+    num('pkp', 'Minimum pickup', 0.20, 'pu of winding rating', 0.01),
+    num('s1', 'Slope 1', 25, '%', 1),
+    num('br1', 'Break 1', 2.0, 'pu restraint', 0.1),
+    num('s2', 'Slope 2', 60, '%', 1),
+    num('br2', 'Break 2', 6.0, 'pu restraint', 0.1),
+    sel('rst', 'Restraint definition', 'max', [['max', 'max(|IW1|,|IW2|)'], ['avg', '(|IW1|+|IW2|)/2'], ['sum', '(|IW1|+|IW2|)']], 'confirm in manual')
+  ],
+  opts: [
+    { k: 'rests', l: 'Restraint points', d: '0.5, 1.5, 3.0, 7.0', u: 'pu', t: 'txt' },
+    num('marg', 'Margin either side', 10, '%', 1),
+    sel('ph', 'Test phase set', '3ph', [['3ph', 'Balanced 3-phase (correct for any vector group)'], ['A', 'Single-phase L1 only']], '')
+  ],
+  compute(s, o) {
+    const b = base(), sh = b.shift, marg = o.marg / 100;
+    const req = Ir => {
+      if (Ir <= s.br1) return s.pkp;
+      if (Ir <= s.br2) return Math.max(s.pkp, (s.s1 / 100) * Ir);
+      return Math.max(s.pkp, (s.s1 / 100) * s.br2 + (s.s2 / 100) * (Ir - s.br2));
+    };
+    const split = (Ir, Id) => {
+      if (s.rst === 'avg') return [Ir + Id / 2, Ir - Id / 2];
+      if (s.rst === 'sum') return [(Ir + Id) / 2, (Ir - Id) / 2];
+      return [Ir, Ir - Id];                                  /* max(): larger winding sets restraint */
+    };
+    const pts = [];
+    multiplesOf(o.rests).forEach(Ir => {
+      [['op', 1 + marg, 'OPERATE'], ['no', 1 - marg, 'RESTRAIN']].forEach(([tag, f, verdict]) => {
+        const Id = req(Ir) * f;
+        let [p1, p2] = split(Ir, Id);
+        /* When the required differential exceeds what this restraint level can carry,
+           the pair cannot be realised: clamping W2 to zero leaves a differential of Ir,
+           not Id, so the stated verdict would be wrong. Mark the point instead. */
+        const flip = p2 < 0;
+        if (flip) p2 = 0;
+        const unreal = flip && Math.abs(Ir - Id) > 1e-9;
+        const i1s = puToSec(p1, 1), i2s = puToSec(Math.abs(p2), 2);
+        const a1 = 0, a2 = 180 + sh;
+        const v = P3(b.vLNs, 0);
+        const T1 = o.ph === '3ph' ? P3(i1s, a1) : [P(i1s, a1), P(0, 0), P(0, 0)];
+        const T2 = o.ph === '3ph' ? P3(i2s, a2) : [P(i2s, a2), P(0, 0), P(0, 0)];
+        pts.push({
+          id: '87-' + Ir + '-' + tag,
+          name: 'Irest ' + fmt(Ir, 2) + ' pu — ' + (tag === 'op' ? 'above' : 'below') + ' slope',
+          detail: 'Idiff required ' + fmt(req(Ir), 3) + ' pu · applied ' + fmt(Id, 3) + ' pu (' + (tag === 'op' ? '+' : '−') + fmt(o.marg, 0) + '%)'
+            + (unreal
+                ? ' · NOT REALISABLE: this restraint level cannot carry the required differential, so the point below is what the test set would actually produce, not what the characteristic asks for'
+                : flip ? ' · W2 driven to zero, W1 carries the whole differential' : ''),
+          expect: unreal ? 'NOT TESTABLE' : verdict,
+          expectSub: 'IW1 ' + fmt(p1, 3) + ' pu · IW2 ' + fmt(Math.abs(p2), 3) + ' pu',
+          verdict: unreal ? 'wn' : (tag === 'op' ? 'op' : 'no'),
+          channels: chans(v, T1, T2),
+          phasor: {
+            v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+            i: [{ lab: 'IW1 L1', cls: 'ch-l1', mag: i1s, ang: a1 }, { lab: 'IW2 L1', cls: 'ch-l3', mag: i2s, ang: a2, alt: true }]
+          },
+          sheet: ['87T', 'Irest ' + fmt(Ir, 2) + ' pu ' + verdict, fmt(i1s, 3) + ' A @ ' + fmt(a1, 1) + '°', fmt(i2s, 3) + ' A @ ' + fmt(wrap(a2), 1) + '°', verdict]
+        });
+      });
+    });
+    const notes = [];
+    /* The slope exists mainly to cover the tap changer. Say what it must cover
+       and whether the setting does, since that is the number that decides
+       whether a healthy transformer trips at the end of its range. */
+    if (CFG.oltcW !== '0' && b.tapMis > 0) {
+      const need = (b.tapMis + 0.10) * 100;
+      notes.push({ lvl: s.s1 < need ? 'warn' : 'good', lb: 'Slope 1 against the tap range',
+        txt: 'The tap changer moves W' + CFG.oltcW + ' by \u00b1' + fmt(b.tapMis * 100, 1) +
+          '% about mid-tap. Allowing 5% for CT error and 5% for the relay\'s own matching, slope 1 needs to be above about ' +
+          fmt(need, 0) + '%; it is set to ' + fmt(s.s1, 0) + '%. ' +
+          (s.s1 < need
+            ? 'That is not enough. A healthy transformer at the end of its tap range will produce a differential the slope does not cover.'
+            : 'That covers it. Prove the through-current point at the as-found tap of ' + fmt(CFG.oltcPos, 1) +
+              '%, not only at mid-tap \u2014 mid-tap is the one position where the mismatch is zero.') });
+    }
+    notes.push(
+      { lvl: 'note', lb: 'Vector group', txt: base().vg + ' places W2 ' + (sh === 0 ? 'in phase with' : (sh < 0 ? Math.abs(sh) + '° behind' : sh + '° ahead of') + '') + ' W1. The W2 triple is injected at ' + fmt(wrap(180 + sh), 0) + '° so that through-current lands on the relay\'s internal compensation and nets to zero differential.' },
+      { lvl: 'note', lb: 'Reference', txt: 'Per-unit is referred to each winding\'s own rated current — ' + fmt(b.Ir1s, 3) + ' A secondary on W1, ' + fmt(b.Ir2s, 3) + ' A secondary on W2. The two secondary currents differ in magnitude; that mismatch is the relay\'s magnitude compensation working, not an error.' });
+    if (o.ph === 'A' && sh !== 0)
+      notes.push({ lvl: 'warn', lb: 'Single-phase', txt: 'With a ' + sh + '° group the relay\'s delta compensation mixes phases, so a single-phase injection spills differential current into a second phase and the measured slope will not match the setting. Use the balanced 3-phase set unless you are deliberately proving the compensation matrix.' });
+    if (CFG.ct1c === 'delta' || CFG.ct2c === 'delta')
+      notes.push({ lvl: 'warn', lb: 'CT connection', txt: 'A delta-connected CT on a winding introduces a √3 magnitude and 30° angle change ahead of the relay. Confirm the relay\'s CT connection setting matches the field wiring before trusting these magnitudes.' });
+    return {
+      readout: [
+        { k: 'W1 rated', v: fmt(b.Ir1s, 3), u: 'A sec' }, { k: 'W2 rated', v: fmt(b.Ir2s, 3), u: 'A sec' },
+        { k: 'W1 rated', v: fmt(b.Ir1p, 1), u: 'A pri' }, { k: 'W2 rated', v: fmt(b.Ir2p, 1), u: 'A pri' },
+        { k: 'Phase shift', v: (sh > 0 ? '+' : '') + sh, u: 'deg' },
+        { k: 'Min pickup', v: fmt(puToSec(s.pkp, 1), 3), u: 'A sec W1' }
+      ], points: pts, notes
+    };
+  }
+});
+
+/* ================= 87T HARMONIC INHIBIT =========================== */
+reg({
+  ansi: '87T-H', name: 'Harmonic inhibit', group: 'Differential',
+  desc: 'Proves the inrush (2nd) and overexcitation (5th) blocking thresholds. A differential well above pickup is established on one winding, then harmonic content is walked across the setting.',
+  fields: [
+    num('h2', '2nd harmonic block', 20, '% of fundamental', 1),
+    num('h5', '5th harmonic block', 30, '% of fundamental', 1),
+    num('fund', 'Fundamental level', 1.0, 'pu of winding rating', 0.05),
+    WSEL('1')
+  ],
+  opts: [num('marg', 'Margin either side', 10, '%', 1)],
+  compute(s, o) {
+    const b = base(), w = Number(s.w), m = o.marg / 100;
+    const If = puToSec(s.fund, w);
+    const pts = [];
+    [[2, s.h2, '2nd — inrush'], [5, s.h5, '5th — overexcitation']].forEach(([h, set, lbl]) => {
+      [[1 + m, 'RESTRAIN', 'no', 'above'], [1 - m, 'OPERATE', 'op', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const pct = set * f, Ih = If * pct / 100;
+        const chName = (CFG.cmc === '6x' ? (w === 2 ? 'I B-L1' : 'I A-L1') : 'I L1');
+        const ord = h === 2 ? '2nd' : '5th';
+        pts.push({
+          id: 'h' + h + f, name: lbl + ' — ' + rel + ' threshold',
+          detail: 'Harmonic content ' + fmt(pct, 1) + '% of fundamental (setting ' + fmt(set, 0) + '%)',
+          expect: verdict, expectSub: 'Differential ' + fmt(s.fund, 2) + ' pu present throughout',
+          verdict: vt,
+          channels: chans(P3(b.vLNs, 0), null, null).concat([
+            { ch: chName, cls: 'ch-l1', mag: If, unit: 'A', ang: 0, freq: CFG.freq, note: 'fundamental' },
+            { ch: chName, cls: 'ch-l1', mag: Ih, unit: 'A', ang: 0, freq: CFG.freq * h, note: ord + ' harmonic — superimposed on the same output' }
+          ]),
+          phasor: { v: [], i: [{ lab: 'I fund', cls: 'ch-l1', mag: If, ang: 0 }, { lab: 'I h' + h, cls: 'ch-l2', mag: Ih, ang: 0 }] },
+          sheet: ['87T-H', lbl + ' ' + rel, fmt(If, 3) + ' A @ ' + CFG.freq + ' Hz', fmt(Ih, 3) + ' A @ ' + (CFG.freq * h) + ' Hz', verdict]
+        });
+      });
+    });
+    return {
+      readout: [{ k: 'Fundamental', v: fmt(If, 3), u: 'A sec' },
+        { k: '2nd at setting', v: fmt(If * s.h2 / 100, 3), u: 'A sec' },
+        { k: '5th at setting', v: fmt(If * s.h5 / 100, 3), u: 'A sec' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Test module', txt: 'Both components go on the same physical output. Build them in the CMC Harmonics module, or as a superimposed signal in State Sequencer — the channel table lists them as two rows on the one channel.' },
+        { lvl: 'note', lb: 'Only one winding', txt: 'Energising a single winding is what makes the differential; leave the other triple at zero so the relay sees full unrestrained differential and the harmonic decision is the only variable.' }]
+    };
+  }
+});
+
+/* ================= 87G / 64REF  RESTRICTED GROUND FAULT =========== */
+reg({
+  ansi: '87G', name: 'Restricted ground fault', group: 'Differential',
+  desc: 'Low-impedance REF comparing the residual of the phase CTs against the neutral/ground CT. Sensitivity is proved with the ground input alone; stability is proved with matched through current.',
+  fields: [
+    num('pkp', 'Pickup', 0.10, '×CT (ground input)', 0.01),
+    num('slp', 'Slope', 20, '%', 1),
+    num('dly', 'Delay', 0.00, 's', 0.01)
+  ],
+  opts: [num('marg', 'Margin either side', 10, '%', 1), num('thru', 'Through-current stability point', 4.0, '×CT', 0.5)],
+  compute(s, o) {
+    const b = base(), w = Number(CFG.refw), m = o.marg / 100;
+    const Ipk = s.pkp * CFG.ctgs;                       /* ground CT secondary A */
+    const pts = [];
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const I = Ipk * f;
+      pts.push({
+        id: 'ref' + f, name: 'Sensitivity — ' + rel + ' pickup',
+        detail: 'Ground CT input only, phase CTs at zero. Applied ' + fmt(I / CFG.ctgs, 3) + ' ×CT.',
+        expect: verdict, expectSub: 'Operate time ' + fmt(s.dly, 2) + ' s', verdict: vt,
+        channels: chans(P3(b.vLNs, 0), [P(I, 0, 'ground / neutral CT input')], null),
+        phasor: { v: [], i: [{ lab: 'Ig', cls: 'ch-l1', mag: I, ang: 0 }] },
+        sheet: ['87G', 'Sensitivity ' + rel, fmt(I, 3) + ' A @ 0°', '—', verdict]
+      });
+    });
+    /* The stability point simulates an EXTERNAL ground fault: the same primary
+       amperes flow in the phase CTs (as residual) and in the ground CT. Convert
+       phase-secondary -> primary -> ground-secondary. Using the CT secondary
+       RATINGS here instead of the full ratios silently cancels whenever both CTs
+       are 5 A, and mis-scales badly whenever they are not. */
+    const It = o.thru * b.ctSec(w), Ig = It * b.ctr(w) / b.ctrg;
+    /* Largest through-current both channels can actually carry. The ground side
+       reaches the amplifier limit first whenever the ground CT ratio is lower
+       than the phase CT ratio, which is the common case. */
+    const maxThru = Math.min(
+      CFG.imax / b.ctSec(w),
+      CFG.imax * b.ctrg / (b.ctSec(w) * b.ctr(w))
+    );
+    pts.push({
+      id: 'refstab', name: 'Through-fault stability',
+      detail: 'Phase L1 and ground input driven in opposition at ' + fmt(o.thru, 1) + ' ×CT — an external ground fault.',
+      expect: 'RESTRAIN', expectSub: 'No operation at any point of the ramp', verdict: 'no',
+      channels: chans(P3(b.vLNs, 0), [P(It, 0, 'W' + w + ' phase L1'), P(0, 0), P(0, 0)], null)
+        .concat([{ ch: 'I ' + (CFG.cmc === '6x' ? 'B-L1' : 'aux'), cls: 'ch-n', mag: Ig, unit: 'A', ang: 180, freq: CFG.freq, note: 'ground / neutral CT input, reversed polarity' }]),
+      phasor: { v: [], i: [{ lab: 'Iph', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'Ig', cls: 'ch-l3', mag: Ig, ang: 180 }] },
+      sheet: ['87G', 'Through stability', fmt(It, 3) + ' A @ 0°', fmt(Ig, 3) + ' A @ 180°', 'RESTRAIN']
+    });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(Ipk, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(s.pkp * CFG.ctgp, 1), u: 'A pri' },
+        { k: 'REF winding', v: 'W' + w, u: '' }, { k: 'Ground CTR', v: CFG.ctgp + ':' + CFG.ctgs, u: '' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Polarity', txt: 'REF is a polarity test as much as a level test. If the stability point operates, the ground CT or one phase CT is reversed — chase the wiring before touching the settings.' },
+        { lvl: 'note', lb: 'Ratio mismatch', txt: 'Phase CTs are ' + b.ctPri(w) + ':' + b.ctSec(w) + ' and the ground CT is ' + CFG.ctgp + ':' + CFG.ctgs + '. Both inputs are scaled to the same primary current: ' + fmt(It, 3) + ' A into the phase input is ' + fmt(It * b.ctr(w), 0) + ' A primary, which is ' + fmt(Ig, 3) + ' A out of the ground CT.' + (maxThru < o.thru ? ' Both inputs have to fit the ' + fmt(CFG.imax, 1) + ' A channel limit, and the ground side reaches it first: the largest through-current this CT pair can be tested at is about ' + fmt(maxThru, 2) + ' \u00d7CT. Above that the stability point cannot be produced by this amplifier at all \u2014 prove REF stability with primary injection, or accept a reduced through level and say so on the record.' : ' Both sit inside the ' + fmt(CFG.imax, 1) + ' A channel limit.') }]
+    };
+  }
+});
+
+/* ================= GENERIC OVERCURRENT FACTORIES ================== */
+/* q: 'phase' | 'ground' | 'neutral' | 'negseq'  -- decides how the injected
+   current relates to the operating quantity the relay measures.          */
+const Q_INFO = {
+  phase:  { lab: 'phase',            k: 1, txt: 'Operating quantity is the phase current itself.' },
+  ground: { lab: 'ground (Ig)',      k: 1, txt: 'Injected into the dedicated ground CT input.' },
+  neutral:{ lab: 'residual (3I0)',   k: 1, txt: 'A single-phase injection into one phase CT produces 3I0 equal to that current.' },
+  negseq: { lab: 'negative seq (I2)',k: 3, txt: 'A single-phase injection produces I2 = I/3, so the applied current is three times the setting.' }
+};
+
+function mkIOC(ansi, nm, q, dflt) {
+  return {
+    ansi, name: nm, group: 'Overcurrent',
+    desc: 'Definite-time instantaneous element. Pickup is bracketed either side, then a clean multiple is applied to time the definite delay.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01), sel('pu', 'Pickup unit', 'xCT', [['xCT', '×CT'], ['A_sec', 'A secondary'], ['A_pri', 'A primary']], ''),
+      num('dly', 'Delay', 0.05, 's', 0.01), WSEL('1')],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), num('tm', 'Timing multiple', 2, '× pickup', 0.5),
+      num('iang', 'Injection angle', -75, 'deg (lags V L1)', 5)],
+    compute(s, o) {
+      const b = base(), p = ocPickup(s, b), m = o.marg / 100, qi = Q_INFO[q], K = qi.k;
+      const pts = [];
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        pts.push(Object.assign(ocPoint('ioc' + f, 'Pickup — ' + rel + ' threshold',
+          fmt(f * 100, 0) + '% of setting · operating quantity ' + fmt(p.sec * f, 3) + ' A sec',
+          p.sec * f * K, o.iang, p.w, verdict, vt === 'op' ? 'Operate within ' + fmt(s.dly, 2) + ' s' : 'No operation'),
+          { verdict: vt, sheet: [ansi, 'Pickup ' + rel, fmt(p.sec * f * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', '—', verdict] }));
+      });
+      pts.push(Object.assign(ocPoint('ioctm', 'Timing at ' + fmt(o.tm, 1) + '× pickup',
+        'Step from prefault zero straight to the test value', p.sec * o.tm * K, o.iang, p.w,
+        fmt(s.dly, 3) + ' s', 'Measured from application of current to trip contact'),
+        { verdict: 'nu', sheet: [ansi, 'Timing ' + fmt(o.tm, 1) + '×', fmt(p.sec * o.tm * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', fmt(s.dly, 3) + ' s', 'TIME'] }));
+      const notes = [{ lvl: 'note', lb: 'Quantity', txt: qi.txt }];
+      if (q === 'negseq') notes.push({ lvl: 'warn', lb: '×3 factor', txt: 'The current in the channel table is already three times the setting. A balanced three-phase set injected in reverse rotation gives I2 = I instead, if you would rather test that way.' });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 1), u: 'A pri' },
+          { k: 'CT ratio', v: p.ctP + ':' + p.ctS, u: '' }, { k: 'Applied at 1×', v: fmt(p.sec * K, 3), u: 'A sec' },
+          { k: 'Delay', v: fmt(s.dly, 3), u: 's' }],
+        points: pts, notes
+      };
+    }
+  };
+}
+
+function mkTOC(ansi, nm, q, dflt) {
+  return {
+    ansi, name: nm, group: 'Overcurrent',
+    desc: 'Inverse-time element. Pickup is bracketed, then operate time is predicted at each multiple from the selected curve equation.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01), sel('pu', 'Pickup unit', 'xCT', [['xCT', '×CT'], ['A_sec', 'A secondary'], ['A_pri', 'A primary']], ''),
+      sel('crv', 'Curve', 'IEEE Ext Inv', Object.keys(CURVES).map(k => [k, k]), ''),
+      num('tdm', 'Time dial / TDM', 0.15, '', 0.01), WSEL('1')],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), { k: 'muls', l: 'Timing multiples', d: '2, 3, 5', u: '× pickup', t: 'txt' },
+      num('iang', 'Injection angle', -75, 'deg (lags V L1)', 5)],
+    compute(s, o) {
+      const b = base(), p = ocPickup(s, b), m = o.marg / 100, qi = Q_INFO[q], K = qi.k, pts = [];
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        pts.push(Object.assign(ocPoint('toc' + f, 'Pickup — ' + rel + ' threshold',
+          fmt(f * 100, 0) + '% of setting · operating quantity ' + fmt(p.sec * f, 3) + ' A sec',
+          p.sec * f * K, o.iang, p.w, verdict, vt === 'op' ? 'Long operate time — allow the curve to run out' : 'No operation'),
+          { verdict: vt, sheet: [ansi, 'Pickup ' + rel, fmt(p.sec * f * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', '—', verdict] }));
+      });
+      multiplesOf(o.muls).forEach(M => {
+        const t = curveTime(s.crv, M, s.tdm);
+        pts.push(Object.assign(ocPoint('t' + M, 'Timing at ' + fmt(M, 1) + '× pickup',
+          s.crv + ' · TDM ' + fmt(s.tdm, 2), p.sec * M * K, o.iang, p.w,
+          t == null ? 'no operation' : fmt(t, 3) + ' s', t == null ? 'Multiple is below the curve asymptote' : 'Predicted from the curve equation'),
+          { verdict: 'nu', sheet: [ansi, 'Timing ' + fmt(M, 1) + '×', fmt(p.sec * M * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 3) + ' s', 'TIME'] }));
+      });
+      const notes = [{ lvl: 'note', lb: 'Quantity', txt: qi.txt },
+        { lvl: 'warn', lb: 'Curve constants', txt: 'Times come from the published ' + s.crv + ' equation. Curve constants have moved between firmware revisions — check the first timing point against the relay\'s own prediction before you accept the rest.' }];
+      if (q === 'negseq') notes.push({ lvl: 'warn', lb: '×3 factor', txt: 'Channel currents are already three times the setting because a single-phase injection yields I2 = I/3.' });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 1), u: 'A pri' },
+          { k: 'CT ratio', v: p.ctP + ':' + p.ctS, u: '' }, { k: 'Curve', v: s.crv.replace(/ /g, ' '), u: '' },
+          { k: 't @ 2×', v: (curveTime(s.crv, 2, s.tdm) == null ? '—' : fmt(curveTime(s.crv, 2, s.tdm), 3)), u: 's' }],
+        points: pts, notes
+      };
+    }
+  };
+}
+
+reg(mkIOC('50P', 'Phase instantaneous OC', 'phase', 8.0));
+reg(mkTOC('51P', 'Phase time OC', 'phase', 1.20));
+reg(mkIOC('50G', 'Ground instantaneous OC', 'ground', 0.50));
+reg(mkTOC('51G', 'Ground time OC', 'ground', 0.20));
+reg(mkIOC('50N', 'Neutral instantaneous OC', 'neutral', 0.60));
+reg(mkTOC('51N', 'Neutral time OC', 'neutral', 0.25));
+reg(mkIOC('50_2', 'Negative-sequence IOC', 'negseq', 0.50));
+reg(mkTOC('46', 'Negative-sequence TOC', 'negseq', 0.20));
+
+/* ================= 67  DIRECTIONAL OVERCURRENT ==================== */
+/* Convention used throughout: ECA is the angle by which the operating
+   current LAGS its polarising reference at maximum forward torque.
+   Phase elements use the quadrature connection (IL1 polarised by V L2-L3),
+   ground elements use zero-sequence polarising (3I0 against -3V0).
+   Both references land on 0° for the injections built below, so the
+   forward maximum-torque current angle is simply -ECA.               */
+reg({
+  ansi: '67', name: 'Directional supervision', group: 'Directional',
+  desc: 'Locates the forward maximum-torque line and both boundaries, so the directional decision can be proved without disturbing the overcurrent settings underneath it.',
+  fields: [
+    sel('kind', 'Element', 'P', [['P', '67P — phase, quadrature polarised'], ['N', '67N — ground, zero-sequence polarised']], ''),
+    num('eca', 'Characteristic angle (ECA)', 45, 'deg lag', 1),
+    num('imul', 'Test current', 2.0, '× the supervised pickup', 0.1),
+    num('pkp', 'Supervised pickup', 1.20, '×CT', 0.01),
+    num('vmin', 'Minimum polarising voltage', 3.0, 'V sec', 0.1),
+    WSEL('1')
+  ],
+  opts: [num('bnd', 'Boundary offset', 90, 'deg from MTA', 1), num('marg', 'Boundary test margin', 5, 'deg', 1)],
+  compute(s, o) {
+    const b = base(), w = Number(s.w), gnd = s.kind === 'N';
+    const Isec = s.pkp * b.ctSec(w) * s.imul;
+    const mta = -s.eca;                                  /* forward maximum torque */
+    const build = (aI, name, detail, verdict, vt) => {
+      let v;
+      if (gnd) {
+        /* A-phase-to-ground condition: collapse V L1 so that -3V0 sits on 0° */
+        const Vf = Math.max(0, b.vLNs * 0.20);
+        v = [P(Vf, 0, 'faulted phase, collapsed'), P(b.vLNs, -120), P(b.vLNs, 120)];
+      } else {
+        v = P3(b.vLNs, 0);
+      }
+      const trip = [P(Isec, aI), P(0, 0), P(0, 0)];
+      return {
+        id: name, name, detail, expect: verdict, expectSub: 'Current held at ' + fmt(s.imul, 1) + '× pickup throughout',
+        verdict: vt,
+        channels: chans(v, w === 1 ? trip : nullTriple(), CFG.cmc === '6x' ? (w === 2 ? trip : nullTriple()) : null),
+        phasor: {
+          v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+          i: [{ lab: gnd ? '3I0' : 'I L1', cls: 'ch-l1', mag: Isec, ang: aI }]
+        },
+        sheet: ['67' + s.kind, name, fmt(Isec, 3) + ' A @ ' + fmt(wrap(aI), 1) + '°', 'ECA ' + fmt(s.eca, 0) + '°', verdict]
+      };
+    };
+    const pts = [
+      build(mta, 'Forward maximum torque', 'Current at the characteristic angle — deepest into the operate zone.', 'FORWARD', 'op'),
+      build(wrap(mta + 180), 'Reverse maximum torque', 'Rotated 180° from MTA — deepest into the restrain zone.', 'REVERSE', 'no'),
+      build(wrap(mta + o.bnd - o.marg), 'Boundary, leading side (inside)', fmt(o.marg, 0) + '° inside the ' + fmt(o.bnd, 0) + '° boundary.', 'FORWARD', 'op'),
+      build(wrap(mta + o.bnd + o.marg), 'Boundary, leading side (outside)', fmt(o.marg, 0) + '° outside the boundary.', 'REVERSE', 'no'),
+      build(wrap(mta - o.bnd + o.marg), 'Boundary, lagging side (inside)', fmt(o.marg, 0) + '° inside the ' + fmt(o.bnd, 0) + '° boundary.', 'FORWARD', 'op'),
+      build(wrap(mta - o.bnd - o.marg), 'Boundary, lagging side (outside)', fmt(o.marg, 0) + '° outside the boundary.', 'REVERSE', 'no')
+    ];
+    return {
+      readout: [{ k: 'Test current', v: fmt(Isec, 3), u: 'A sec' }, { k: 'MTA angle', v: fmtA(mta), u: '' },
+        { k: 'Operate zone', v: fmtA(mta - o.bnd) + ' … ' + fmtA(mta + o.bnd), u: '' },
+        { k: 'Polarising', v: gnd ? '−3V0' : 'V L2-L3', u: '' }],
+      points: pts,
+      notes: [
+        { lvl: 'warn', lb: 'Convention', txt: 'ECA here is the angle by which the operating current lags its polarising reference at maximum forward torque, and angles are quoted against V L1 at 0°. Manufacturers differ on the sign. Prove the convention once on the forward and reverse points, then the four boundary points are trustworthy.' },
+        { lvl: 'note', lb: 'Polarising level', txt: gnd
+            ? 'The faulted phase is held at ' + fmt(b.vLNs * 0.2, 1) + ' V so −3V0 is roughly ' + fmt(b.vLNs * 0.8, 1) + ' V — comfortably above the ' + fmt(s.vmin, 1) + ' V minimum. Below that the element goes non-directional or blocks, depending on the setting.'
+            : 'Balanced voltage gives a quadrature polarising magnitude of ' + fmt(b.vLNs * Math.sqrt(3), 1) + ' V, well above the ' + fmt(s.vmin, 1) + ' V minimum.' },
+        { lvl: 'note', lb: 'Sweep instead', txt: 'For a characteristic plot rather than six points, ramp the current angle in the CMC Ramping module and log the operate/reset angles — the two boundaries should sit ' + fmt(2 * o.bnd, 0) + '° apart, centred on ' + fmtA(mta) + '.' }
+      ]
+    };
+  }
+});
+
+/* ================= VOLTAGE ELEMENTS =============================== */
+const VUNIT = sel('vu', 'Pickup unit', 'xVT', [['xVT', '×VT (L-N nominal)'], ['V_sec', 'V secondary'], ['kV_pri', 'kV primary L-L']], '');
+
+reg({
+  ansi: '27', name: 'Undervoltage', group: 'Voltage & frequency',
+  desc: 'Bracketed at the threshold from above, then driven well below it for the timing run.',
+  fields: [num('vpkp', 'Pickup', 0.80, '', 0.01), VUNIT, num('dly', 'Delay', 2.0, 's', 0.1),
+    sel('mode', 'Phase logic', 'any', [['any', 'Any one phase'], ['all', 'All three phases']], ''),
+    num('block', 'Minimum operating V', 5, 'V sec', 0.5)],
+  opts: [num('marg', 'Margin either side', 5, '%', 1), num('tv', 'Timing voltage', 0.5, '× pickup', 0.05)],
+  compute(s, o) {
+    const b = base(), p = vPickup(s, b), m = o.marg / 100, pts = [];
+    const mk = (Vlev, name, detail, verdict, vt, sub) => {
+      const v = s.mode === 'all' ? P3(Vlev, 0) : [P(Vlev, 0, 'depressed phase'), P(b.vLNs, -120), P(b.vLNs, 120)];
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), CFG.cmc === '6x' ? nullTriple() : null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['27', name, fmt(Vlev, 2) + ' V @ 0°', sub, verdict] };
+    };
+    pts.push(mk(p.sec * (1 - m), 'Pickup — below threshold', fmt((1 - m) * 100, 0) + '% of setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'));
+    pts.push(mk(p.sec * (1 + m), 'Pickup — above threshold', fmt((1 + m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'));
+    pts.push(mk(p.sec * o.tv, 'Timing at ' + fmt(o.tv, 2) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time'));
+    pts.push(mk(Math.max(0, s.block * 0.8), 'Below minimum operating voltage', 'Proves the element blocks rather than operating on a dead bus', 'BLOCKED', 'no', 'Element inhibited'));
+    return {
+      readout: [{ k: 'Pickup', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Pickup', v: fmt(p.pri / 1000, 2), u: 'kV pri L-N' },
+        { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' }, { k: 'VT ratio', v: fmt(b.vtr, 1) + ':1', u: '' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Start from nominal', txt: 'Every step starts from a healthy balanced prefault state — an element that has never seen nominal voltage may sit blocked and never pick up.' },
+        { lvl: 'note', lb: 'Phase logic', txt: s.mode === 'all' ? 'Set for all-three-phase logic, so the whole set is depressed together.' : 'Set for any-one-phase logic, so only V L1 is depressed and the healthy phases stay at nominal.' }]
+    };
+  }
+});
+
+reg({
+  ansi: '59', name: 'Overvoltage', group: 'Voltage & frequency',
+  desc: 'Threshold bracketed from below, then a clean multiple for the definite-time run.',
+  fields: [num('vpkp', 'Pickup', 1.10, '', 0.01), VUNIT, num('dly', 'Delay', 1.0, 's', 0.1),
+    sel('mode', 'Phase logic', 'any', [['any', 'Any one phase'], ['all', 'All three phases']], '')],
+  opts: [num('marg', 'Margin either side', 5, '%', 1), num('tv', 'Timing voltage', 1.3, '× pickup', 0.05)],
+  compute(s, o) {
+    const b = base(), p = vPickup(s, b), m = o.marg / 100;
+    const mk = (Vlev, name, detail, verdict, vt, sub) => {
+      const v = s.mode === 'all' ? P3(Vlev, 0) : [P(Vlev, 0, 'raised phase'), P(b.vLNs, -120), P(b.vLNs, 120)];
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), CFG.cmc === '6x' ? nullTriple() : null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['59', name, fmt(Vlev, 2) + ' V @ 0°', sub, verdict] };
+    };
+    return {
+      readout: [{ k: 'Pickup', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Pickup', v: fmt(p.pri / 1000, 2), u: 'kV pri L-N' },
+        { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' }, { k: 'Timing level', v: fmt(p.sec * o.tv, 2), u: 'V sec' }],
+      points: [
+        mk(p.sec * (1 + m), 'Pickup — above threshold', fmt((1 + m) * 100, 0) + '% of setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'),
+        mk(p.sec * (1 - m), 'Pickup — below threshold', fmt((1 - m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'),
+        mk(p.sec * o.tv, 'Timing at ' + fmt(o.tv, 2) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time')
+      ],
+      notes: [{ lvl: 'warn', lb: 'Channel limit', txt: 'Sustained overvoltage on all three channels is the case most likely to run the amplifier warm. Keep the timing run only as long as the delay plus a margin.' }]
+    };
+  }
+});
+
+reg({
+  ansi: '59N', name: 'Neutral overvoltage', group: 'Voltage & frequency',
+  desc: 'Zero-sequence overvoltage. Either injected straight into the auxiliary input from a broken-delta winding, or produced by unbalancing the wye set.',
+  fields: [num('vpkp', 'Pickup', 10, 'V sec (3V0)', 0.5), num('dly', 'Delay', 1.0, 's', 0.1),
+    sel('src', 'Source', 'aux', [['aux', 'Broken delta into V4'], ['wye', 'Unbalance the wye set']], '')],
+  opts: [num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, pts = [];
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const T = s.vpkp * f;
+      let channels, ph;
+      if (s.src === 'aux') {
+        channels = chans(P3(b.vLNs, 0), nullTriple(), null, null, P(T, 0, 'broken-delta 3V0 input'));
+        ph = { v: [{ lab: '3V0', cls: 'ch-n', mag: T, ang: 0 }], i: [] };
+      } else {
+        const Va = Math.max(0, b.vLNs - T);
+        const v = [P(Va, 0, 'depressed to create 3V0'), P(b.vLNs, -120), P(b.vLNs, 120)];
+        channels = chans(v, nullTriple(), null);
+        ph = { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] };
+      }
+      pts.push({ id: 'n' + f, name: 'Pickup — ' + rel + ' threshold', detail: '3V0 = ' + fmt(T, 2) + ' V secondary',
+        expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 2) + ' s' : 'No operation', verdict: vt,
+        channels, phasor: ph, sheet: ['59N', 'Pickup ' + rel, fmt(T, 2) + ' V (3V0)', '—', verdict] });
+    });
+    return {
+      readout: [{ k: 'Pickup 3V0', v: fmt(s.vpkp, 2), u: 'V sec' }, { k: 'Nominal L-N', v: fmt(b.vLNs, 2), u: 'V sec' },
+        { k: 'Source', v: s.src === 'aux' ? 'V4' : 'wye set', u: '' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Unbalance method', txt: 'With V L2 and V L3 at nominal their sum is one nominal phasor at 180°, so 3V0 comes out as the shortfall on V L1. Dropping V L1 by the pickup value is all that is needed.' }]
+    };
+  }
+});
+
+/* ================= 24  VOLTS PER HERTZ ============================ */
+reg({
+  ansi: '24', name: 'Volts per hertz', group: 'Voltage & frequency',
+  desc: 'Overexcitation. The point of the test is that V/Hz can be reached from either variable — the table gives the voltage required at each test frequency.',
+  fields: [num('vhz', 'Pickup', 1.10, 'pu V/Hz', 0.01), num('dly', 'Delay', 5.0, 's', 0.1),
+    sel('bs', 'Voltage base', 'LN', [['LN', 'Nominal L-N secondary'], ['LL', 'Nominal L-L secondary']], '')],
+  opts: [{ k: 'fs', l: 'Test frequencies', d: '60, 57, 54', u: 'Hz', t: 'txt' }, num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), Vb = s.bs === 'LL' ? b.vLLs : b.vLNs, m = o.marg / 100, pts = [];
+    multiplesOf(o.fs).forEach(ft => {
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const target = s.vhz * f;
+        const Vreq = target * Vb * (ft / CFG.freq);        /* V = (V/Hz)pu · Vbase · f/fnom */
+        const v = P3(Vreq, 0).map(q => (q.f = ft, q));
+        pts.push({ id: 'vh' + ft + f, name: fmt(ft, 1) + ' Hz — ' + rel + ' threshold',
+          detail: fmt(target, 3) + ' pu V/Hz requires ' + fmt(Vreq, 2) + ' V secondary at ' + fmt(ft, 1) + ' Hz',
+          expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 1) + ' s' : 'No operation', verdict: vt,
+          channels: chans(v, nullTriple(), null, ft),
+          phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+          sheet: ['24', fmt(ft, 1) + ' Hz ' + rel, fmt(Vreq, 2) + ' V', fmt(ft, 1) + ' Hz', verdict] });
+      });
+    });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.vhz, 3), u: 'pu V/Hz' }, { k: 'V base', v: fmt(Vb, 2), u: 'V sec' },
+        { k: 'V at nominal f', v: fmt(s.vhz * Vb, 2), u: 'V sec' }, { k: 'Delay', v: fmt(s.dly, 1), u: 's' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Two ways in', txt: 'At reduced frequency the voltage needed to reach the same V/Hz falls in proportion. Testing at 54 Hz keeps the amplifier well inside its range and still proves the element.' },
+        { lvl: 'warn', lb: 'Base', txt: 'Relays differ on whether the V/Hz base is the L-N or the L-L nominal. A wrong base shows up as a clean √3 error — check the relay\'s own V/Hz metering against the first point.' }]
+    };
+  }
+});
+
+/* ================= 81  FREQUENCY ================================== */
+reg({
+  ansi: '81', name: 'Under / over frequency', group: 'Voltage & frequency',
+  desc: 'Frequency is stepped across the threshold with voltage held at nominal, since the element needs a healthy voltage to measure at all.',
+  fields: [sel('kind', 'Element', 'U', [['U', '81U — underfrequency'], ['O', '81O — overfrequency']], ''),
+    num('fpk', 'Pickup', 59.30, 'Hz', 0.01), num('dly', 'Delay', 0.30, 's', 0.01),
+    num('vmin', 'Minimum voltage', 30, 'V sec', 1)],
+  opts: [num('dev', 'Test offset', 0.10, 'Hz either side', 0.01)],
+  compute(s, o) {
+    const b = base(), under = s.kind === 'U';
+    const mk = (ft, name, detail, verdict, vt, sub) => {
+      const v = P3(b.vLNs, 0).map(q => (q.f = ft, q));
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), null, ft),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['81' + s.kind, name, fmt(b.vLNs, 2) + ' V', fmt(ft, 3) + ' Hz', verdict] };
+    };
+    const inF = under ? s.fpk - o.dev : s.fpk + o.dev;
+    const outF = under ? s.fpk + o.dev : s.fpk - o.dev;
+    const pts = [
+      mk(inF, 'Pickup — past threshold', fmt(o.dev, 3) + ' Hz beyond the setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'),
+      mk(outF, 'Pickup — short of threshold', fmt(o.dev, 3) + ' Hz on the healthy side', 'RESTRAIN', 'no', 'No operation'),
+      mk(inF, 'Timing', 'Step from ' + fmt(CFG.freq, 1) + ' Hz straight to ' + fmt(inF, 3) + ' Hz', fmt(s.dly, 3) + ' s', 'nu', 'Definite time')
+    ];
+    pts[2].channels = pts[2].channels.map(c => Object.assign({}, c, { note: 'step from ' + fmt(CFG.freq, 1) + ' Hz' }));
+    const pv = P3(Math.max(0, s.vmin * 0.8), 0).map(q => (q.f = inF, q));
+    pts.push({ id: 'blk', name: 'Below minimum voltage', detail: 'Frequency past the setting but voltage held under the ' + fmt(s.vmin, 0) + ' V supervision level',
+      expect: 'BLOCKED', expectSub: 'Element inhibited', verdict: 'no',
+      channels: chans(pv, nullTriple(), null, inF),
+      phasor: { v: pv.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+      sheet: ['81' + s.kind, 'V supervision', fmt(s.vmin * 0.8, 2) + ' V', fmt(inF, 3) + ' Hz', 'BLOCKED'] });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.fpk, 3), u: 'Hz' }, { k: 'Operate at', v: fmt(inF, 3), u: 'Hz' },
+        { k: 'Restrain at', v: fmt(outF, 3), u: 'Hz' }, { k: 'Voltage', v: fmt(b.vLNs, 2), u: 'V sec' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Ramp rate', txt: 'For the pickup points step the frequency rather than ramp it — a slow ramp measures the relay\'s tracking behaviour instead of its threshold. Use a ramp only when the setting includes a rate-of-change term.' }]
+    };
+  }
+});
+
+/* ================= 32  DIRECTIONAL POWER ========================== */
+reg({
+  ansi: '32', name: 'Directional power', group: 'Directional',
+  desc: 'Three-phase power is set by holding voltage at nominal and solving for the current that produces the required watts at the characteristic angle.',
+  fields: [num('pkp', 'Pickup', 3.0, '', 0.01),
+    sel('pu', 'Pickup unit', 'pct', [['pct', '% of transformer rating'], ['MW', 'MW primary'], ['W_sec', 'W secondary, 3-phase']], ''),
+    num('mta', 'Characteristic angle', 0, 'deg', 1), num('dly', 'Delay', 1.0, 's', 0.1),
+    sel('dir', 'Direction', 'fwd', [['fwd', 'Forward / export'], ['rev', 'Reverse / import']], ''), WSEL('1')],
+  opts: [num('marg', 'Margin either side', 10, '%', 1)],
+  compute(s, o) {
+    const b = base(), w = Number(s.w), m = o.marg / 100;
+    const vtr = b.vtr, ctr = b.ctr(w);
+    let Psec;                                            /* three-phase watts at the relay terminals */
+    if (s.pu === 'W_sec') Psec = s.pkp;
+    else if (s.pu === 'MW') Psec = s.pkp * 1e6 / (vtr * ctr);
+    else Psec = (s.pkp / 100) * CFG.mva * 1e6 / (vtr * ctr);
+    const V = b.vLNs, mk = (f, name, verdict, vt, rel) => {
+      const Pt = Psec * f;
+      const cosphi = Math.cos(s.mta * D2R);
+      const I = Math.abs(Pt / (3 * V * (Math.abs(cosphi) < 1e-6 ? 1e-6 : cosphi)));
+      const aI = (s.dir === 'rev' ? 180 : 0) - s.mta;
+      const v = P3(V, 0), i = P3(I, aI);
+      return { id: name, name, detail: fmt(f * 100, 0) + '% of setting — ' + fmt(Pt, 1) + ' W secondary, ' + fmt(Pt * vtr * ctr / 1e6, 3) + ' MW primary',
+        expect: verdict, expectSub: 'Balanced 3-phase, current at ' + fmtA(aI), verdict: vt,
+        channels: chans(v, w === 1 ? i : nullTriple(), CFG.cmc === '6x' ? (w === 2 ? i : nullTriple()) : null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['32', name, fmt(I, 3) + ' A @ ' + fmtA(aI), fmt(V, 2) + ' V @ 0°', verdict] };
+    };
+    return {
+      readout: [{ k: 'Pickup', v: fmt(Psec, 1), u: 'W sec 3φ' }, { k: 'Pickup', v: fmt(Psec * vtr * ctr / 1e6, 3), u: 'MW pri' },
+        { k: 'Current at 1×', v: fmt(Math.abs(Psec / (3 * V * Math.cos(s.mta * D2R))), 3), u: 'A sec' },
+        { k: 'Angle', v: fmtA((s.dir === 'rev' ? 180 : 0) - s.mta), u: '' }],
+      points: [mk(1 + m, 'Pickup — above threshold', 'OPERATE', 'op'), mk(1 - m, 'Pickup — below threshold', 'RESTRAIN', 'no'),
+        mk(2, 'Timing at 2× pickup', fmt(s.dly, 2) + ' s', 'nu')],
+      notes: [{ lvl: 'note', lb: 'Why three-phase', txt: 'The element sums all three phases, so a single-phase injection reads one third of the expected power. Keep the balanced set.' },
+        { lvl: 'warn', lb: 'Sign', txt: 'Forward here means current in phase with voltage at the characteristic angle. Confirm against the relay\'s own power metering before recording — the sign convention follows the CT polarity as wired, not the setting.' }]
+    };
+  }
+});
+
+/* ================= 49  THERMAL OVERLOAD =========================== */
+reg({
+  ansi: '49', name: 'Thermal overload', group: 'Overcurrent',
+  desc: 'Operate times from the IEC 60255-8 thermal replica, including the effect of prior load on the initial thermal state.',
+  fields: [num('ib', 'Base current Ib', 1.0, '×CT', 0.01), num('kf', 'k factor', 1.05, '', 0.01),
+    num('tau', 'Time constant τ', 5.0, 'minutes', 0.1), num('ip', 'Prior load', 0.0, '× Ib', 0.05), WSEL('1')],
+  opts: [{ k: 'muls', l: 'Test multiples', d: '1.5, 2, 3, 5', u: '× k·Ib', t: 'txt' }, num('iang', 'Injection angle', 0, 'deg', 5)],
+  compute(s, o) {
+    const b = base(), w = Number(s.w), Ibs = s.ib * b.ctSec(w), Ith = s.kf * Ibs, tau = s.tau * 60;
+    const pts = multiplesOf(o.muls).map(M => {
+      const I = Ith * M, num_ = I * I - Math.pow(s.ip * Ibs, 2), den = I * I - Ith * Ith;
+      const t = den > 0 && num_ > 0 ? tau * Math.log(num_ / den) : null;
+      return Object.assign(ocPoint('th' + M, 'Operate at ' + fmt(M, 2) + '× thermal setting',
+        'Applied ' + fmt(I, 3) + ' A sec · prior load ' + fmt(s.ip, 2) + '× Ib', I, o.iang, w,
+        t == null ? 'no operation' : fmt(t, 1) + ' s', t == null ? 'Below the thermal asymptote k·Ib' : fmt(t / 60, 2) + ' minutes'),
+        { verdict: 'nu', sheet: ['49', fmt(M, 2) + '× k·Ib', fmt(I, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 1) + ' s', 'TIME'] });
+    });
+    return {
+      readout: [{ k: 'Base Ib', v: fmt(Ibs, 3), u: 'A sec' }, { k: 'k·Ib', v: fmt(Ith, 3), u: 'A sec' },
+        { k: 'τ', v: fmt(s.tau, 1), u: 'min' }, { k: 'Prior load', v: fmt(s.ip * Ibs, 3), u: 'A sec' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Cool down first', txt: 'These times assume the thermal image starts at the stated prior load. After a test that reached trip the replica needs several time constants — around ' + fmt(5 * s.tau, 0) + ' minutes here — or the next point reads short. Reset the thermal memory between points if the relay allows it.' },
+        { lvl: 'note', lb: 'Model', txt: 't = τ · ln[(I² − Ip²) / (I² − (k·Ib)²)], the IEC 60255-8 replica. Confirm the relay uses this form and not a discrete-step model before relying on the longer times.' }]
+    };
+  }
+});
+
+/* ================= 50BF  BREAKER FAILURE ========================== */
+reg({
+  ansi: '50BF', name: 'Breaker failure', group: 'Overcurrent',
+  desc: 'Current is held above the detector while the initiate is asserted and never removed, so both stages time out.',
+  fields: [num('pkp', 'Current detector', 0.20, '×CT', 0.01), num('t1', 'Timer 1 — retrip', 0.10, 's', 0.01),
+    num('t2', 'Timer 2 — backup trip', 0.20, 's', 0.01), WSEL('1')],
+  opts: [num('imul', 'Test current', 2.0, '× detector pickup', 0.1), num('marg', 'Margin either side', 5, '%', 1), num('iang', 'Injection angle', -75, 'deg', 5)],
+  compute(s, o) {
+    const b = base(), w = Number(s.w), Ipk = s.pkp * b.ctSec(w), m = o.marg / 100;
+    const pts = [
+      Object.assign(ocPoint('bf1', 'Current detector — above threshold', fmt((1 + m) * 100, 0) + '% of detector setting, no initiate',
+        Ipk * (1 + m), o.iang, w, 'DETECTOR PICKED UP', 'Flag only — no trip without initiate'),
+        { verdict: 'op', sheet: ['50BF', 'Detector above', fmt(Ipk * (1 + m), 3) + ' A', '—', 'PICKUP'] }),
+      Object.assign(ocPoint('bf2', 'Current detector — below threshold', fmt((1 - m) * 100, 0) + '% of detector setting',
+        Ipk * (1 - m), o.iang, w, 'NO PICKUP', 'Detector must drop out'),
+        { verdict: 'no', sheet: ['50BF', 'Detector below', fmt(Ipk * (1 - m), 3) + ' A', '—', 'NO PICKUP'] }),
+      Object.assign(ocPoint('bf3', 'Retrip timing', 'Initiate asserted with current held at ' + fmt(o.imul, 1) + '× detector and never removed',
+        Ipk * o.imul, o.iang, w, fmt(s.t1, 3) + ' s', 'Timer 1 — retrip output'),
+        { verdict: 'nu', sheet: ['50BF', 'Retrip t1', fmt(Ipk * o.imul, 3) + ' A', fmt(s.t1, 3) + ' s', 'TIME'] }),
+      Object.assign(ocPoint('bf4', 'Backup trip timing', 'Same state, second stage', Ipk * o.imul, o.iang, w,
+        fmt(s.t2, 3) + ' s', 'Timer 2 — bus / backup trip output'),
+        { verdict: 'nu', sheet: ['50BF', 'Backup t2', fmt(Ipk * o.imul, 3) + ' A', fmt(s.t2, 3) + ' s', 'TIME'] }),
+      Object.assign(ocPoint('bf5', 'Reset check', 'Initiate asserted, then current removed inside timer 1', 0, o.iang, w,
+        'NO TRIP', 'Proves the detector reset stops the scheme'),
+        { verdict: 'no', sheet: ['50BF', 'Reset check', '0 A after initiate', '—', 'NO TRIP'] })
+    ];
+    return {
+      readout: [{ k: 'Detector', v: fmt(Ipk, 3), u: 'A sec' }, { k: 'Detector', v: fmt(s.pkp * b.ctPri(w), 1), u: 'A pri' },
+        { k: 'Timer 1', v: fmt(s.t1, 3), u: 's' }, { k: 'Timer 2', v: fmt(s.t2, 3), u: 's' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Initiate', txt: 'The initiate is a binary output from the CMC into the relay\'s BFI input — it does not appear in the channel table. Start both timers from the initiate edge, not from the current step.' },
+        { lvl: 'warn', lb: 'Reset time', txt: 'The reset check is the point that actually matters in service. If the detector reset is slow the scheme trips the bus on every successful clearance.' }]
+    };
+  }
+});
+
+/* ================= 25  SYNCHROCHECK =============================== */
+reg({
+  ansi: '25', name: 'Synchrocheck', group: 'Voltage & frequency',
+  desc: 'Bus on the three-phase set, line on the auxiliary output. Each limit is crossed one at a time so a failure names its own cause.',
+  fields: [num('dv', 'Max voltage difference', 10, 'V sec', 0.5), num('da', 'Max angle difference', 20, 'deg', 1),
+    num('df', 'Max slip frequency', 0.10, 'Hz', 0.01), num('dead', 'Dead threshold', 20, 'V sec', 1),
+    num('live', 'Live threshold', 70, 'V sec', 1)],
+  opts: [num('marg', 'Margin either side', 20, '% of each limit', 5)],
+  compute(s, o) {
+    const b = base(), V = b.vLNs, m = o.marg / 100;
+    const mk = (name, detail, v4m, v4a, v4f, verdict, vt, sub) => {
+      const v = P3(V, 0);
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), null, CFG.freq, P(v4m, v4a, 'line side' + (v4f !== CFG.freq ? ' — ' + fmt(v4f, 3) + ' Hz' : ''))).map(c => c.ch === 'V 4' ? Object.assign(c, { freq: v4f }) : c),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })).concat([{ lab: 'V4 line', cls: 'ch-n', mag: v4m, ang: v4a }]), i: [] },
+        sheet: ['25', name, fmt(V, 2) + ' V bus', fmt(v4m, 2) + ' V @ ' + fmtA(v4a) + ' / ' + fmt(v4f, 3) + ' Hz', verdict] };
+    };
+    return {
+      readout: [{ k: 'Bus V', v: fmt(V, 2), u: 'V sec' }, { k: 'ΔV limit', v: fmt(s.dv, 1), u: 'V' },
+        { k: 'Δθ limit', v: fmt(s.da, 0), u: 'deg' }, { k: 'Δf limit', v: fmt(s.df, 3), u: 'Hz' }],
+      points: [
+        mk('In synchronism', 'All three differences comfortably inside their limits', V, s.da * (1 - m), CFG.freq, 'CLOSE PERMITTED', 'op', 'Δθ ' + fmt(s.da * (1 - m), 1) + '°, ΔV 0 V, Δf 0 Hz'),
+        mk('Angle just inside limit', 'Angle difference at ' + fmt((1 - m) * 100, 0) + '% of the setting', V, s.da * (1 - m), CFG.freq, 'CLOSE PERMITTED', 'op', 'Δθ ' + fmt(s.da * (1 - m), 1) + '°'),
+        mk('Angle just outside limit', 'Angle difference at ' + fmt((1 + m) * 100, 0) + '% of the setting', V, s.da * (1 + m), CFG.freq, 'BLOCKED', 'no', 'Δθ ' + fmt(s.da * (1 + m), 1) + '°'),
+        mk('Voltage difference outside limit', 'Angle matched, magnitude offset past ΔV', V - s.dv * (1 + m), 0, CFG.freq, 'BLOCKED', 'no', 'ΔV ' + fmt(s.dv * (1 + m), 2) + ' V'),
+        mk('Slip outside limit', 'Line output run off frequency so the angle rotates', V, 0, CFG.freq + s.df * (1 + m), 'BLOCKED', 'no', 'Δf ' + fmt(s.df * (1 + m), 3) + ' Hz'),
+        mk('Dead line, live bus', 'Line collapsed below the dead threshold', s.dead * 0.5, 0, CFG.freq, 'PER DEAD-LINE LOGIC', 'nu', 'Result depends on the dead/live scheme enabled'),
+        mk('Both dead', 'Bus and line both below the dead threshold — set the bus channels low as well', s.dead * 0.5, 0, CFG.freq, 'PER DEAD-BUS LOGIC', 'nu', 'Drop the three bus channels to ' + fmt(s.dead * 0.5, 1) + ' V for this step')
+      ],
+      notes: [{ lvl: 'note', lb: 'V4 output', txt: 'The line-side voltage goes on the CMC\'s fourth voltage output. Independent frequency on that channel is what makes the slip test possible — set it in the State Sequencer, not the fixed-state module.' },
+        { lvl: 'warn', lb: 'Slip test', txt: 'A slipping line rotates continuously, so the element will permit closing each time the angle sweeps through the window. Judge the slip test on whether the permissive appears at the right angle, not on whether it appears at all.' }]
+    };
+  }
+});
+
+/* ==================================================================
+   PHASOR RENDERER
+   ================================================================== */
+function phasorSVG(data, size) {
+  const S = size || 300, C = S / 2, R = S * 0.365;
+  const vs = (data.v || []).filter(x => x && isFinite(x.mag));
+  const is = (data.i || []).filter(x => x && isFinite(x.mag));
+  const vMax = Math.max(1e-9, ...vs.map(x => Math.abs(x.mag)));
+  const iMax = Math.max(1e-9, ...is.map(x => Math.abs(x.mag)));
+  let g = '';
+  [0.25, 0.5, 0.75, 1].forEach(f =>
+    g += '<circle class="ph-grid" cx="' + C + '" cy="' + C + '" r="' + (R * f).toFixed(1) + '" fill="none"/>');
+  for (let a = 0; a < 360; a += 30) {
+    const x = C + R * Math.cos(a * D2R), y = C - R * Math.sin(a * D2R);
+    g += '<line class="' + (a % 90 === 0 ? 'ph-axis' : 'ph-grid') + '" x1="' + C + '" y1="' + C + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>';
+  }
+  [[0, '0°'], [90, '90°'], [180, '180°'], [270, '270°']].forEach(([a, t]) => {
+    const r = R + 13, x = C + r * Math.cos(a * D2R), y = C - r * Math.sin(a * D2R);
+    g += '<text class="ph-tick" x="' + x.toFixed(1) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="middle" fill="currentColor">' + t + '</text>';
+  });
+  const draw = (arr, max, kind) => arr.forEach(p => {
+    const L = R * Math.min(1, Math.abs(p.mag) / max);
+    if (L < 1.5) return;
+    const a = p.ang * D2R, x = C + L * Math.cos(a), y = C - L * Math.sin(a);
+    const hw = 4.2, hl = 9;
+    const bx = C + (L - hl) * Math.cos(a), by = C - (L - hl) * Math.sin(a);
+    const px = -Math.sin(a) * hw, py = -Math.cos(a) * hw;
+    const cls = p.cls.replace('ch-', kind === 'v' ? 'v-' : 'i-') + (p.alt ? ' alt' : '');
+    const fcl = p.cls.replace('ch-', 'f-');
+    g += '<line class="' + (kind === 'v' ? 'vec-v ' : 'vec-i ') + cls + '" x1="' + C + '" y1="' + C + '" x2="' + bx.toFixed(1) + '" y2="' + by.toFixed(1) + '"/>';
+    g += '<polygon class="' + fcl + '" points="' + x.toFixed(1) + ',' + y.toFixed(1) + ' ' +
+      (bx + px).toFixed(1) + ',' + (by + py).toFixed(1) + ' ' + (bx - px).toFixed(1) + ',' + (by - py).toFixed(1) + '"/>';
+  });
+  draw(vs, vMax, 'v');
+  draw(is, iMax, 'i');
+  return '<svg class="phasor" viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Phasor diagram">' + g + '</svg>';
+}
+function phasorLegend(data) {
+  const rows = [];
+  const vm = Math.max(0, ...(data.v || []).map(x => x.mag)), im = Math.max(0, ...(data.i || []).map(x => x.mag));
+  if (vm > 0 || im > 0) rows.push('<div class="scale">full scale ' +
+    (vm > 0 ? fmt(vm, 1) + ' V' : '') + (vm > 0 && im > 0 ? ' · ' : '') + (im > 0 ? fmt(im, 2) + ' A' : '') + '</div>');
+  (data.v || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ')"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 2) + ' V ' + fmtA(p.ang) + '</span></span></div>'));
+  (data.i || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ');border-top-style:' + (p.alt ? 'dotted' : 'dashed') + '"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 3) + ' A ' + fmtA(p.ang) + '</span></span></div>'));
+  if (!rows.length) rows.push('<div class="lgi"><span></span><span class="val">no quantities</span></div>');
+  return rows.join('');
+}
+
+/* ==================================================================
+   STATE + PERSISTENCE
+   ================================================================== */
+const STORE = 'vec845.v1';
+let ST = { el: '51P', set: {}, opt: {}, sheet: [], vec: null };
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST })); } catch (e) {} }
+function load() {
+  try {
+    const r = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); return true; }
+  } catch (e) {}
+  return false;
+}
+const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
+function defaults(el) {
+  const s = {}, o = {};
+  el.fields.forEach(f => s[f.k] = f.d);
+  (el.opts || []).forEach(f => o[f.k] = f.d);
+  return { s, o };
+}
+function curSettings() {
+  const el = elByAnsi(ST.el), d = defaults(el);
+  return { el, s: Object.assign(d.s, ST.set[el.ansi] || {}), o: Object.assign(d.o, ST.opt[el.ansi] || {}) };
+}
+
+/* ==================================================================
+   RENDER — configuration tab
+   ================================================================== */
+const $ = q => document.querySelector(q);
+const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function renderCfg() {
+  document.querySelectorAll('[data-cfg]').forEach(el => {
+    if (el !== document.activeElement) el.value = CFG[el.dataset.cfg];
+  });
+  const b = base();
+  $('#derived').innerHTML = [
+    ['W1 rated current', fmt(b.Ir1p, 1), 'A primary'], ['W1 at CT secondary', fmt(b.Ir1s, 3), 'A sec'],
+    ['W2 rated current', fmt(b.Ir2p, 1), 'A primary'], ['W2 at CT secondary', fmt(b.Ir2s, 3), 'A sec'],
+    ['W1 CT ratio', fmt(b.ctr1, 1) + ':1', ''], ['W2 CT ratio', fmt(b.ctr2, 1) + ':1', ''],
+    ['VT ratio', fmt(b.vtr, 1) + ':1', ''], ['Nominal secondary', fmt(b.vLNs, 2), 'V L-N'],
+    ['Vector group', b.vg, 'shift ' + fmtA(b.shift)],
+    ['Base rating', fmt(b.mvaB, 1) + ' MVA', { onan: 'ONAN', onaf1: 'ONAF 1', onaf2: 'ONAF 2' }[CFG.mvaBase] || 'ONAN'],
+    ['Through fault, W1', fmt(b.Ift1, 0), 'A pri at ' + fmt(CFG.z, 2) + '%'],
+    ['Through fault, W2', fmt(b.Ift2, 0), 'A pri'],
+    ['Through fault, W1 sec', fmt(b.Ift1 / b.ctr1, 2), 'A · ' + fmt(b.Ift1 / b.Ir1p, 1) + ' pu'],
+    ['Tap spread', CFG.oltcW === '0' ? 'no OLTC' : '±' + fmt(b.tapMis * 100, 1) + '%',
+      CFG.oltcW === '0' ? '' : 'on W' + CFG.oltcW + ', now ' + fmt(CFG.oltcPos, 1) + '%'],
+    ['Earth fault, W1', b.Igf1 > 0 ? fmt(b.Igf1, 0) + ' A' : 'none', earthed(CFG.w1c) ? 'available' : 'not earthed'],
+    ['Earth fault, W2', b.Igf2 > 0 ? fmt(b.Igf2, 0) + ' A' : 'none', earthed(CFG.w2c) ? 'available' : 'not earthed'],
+    ['CT margin', fmt(CFG.ct1p / b.Ir1p, 2) + ' / ' + fmt(CFG.ct2p / b.Ir2p, 2) + '×', 'W1 / W2 vs rated']
+  ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
+
+  const n = [], r1 = b.Ir1s, r2 = b.Ir2s, mis = Math.abs(r1 - r2) / Math.max(r1, r2);
+  if (mis > 0.25) n.push({ lvl: 'warn', lb: 'CT mismatch', txt: 'The two windings sit at ' + fmt(r1, 2) + ' A and ' + fmt(r2, 2) + ' A secondary at transformer rating — a ' + fmt(mis * 100, 0) + '% mismatch. That is what the relay\'s magnitude compensation exists for, but it also means the two current triples in every 87T test will look very different. Check the CT ratios before you suspect the calculation.' });
+  else n.push({ lvl: 'good', lb: 'CT match', txt: 'Both windings land within ' + fmt(mis * 100, 0) + '% of each other at rated load — ' + fmt(r1, 2) + ' A and ' + fmt(r2, 2) + ' A secondary.' });
+  if (CFG.ct1p < b.Ir1p) n.push({ lvl: 'bad', lb: 'W1 CT undersized', txt: 'The W1 CT primary (' + CFG.ct1p + ' A) is below the winding rated current (' + fmt(b.Ir1p, 1) + ' A). Confirm the nameplate MVA base — a forced-cooled rating entered against self-cooled CTs produces exactly this.' });
+  if (CFG.ct2p < b.Ir2p) n.push({ lvl: 'bad', lb: 'W2 CT undersized', txt: 'The W2 CT primary (' + CFG.ct2p + ' A) is below the winding rated current (' + fmt(b.Ir2p, 1) + ' A).' });
+  if (CFG.cmc !== '6x') n.push({ lvl: 'warn', lb: 'Amp mode', txt: 'One current triple is configured. The 87T and 87G tests drive both windings and need the 6 × 12.5 A arrangement.' });
+  else n.push({ lvl: 'note', lb: 'Amp mode', txt: 'Two triples, ' + fmt(CFG.imax, 1) + ' A per channel. Triple A feeds W1, triple B feeds W2 throughout this tool.' });
+  /* the slope has to cover the tap range, the CT error and the relay's own
+     mismatch before it covers anything real */
+  if (CFG.oltcW !== '0' && b.tapMis > 0) {
+    const need = (b.tapMis + 0.05 + 0.05) * 100;
+    n.push({ lvl: 'note', lb: 'Tap range vs slope 1',
+      txt: 'The tap changer moves W' + CFG.oltcW + ' by ±' + fmt(b.tapMis * 100, 1) +
+        '% about mid-tap. With 5% for CT error and 5% for the relay\'s own matching, slope 1 has to sit above about ' +
+        fmt(need, 0) + '% or a healthy transformer at the end of its range will look like an internal fault. ' +
+        'It is currently found at ' + fmt(CFG.oltcPos, 1) + '%, which is where the differential should be proved.' });
+  }
+  if (CFG.oltcW !== '0' && Math.abs(+CFG.oltcPos) > Math.max(+CFG.oltcHi, +CFG.oltcLo) + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Tap out of range', txt: 'The present tap position of ' + fmt(CFG.oltcPos, 1) +
+      '% is outside the declared range of +' + fmt(CFG.oltcHi, 1) + '% / −' + fmt(CFG.oltcLo, 1) + '%.' });
+
+  /* earthing decides whether the ground elements have anything to measure */
+  [[1, CFG.w1c, CFG.gnd1, b.Igf1], [2, CFG.w2c, CFG.gnd2, b.Igf2]].forEach(([w, conn, mode, ig]) => {
+    if (!earthed(conn)) {
+      if (mode !== 'none') n.push({ lvl: 'bad', lb: 'W' + w + ' cannot be earthed',
+        txt: 'W' + w + ' is connected ' + conn + ', which has no star point to earth, but an earthing arrangement is set against it. Zero-sequence current cannot flow out of that winding, so its ground elements and REF have nothing to measure.' });
+      return;
+    }
+    if (ig > 0 && ig < 50) n.push({ lvl: 'warn', lb: 'W' + w + ' earth fault current is small',
+      txt: 'The W' + w + ' earthing arrangement limits earth fault current to about ' + fmt(ig, 0) +
+        ' A primary, which is ' + fmt(ig / b.ctrg, 3) + ' A through a ' + CFG.ctgp + ':' + CFG.ctgs +
+        ' ground CT. Set REF and the ground overcurrent elements against that figure, not against the phase CT rating.' });
+    else if (ig > 0) n.push({ lvl: 'note', lb: 'W' + w + ' earth fault current',
+      txt: 'About ' + fmt(ig, 0) + ' A primary available, ' + fmt(ig / b.ctrg, 2) + ' A through the ground CT.' });
+  });
+
+  if (b.Ift1 / b.Ir1p > 0 && CFG.z > 0)
+    n.push({ lvl: 'note', lb: 'Through fault',
+      txt: 'At ' + fmt(CFG.z, 2) + '% impedance a through fault reaches ' + fmt(b.Ift1 / b.Ir1p, 1) +
+        ' times rating — ' + fmt(b.Ift1, 0) + ' A primary on W1 and ' + fmt(b.Ift2, 0) + ' A on W2, ' +
+        'or ' + fmt(b.Ift1 / b.ctr1, 1) + ' A and ' + fmt(b.Ift2 / b.ctr2, 1) +
+        ' A at the CT secondaries. That is the current the differential has to stay stable through, and the level any instantaneous element must sit above.' });
+
+  const hi = 8 * Math.max(CFG.ct1s, CFG.ct2s);
+  if (hi > CFG.imax) n.push({ lvl: 'note', lb: 'Headroom', txt: 'A typical 50P setting of 8 ×CT would call for ' + fmt(hi, 1) + ' A secondary, past the ' + fmt(CFG.imax, 1) + ' A channel limit. Instantaneous elements at that level usually need the 3 × 32 A mode.' });
+  $('#cfgNotes').innerHTML = n.map(noteHTML).join('');
+  chipStrip();
+}
+const noteHTML = n => '<div class="note ' + (n.lvl === 'note' ? '' : n.lvl) + '"><span class="lb">' + n.lb + '</span><span>' + n.txt + '</span></div>';
+
+function chipStrip() {
+  const b = base();
+  $('#topChips').innerHTML = [
+    ['<span class="dot"></span>' + fmt(b.mvaB, 1) + ' MVA', CFG.kv1 + '/' + CFG.kv2 + ' kV ' + b.vg],
+    ['CT', CFG.ct1p + ':' + CFG.ct1s + ' · ' + CFG.ct2p + ':' + CFG.ct2s],
+    ['VT', CFG.vtp + ':' + CFG.vts + ' ' + CFG.vtc],
+    ['CMC', CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A'],
+    ['f', CFG.freq + ' Hz · ' + CFG.rot]
+  ].map(([a, v]) => '<span class="chip">' + a + '<b>' + v + '</b></span>').join('');
+}
+
+/* ==================================================================
+   RENDER — element rail, settings form, results
+   ================================================================== */
+function renderRail() {
+  const groups = [];
+  ELEMENTS.forEach(e => {
+    let g = groups.find(x => x.n === e.group);
+    if (!g) groups.push(g = { n: e.group, items: [] });
+    g.items.push(e);
+  });
+  $('#rail').innerHTML = groups.map(g =>
+    '<div class="rail-h">' + esc(g.n) + '</div>' + g.items.map(e =>
+      '<button class="rail-i" type="button" data-el="' + e.ansi + '" aria-current="' + (e.ansi === ST.el) + '">' +
+      '<span class="ansi">' + esc(e.ansi) + '</span><span class="nm">' + esc(e.name) + '</span></button>').join('')
+  ).join('');
+}
+
+function fieldHTML(f, v, ns) {
+  const id = ns + '_' + f.k;
+  let ctl;
+  if (f.t === 'sel') ctl = '<select id="' + id + '" data-' + ns + '="' + f.k + '">' +
+    f.opts.map(([val, lab]) => '<option value="' + esc(val) + '"' + (String(v) === String(val) ? ' selected' : '') + '>' + esc(lab) + '</option>').join('') + '</select>';
+  else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  else ctl = '<input id="' + id + '" type="number" step="' + (f.step || 0.01) + '" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  const wide = f.t === 'sel' && f.opts.some(o => o[1].length > 22);
+  return '<div class="f' + (wide || f.t === 'txt' ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
+    (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
+}
+
+function renderElement() {
+  const { el, s, o } = curSettings();
+  document.querySelectorAll('.rail-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.el === el.ansi)));
+  $('#setHint').textContent = 'ANSI ' + el.ansi;
+  $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
+  $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+
+  let R;
+  try { R = el.compute(s, o); }
+  catch (err) { $('#outPane').innerHTML = '<div class="note bad"><span class="lb">Error</span><span>' + esc(err.message) + ' — check the settings above for a value that cannot be resolved (a zero ratio or a negative pickup).</span></div>'; return; }
+
+  if (!ST.pt || !R.points.some(p => p.id === ST.pt)) ST.pt = R.points[0] && R.points[0].id;
+  const pt = R.points.find(p => p.id === ST.pt) || R.points[0];
+  const chNotes = pt ? checkChannels(pt.channels) : [];
+
+  $('#outPane').innerHTML =
+    '<div class="ehead"><span class="badge">' + esc(el.ansi) + '</span><div><h2>' + esc(el.name) + '</h2>' +
+      '<p class="desc">' + esc(el.desc) + '</p></div></div>' +
+
+    '<div class="blk"><div class="blk-h"><h3>Derived from settings</h3></div>' +
+      '<dl class="readout">' + R.readout.map(r => '<div><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) + (r.u ? '<small>' + esc(r.u) + '</small>' : '') + '</dd></div>').join('') + '</dl></div>' +
+
+    '<div class="blk"><div class="blk-h"><h3>Test points</h3><span class="hint">select a row to load its channels</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Step</th><th>What is applied</th><th>Expected</th></tr></thead><tbody>' +
+      R.points.map(p => {
+        const pk = Math.max(0, ...p.channels.filter(c => c.unit === 'A').map(c => c.mag));
+        const over = pk > CFG.imax + 1e-9;
+        return '<tr data-pt="' + esc(p.id) + '" style="cursor:pointer' + (p.id === ST.pt ? ';background:var(--accent-soft)' : '') + '">' +
+        '<td class="key">' + esc(p.name) +
+          (over ? '<span class="sm" style="color:var(--fail)">needs ' + fmt(pk, 1) + ' A — past the ' + fmt(CFG.imax, 1) + ' A channel limit</span>' : '') + '</td>' +
+        '<td>' + esc(p.detail) + '</td>' +
+        '<td><span class="pill ' + (p.verdict || 'nu') + '">' + esc(p.expect) + '</span><span class="sm">' + esc(p.expectSub || '') + '</span></td></tr>';
+      }).join('') +
+      '</tbody></table></div></div>' +
+
+    (pt ? '<div class="blk"><div class="chan">' +
+      '<div class="chan-h"><h3>CMC 356 channels</h3><span class="cfg">' + esc(pt.name) + ' · ' +
+        (CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A') + '</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Output</th><th class="n">Magnitude</th><th class="n">Angle</th><th class="n">Freq</th><th>Note</th></tr></thead><tbody>' +
+      pt.channels.map(c => '<tr><td class="chname ' + c.cls + '">' + esc(c.ch) + '</td>' +
+        '<td class="n">' + fmt(c.mag, c.unit === 'A' ? 3 : 2) + ' ' + c.unit + '</td>' +
+        '<td class="n">' + fmtA(c.ang) + '</td>' +
+        '<td class="n">' + fmt(c.freq, 3) + ' Hz</td>' +
+        '<td>' + esc(c.note || '') + '</td></tr>').join('') +
+      '</tbody></table></div></div></div>' : '') +
+
+    (pt && (pt.phasor.v.length || pt.phasor.i.length) ?
+      '<div class="blk"><div class="blk-h"><h3>Applied vectors</h3><span class="hint">' + esc(pt.name) + '</span></div>' +
+      '<div class="phwrap"><div class="phbox">' + phasorSVG(pt.phasor, 290) + '</div>' +
+      '<div class="legend">' + phasorLegend(pt.phasor) + '</div></div></div>' : '') +
+
+    '<div class="blk"><div class="blk-h"><h3>Before you inject</h3></div><div class="notes">' +
+      chNotes.concat(R.notes || []).map(noteHTML).join('') + '</div></div>';
+
+  $('#outPane').querySelectorAll('[data-pt]').forEach(tr =>
+    tr.addEventListener('click', () => { ST.pt = tr.dataset.pt; save(); renderElement(); }));
+  window.__lastResult = { el, R };
+}
+
+/* ==================================================================
+   RENDER — vector calculator
+   ================================================================== */
+/* A true through condition: W2 sits 180° from W1 plus the transformer's own group
+   shift, so the relay's internal compensation nets it to zero differential.  The
+   W1 load angle has to be carried into W2 as well, or the pair no longer balances. */
+const through = (b, m1, m2, la) => ({
+  v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
+  i1: [[m1, la], [m1, la - 120], [m1, la + 120]],
+  i2: [[m2, la + 180 + b.shift], [m2, la + 60 + b.shift], [m2, la - 60 + b.shift]]
+});
+const PRESETS = {
+  'Balanced load': b => through(b, b.Ir1s, b.Ir2s, -30),
+  'A-G fault': b => ({ v: [[b.vLNs * 0.15, 0], [b.vLNs, -120], [b.vLNs, 120]],
+    i1: [[8, -75], [0, -150], [0, 90]], i2: [[0, 0], [0, 0], [0, 0]] }),
+  'B-C fault': b => ({ v: [[b.vLNs, 0], [b.vLNs * 0.55, -150], [b.vLNs * 0.55, 150]],
+    i1: [[0, 0], [7, -165], [7, 15]], i2: [[0, 0], [0, 0], [0, 0]] }),
+  '3-phase fault': b => ({ v: [[b.vLNs * 0.2, 0], [b.vLNs * 0.2, -120], [b.vLNs * 0.2, 120]],
+    i1: [[9, -75], [9, -195], [9, 45]], i2: [[0, 0], [0, 0], [0, 0]] }),
+  'Through fault': b => through(b, b.Ir1s * 4, b.Ir2s * 4, -75),
+  'Internal fault': b => ({ v: [[b.vLNs * 0.3, 0], [b.vLNs * 0.3, -120], [b.vLNs * 0.3, 120]],
+    i1: [[b.Ir1s * 3, 0], [b.Ir1s * 3, -120], [b.Ir1s * 3, 120]], i2: [[0, 0], [0, 0], [0, 0]] }),
+  'Reverse rotation': b => ({ v: [[b.vLNs, 0], [b.vLNs, 120], [b.vLNs, -120]],
+    i1: [[b.Ir1s, 0], [b.Ir1s, 120], [b.Ir1s, -120]], i2: [[0, 0], [0, 0], [0, 0]] })
+};
+
+function rowsHTML(id, vals, unit) {
+  return vals.map((p, k) =>
+    '<div class="vin-row"><span class="lbl ' + PHC[k] + '">' + PH[k] + '</span>' +
+    '<input type="number" step="0.01" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
+    '<input type="number" step="0.5" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
+}
+
+const r2 = a => a.map(p => [Math.round(p[0] * 1000) / 1000, Math.round(wrap(p[1]) * 10) / 10]);
+function renderVector() {
+  if (!ST.vec) ST.vec = PRESETS['Balanced load'](base());
+  ST.vec = { v: r2(ST.vec.v), i1: r2(ST.vec.i1), i2: r2(ST.vec.i2) };
+  const V = ST.vec, b = base();
+  $('#presets').innerHTML = Object.keys(PRESETS).map(k => '<button class="pbtn" type="button" data-preset="' + esc(k) + '">' + esc(k) + '</button>').join('');
+  $('#vIn').innerHTML = rowsHTML('v', V.v);
+  $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+  $('#i2In').innerHTML = rowsHTML('i2', V.i2);
+
+  const Vp = V.v.map(p => pol(p[0], p[1])), I1 = V.i1.map(p => pol(p[0], p[1])), I2 = V.i2.map(p => pol(p[0], p[1]));
+  const ph = {
+    v: Vp.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) })),
+    i: I1.map((p, k) => ({ lab: 'IW1 ' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) }))
+      .concat(I2.map((p, k) => ({ lab: 'IW2 ' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p), alt: true })))
+      .filter(x => x.mag > 1e-9)
+  };
+  $('#vecPhasor').innerHTML = phasorSVG(ph, 320);
+  $('#vecLegend').innerHTML = phasorLegend(ph);
+
+  /* --- differential / restraint, with vector-group compensation ---- */
+  const rot = pol(1, -b.shift);
+  const rows = PH.map((nm, k) => {
+    const p1 = scale(I1[k], b.ctr1 / b.Ir1p), p2 = mul(scale(I2[k], b.ctr2 / b.Ir2p), rot);
+    const id = mag(add(p1, p2)), ir = Math.max(mag(p1), mag(p2));
+    return { nm, k, p1: mag(p1), p2: mag(p2), id, ir };
+  });
+  $('#vecDiffTbl').innerHTML =
+    '<thead><tr><th>Phase</th><th class="n">IW1 pu</th><th class="n">IW2 pu</th><th class="n">Idiff pu</th><th class="n">Irest pu</th></tr></thead><tbody>' +
+    rows.map(r => '<tr><td class="chname ' + PHC[r.k] + '">' + r.nm + '</td><td class="n">' + fmt(r.p1, 3) + '</td><td class="n">' + fmt(r.p2, 3) +
+      '</td><td class="n">' + fmt(r.id, 3) + '</td><td class="n">' + fmt(r.ir, 3) + '</td></tr>').join('') +
+    '<tr class="grp"><td colspan="5">W2 rotated ' + fmtA(-b.shift) + ' to undo the ' + b.vg + ' group shift · restraint as max(|IW1|,|IW2|)</td></tr></tbody>';
+
+  /* --- symmetrical components ------------------------------------- */
+  const sv = seq(Vp[0], Vp[1], Vp[2]), s1 = seq(I1[0], I1[1], I1[2]), s2 = seq(I2[0], I2[1], I2[2]);
+  const srow = (lab, c, u, cls) => '<tr><td class="chname ' + cls + '">' + lab + '</td><td class="n">' + fmt(mag(c), u === 'V' ? 2 : 3) + ' ' + u + '</td><td class="n">' + fmtA(ang(c)) + '</td></tr>';
+  $('#vecSeqTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Magnitude</th><th class="n">Angle</th></tr></thead><tbody>' +
+    '<tr class="grp"><td colspan="3">Voltage</td></tr>' + srow('V1', sv.p, 'V', 'ch-l2') + srow('V2', sv.n, 'V', 'ch-l1') + srow('V0', sv.z, 'V', 'ch-n') + srow('3V0', scale(sv.z, 3), 'V', 'ch-n') +
+    '<tr class="grp"><td colspan="3">Current — W1</td></tr>' + srow('I1', s1.p, 'A', 'ch-l2') + srow('I2', s1.n, 'A', 'ch-l1') + srow('3I0', scale(s1.z, 3), 'A', 'ch-n') +
+    '<tr class="grp"><td colspan="3">Current — W2</td></tr>' + srow('I1', s2.p, 'A', 'ch-l2') + srow('I2', s2.n, 'A', 'ch-l1') + srow('3I0', scale(s2.z, 3), 'A', 'ch-n') +
+    '</tbody>';
+
+  /* --- power and apparent impedance, taken on the winding the VT sits on ---- */
+  const pw = Number(CFG.vtw) === 2 ? 2 : 1, Ipw = pw === 2 ? I2 : I1, spw = pw === 2 ? s2 : s1;
+  let S = cx(0, 0);
+  for (let k = 0; k < 3; k++) S = add(S, mul(Vp[k], conj(Ipw[k])));
+  const Sm = mag(S), pf = Sm > 1e-9 ? S.re / Sm : 0;
+  const scaleP = b.vtr * b.ctr(pw);
+  const Z1 = mag(spw.p) > 1e-9 ? div(sv.p, spw.p) : cx(NaN, NaN);
+  const i2r = mag(spw.n) > 1e-9 ? mag(spw.n) / Math.max(1e-9, mag(spw.p)) : 0;
+  document.getElementById('pwrHint').textContent = 'W' + pw + ' — the VT winding';
+  const prow = (k, v, u) => '<tr><td class="key">' + k + '</td><td class="n">' + v + '</td><td class="ch-n">' + u + '</td></tr>';
+  $('#vecPwrTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Value</th><th>Unit</th></tr></thead><tbody>' +
+    prow('P — secondary', fmt(S.re, 2), 'W 3φ') + prow('Q — secondary', fmt(S.im, 2), 'var 3φ') +
+    prow('S — secondary', fmt(Sm, 2), 'VA 3φ') + prow('Power factor', fmt(pf, 4), (S.im >= 0 ? 'lagging' : 'leading')) +
+    prow('P — primary', fmt(S.re * scaleP / 1e6, 4), 'MW') + prow('Q — primary', fmt(S.im * scaleP / 1e6, 4), 'Mvar') +
+    prow('Z1 magnitude', fmt(mag(Z1), 3), 'Ω sec') + prow('Z1 angle', fmtA(ang(Z1)), 'deg') +
+    prow('Z1 primary', fmt(mag(Z1) * b.vtr / b.ctr(pw), 3), 'Ω pri') + prow('I2 / I1', fmt(i2r * 100, 1), '%') +
+    '</tbody>';
+}
+
+/* ==================================================================
+   TEST SHEET
+   ================================================================== */
+const SHEAD = ['Element', 'Test step', 'Quantity 1', 'Quantity 2', 'Expected', 'Measured', 'Pass/Fail'];
+function renderSheet() {
+  const rows = ST.sheet || [];
+  $('#sheetCount').textContent = rows.length;
+  const hdr = LIC.stamp() + '\n' +
+    '# 845-VEC ' + VERSION + '  test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+    '\n# ' + CFG.mva + ' MVA  ' + CFG.kv1 + '/' + CFG.kv2 + ' kV  ' + base().vg +
+    '\t CT ' + CFG.ct1p + ':' + CFG.ct1s + ' / ' + CFG.ct2p + ':' + CFG.ct2s +
+    '\t VT ' + CFG.vtp + ':' + CFG.vts + '\t CMC ' + (CFG.cmc === '6x' ? '6x12.5A' : CFG.cmc === '3x' ? '3x32A' : '1x64A') + '\n\n';
+  $('#sheetOut').value = rows.length
+    ? hdr + SHEAD.join('\t') + '\n' + rows.map(r => r.concat(['', '']).slice(0, 7).join('\t')).join('\n')
+    : 'No test points collected yet.\n\nOpen the Elements tab, set an element up, then use "Add these test points to sheet".';
+}
+
+/* ==================================================================
+   METHOD / DOCUMENTATION
+   ================================================================== */
+function renderMethod() {
+  $('#methodDoc').innerHTML = `
+    <h2>How this tool arrives at its numbers</h2>
+    <p>Everything below is stated so the arithmetic can be checked by hand. Nothing here replaces the relay
+       manual or the setting file in service &mdash; it replaces the twenty minutes of scratch-paper conversion
+       between them and the test set.</p>
+
+    <h3>Reference frame</h3>
+    <p>All applied quantities are <strong>secondary</strong>, at the relay terminals, and all angles are quoted
+       against V&nbsp;L1 at 0&deg; with counter-clockwise positive. That matches the phasor convention in the
+       CMC&rsquo;s own display, so what you read here is what you type in.</p>
+    <div class="eq">V L-N nominal  = VT secondary / &radic;3   (wye)   = ${fmt(base().vLNs, 2)} V
+CT secondary at rating = MVA / (&radic;3 &middot; kV &middot; CTR)</div>
+
+    <h3>Overcurrent pickup</h3>
+    <p>A pickup in <code>&times;CT</code> is referred to the CT rating, so it converts two ways at once:</p>
+    <div class="eq">I secondary = pickup &times; CT secondary rating
+I primary   = pickup &times; CT primary rating</div>
+    <p>Where the operating quantity is not the phase current itself, the applied current differs from the
+       setting. A single-phase injection produces a residual 3I<sub>0</sub> equal to the applied current, but a
+       negative-sequence I<sub>2</sub> of only one third of it &mdash; so negative-sequence elements are tested at
+       three times the setting, and the channel table already carries that factor.</p>
+
+    <h3>Inverse-time curves</h3>
+    <div class="eq">IEEE C37.112   t = TDM &middot; [ A / (M^p &minus; 1) + B ]
+IEC 60255      t = TDM &middot; [ K / (M^E &minus; 1) ]
+IAC / ANSI     t = TDM &middot; [ A + B/(M&minus;C) + D/(M&minus;C)&sup2; + E/(M&minus;C)&sup3; ]</div>
+    <p>M is the multiple of pickup. Curve constants have changed between firmware revisions on more than one
+       product line, so treat the first predicted time as a check against the relay&rsquo;s own curve, not as
+       the reference.</p>
+
+    <h3>Percent differential</h3>
+    <p>Per-unit is referred to each winding&rsquo;s own rated current, which is what makes the two secondary
+       currents come out different:</p>
+    <div class="eq">I(pu) = I secondary &middot; CTR / I rated primary
+I diff = | IW1(pu) + IW2(pu) &middot; 1&ang;(&minus;shift) |
+I rest = max( |IW1(pu)| , |IW2(pu)| )        (selectable)</div>
+    <p>The dual-slope characteristic is taken as flat at minimum pickup up to break&nbsp;1, slope&nbsp;1 from
+       there to break&nbsp;2, and slope&nbsp;2 continuing from the value slope&nbsp;1 reached at break&nbsp;2.
+       Each restraint point is then solved backwards to a pair of winding currents and offset by the margin,
+       giving one point that must operate and one that must not.</p>
+    <p>The W2 triple is injected at 180&deg; plus the vector-group shift. Through current then lands exactly on
+       the relay&rsquo;s internal compensation and nets to zero differential &mdash; which is why the balanced
+       three-phase set is the right way to test a phase-shifting transformer, and a single-phase injection
+       is not.</p>
+
+    <h3>Directional elements</h3>
+    <p>ECA is treated as the angle by which the operating current <em>lags</em> its polarising reference at
+       maximum forward torque. Phase elements are polarised in quadrature, ground elements on
+       &minus;3V<sub>0</sub>. Both references are placed on 0&deg; by the injections built here, so the forward
+       maximum-torque angle comes out as &minus;ECA and the boundaries sit &plusmn;90&deg; either side.
+       Sign conventions differ between manufacturers: prove forward and reverse once, and the four boundary
+       points follow.</p>
+
+    <h3>Volts per hertz</h3>
+    <div class="eq">V required = (V/Hz)pu &middot; V base &middot; f test / f nominal</div>
+    <p>Which is the useful part of the element: the same per-unit V/Hz is reachable at reduced frequency and
+       much lower voltage, keeping the amplifier well inside its range.</p>
+
+    <h3>Thermal overload</h3>
+    <div class="eq">t = &tau; &middot; ln[ (I&sup2; &minus; Ip&sup2;) / (I&sup2; &minus; (k&middot;Ib)&sup2;) ]</div>
+    <p>The IEC&nbsp;60255-8 replica, with Ip the prior load. The replica has memory, so the second point in a
+       run reads short unless the image is reset or given several time constants to decay.</p>
+
+    <h3>What this tool does not do</h3>
+    <ul>
+      <li>It does not read or write relay setting files. Settings are entered by hand, which means they get
+          read off the relay once and checked.</li>
+      <li>It does not cover 60&nbsp;CT/VT supervision. The logic varies enough between firmware revisions that
+          a generic model would be misleading rather than helpful.</li>
+      <li>It does not model CT saturation, burden, or lead resistance. Channel warnings are about the
+          amplifier&rsquo;s limits, not about whether the CT circuit will behave.</li>
+      <li>It does not know your relay&rsquo;s firmware. Curve constants, the restraint definition and the ECA
+          sign are the three places where a revision difference will show up first.</li>
+    </ul>
+
+    <h3>Before the first use on a job</h3>
+    <ul>
+      <li>Enter the real transformer, CT and VT data on the Setup tab and confirm the derived rated currents
+          against the relay&rsquo;s own metering with load on.</li>
+      <li>Run one timing point and compare against the relay&rsquo;s predicted operate time. If they agree, the
+          curve constants in this tool match your firmware.</li>
+      <li>Run the 87T through-fault point and confirm the relay reads near-zero differential. That single test
+          proves the vector group, the CT ratios and the compensation all at once.</li>
+    </ul>`;
+}
+
+/* ==================================================================
+   EVENTS
+   ================================================================== */
+function setTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === id)));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === id));
+  if (id === 'v-vec') renderVector();
+  if (id === 'v-sheet') renderSheet();
+  if (id === 'v-meth') renderMethod();
+  if (id === 'v-setup') renderCfg();
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setTab(t.dataset.view)));
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.cfg) {
+    const k = t.dataset.cfg, v = t.type === 'number' ? parseFloat(t.value) : t.value;
+    CFG[k] = (t.type === 'number' && !isFinite(v)) ? CFG[k] : v;
+    if (k === 'cmc') { CFG.imax = v === '6x' ? 12.5 : v === '3x' ? 32 : 64; document.querySelector('[data-cfg="imax"]').value = CFG.imax; }
+    save(); renderCfg(); renderElement();
+  } else if (t.dataset.set || t.dataset.opt) {
+    const ns = t.dataset.set ? 'set' : 'opt', k = t.dataset[ns], el = elByAnsi(ST.el);
+    ST[ns][el.ansi] = ST[ns][el.ansi] || {};
+    ST[ns][el.ansi][k] = t.type === 'number' ? parseFloat(t.value) : t.value;
+    save();
+    const focus = t.id;
+    let pos = null;
+    try { pos = t.selectionStart; } catch (err) {}
+    renderElement();
+    const back = document.getElementById(focus);
+    if (back) { back.focus(); if (pos != null) { try { back.setSelectionRange(pos, pos); } catch (err) {} } }
+  } else if (t.dataset.vec) {
+    const [g, i, j] = t.dataset.vec.split('.');
+    const v = parseFloat(t.value);
+    if (isFinite(v)) { ST.vec[g][+i][+j] = v; save(); }
+    const focus = t.dataset.vec;
+    renderVector();
+    const back = document.querySelector('[data-vec="' + focus + '"]');
+    if (back) back.focus();
+  }
+});
+
+document.addEventListener('click', e => {
+  const rail = e.target.closest('[data-el]');
+  if (rail) { ST.el = rail.dataset.el; ST.pt = null; save(); renderElement(); return; }
+  const pre = e.target.closest('[data-preset]');
+  if (pre) { ST.vec = PRESETS[pre.dataset.preset](base()); save(); renderVector(); return; }
+});
+
+$('#addSheet').addEventListener('click', () => {
+  const L = window.__lastResult;
+  if (!L) return;
+  L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
+  save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
+  const b = $('#addSheet');
+  b.textContent = L.R.points.length + ' points added — see Test sheet';
+  setTimeout(() => { b.textContent = 'Add these test points to sheet'; }, 2200);
+});
+$('#copySheet').addEventListener('click', () => {
+  const t = $('#sheetOut'); t.focus(); t.select();
+  try { document.execCommand('copy'); } catch (e) {}
+});
+$('#printSheet').addEventListener('click', () => window.print());
+$('#clearSheet').addEventListener('click', () => { ST.sheet = []; save(); renderSheet(); });
+/* ---- station file: export / import -------------------------------------
+   A station is just the CFG block. Saving it as plain JSON means it can be
+   read, diffed and kept in a job pack, rather than trapped in a browser. */
+function stationName() {
+  return (CFG.mva + 'MVA-' + CFG.kv1 + '-' + CFG.kv2 + 'kV-' + base().vg)
+    .replace(/[^A-Za-z0-9.\-]+/g, '');
+}
+$('#saveCfg').addEventListener('click', () => {
+  const doc = { format: '845-VEC station', v: 1, saved: new Date().toISOString(), station: CFG };
+  const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '845-VEC-' + stationName() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  $('#cfgName').textContent = a.download;
+});
+$('#loadCfg').addEventListener('click', () => $('#cfgFile').click());
+$('#cfgFile').addEventListener('change', ev => {
+  const f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    let doc;
+    try { doc = JSON.parse(rd.result); } catch (e) { doc = null; }
+    if (!doc || doc.format !== '845-VEC station' || !doc.station) {
+      alert('That is not an 845-VEC station file.\n\nExpected a .json saved by this tool. ' +
+            'Nothing has been changed.');
+      ev.target.value = ''; return;
+    }
+    /* Merge over the worked sample so a file written by an older version still
+       opens, with anything it does not carry left at the default. */
+    CFG = Object.assign({}, SAMPLE, doc.station);
+    ST.pt = null;
+    save(); renderCfg(); renderElement();
+    ST.vec = null; if ($('#v-vec').classList.contains('on')) renderVector();
+    $('#cfgName').textContent = f.name;
+    ev.target.value = '';
+  };
+  rd.readAsText(f);
+});
+
+$('#resetBtn').addEventListener('click', () => {
+  CFG = Object.assign({}, SAMPLE);
+  ST = { el: '51P', set: {}, opt: {}, sheet: [], vec: null };
+  save(); renderCfg(); renderRail(); renderElement(); renderVector();
+});
+$('#themeBtn').addEventListener('click', () => {
+  const r = document.documentElement, cur = r.getAttribute('data-theme');
+  const dark = cur ? cur === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.setAttribute('data-theme', dark ? 'light' : 'dark');
+  renderElement();
+  if ($('#v-vec').classList.contains('on')) renderVector();
+});
+
+/* ==================================================================
+   INIT
+   ================================================================== */
+try {
+  const restored = load();
+  renderCfg();
+  renderRail();
+  renderElement();
+  /* Nothing saved means nothing has been entered: open on Setup, where the
+     CT and VT ratios go, rather than on element results computed from the
+     worked sample. Once a station is entered, later visits open on Elements. */
+  if (!restored) setTab('v-setup');
+  LIC.boot();          /* async; paints the bar when it resolves */
+} catch (err) {
+  window.__bootFail('This tool could not start in this browser',
+    (err && err.message ? err.message : String(err)) +
+    (err && err.stack ? '\n\n' + err.stack.split('\n').slice(0, 4).join('\n') : ''));
+}
+</script>
+</body>
+</html>
