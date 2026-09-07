@@ -8,6 +8,11 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release under this tag (e.g. v1.1.0). Leave blank to only build."
+        required: false
+        default: ""
 
 permissions:
   contents: write     # the release job attaches installers to a GitHub Release
@@ -85,7 +90,7 @@ jobs:
   # GitHub Release. Artifacts expire after 90 days; a Release is permanent and
   # has a stable URL you can put in an email.
   release:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.release_tag != ''
     needs: bundle
     runs-on: ubuntu-latest
     steps:
@@ -104,7 +109,9 @@ jobs:
           cd out && sha256sum * | tee SHA256SUMS.txt
       - uses: softprops/action-gh-release@v2
         with:
-          name: 845-VEC ${{ github.ref_name }}
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          name: 845-VEC ${{ inputs.release_tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           files: out/*
           body: |
             **Evaluation builds — unsigned.** Every calculation is live and identical to a
