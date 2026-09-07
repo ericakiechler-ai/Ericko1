@@ -1,7 +1,6 @@
 # The signing key. Losing it ends your ability to issue licences; leaking it
 # lets anyone forge one. It must never enter version control.
 keys/signing-key.pem
-keys/
 
 # Per-customer builds and the register of who holds what.
 dist/845-VEC-*.html

@@ -19,11 +19,13 @@ jobs:
       - run: npx playwright install --with-deps chromium
       # A build that has not passed the calculation and licence tests must never
       # reach a customer, so this gates everything below it.
+      # Throwaway keypair for the test run only: overwrites keys/public-key.b64 in
+      # the CI workspace so the minted test licences match the build under test.
       - run: |
-          node tools/make-keys.mjs || true
+          node tools/make-keys.mjs
           node build.mjs
-          node tools/make-licence.mjs --org "CI Test Org" --site "CI" --seats 1
-          node tools/make-licence.mjs --org "Demo Expired" --seats 3 --expires 2020-01-01
+          node tools/make-licence.mjs --org "Northgate Power Services" --site "Calgary Operations" --seats 12 --id LIC-2026-DAF43F --maint 2027-09-07
+          node tools/make-licence.mjs --org "Demo Expired" --seats 3 --expires 2020-01-01 --no-maint --id LIC-2026-EXP
           node tests/run.mjs
 
   bundle:
@@ -43,15 +45,14 @@ jobs:
       - uses: swatinem/rust-cache@v2
         with: { workspaces: './desktop/src-tauri -> target' }
 
-      - name: Build the licensed HTML
+      # The installer ships the EVALUATION build, embedding the committed public
+      # key. No secret is needed and no customer licence ever enters CI. Licensed
+      # copies are minted locally, where the private key lives.
+      - name: Build the evaluation HTML
         shell: bash
         run: |
-          node tools/make-keys.mjs || true
           node build.mjs
-          node tools/make-licence.mjs --org "${{ vars.LICENCE_ORG || 'Evaluation' }}" \
-                                      --site "${{ vars.LICENCE_SITE || '' }}" \
-                                      --seats "${{ vars.LICENCE_SEATS || 1 }}"
-          cp dist/845-VEC-*.html desktop/frontend/index.html
+          cp dist/845-VEC-unlicensed.html desktop/frontend/index.html
 
       - name: Icons and bundle
         working-directory: desktop

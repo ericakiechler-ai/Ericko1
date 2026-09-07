@@ -14,7 +14,11 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 const VERSION = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
-const BUILD = new Date().toISOString().slice(0, 10);
+/* VEC_BUILD_DATE lets the test suite produce a back-dated build to exercise the
+   maintenance-term logic. Never set it for a release. */
+const BUILD = process.env.VEC_BUILD_DATE || new Date().toISOString().slice(0, 10);
+if (!/^\d{4}-\d{2}-\d{2}$/.test(BUILD)) { console.error('VEC_BUILD_DATE must be YYYY-MM-DD'); process.exit(1); }
+const OUT = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : 'dist/845-VEC-unlicensed.html';
 
 let html = fs.readFileSync('src/845-vec.html', 'utf8');
 
@@ -52,14 +56,14 @@ for (const bad of ['fonts.googleapis.com', 'fonts.gstatic.com', 'cdnjs', 'unpkg'
 }
 if (!html.includes('{"p":"","s":""}')) { console.error('Licence slot missing from build.'); process.exit(1); }
 
-fs.mkdirSync('dist', { recursive: true });
-const out = 'dist/845-VEC-unlicensed.html';
+fs.mkdirSync(path.dirname(OUT), { recursive: true });
+const out = OUT;
 fs.writeFileSync(out, html);
 
 
 /* -- customer setup guide -------------------------------------------------- */
 const guideSrc = 'docs/install-guide.src.html';
-if (fs.existsSync(guideSrc)) {
+if (fs.existsSync(guideSrc) && OUT === 'dist/845-VEC-unlicensed.html') {
   let g = fs.readFileSync(guideSrc, 'utf8')
     .replace('/*__FONTS__*/', fs.readFileSync(fontsPath, 'utf8'))
     .replaceAll('__VERSION__', 'v' + VERSION)

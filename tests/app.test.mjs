@@ -3,6 +3,10 @@ const D = new URL('../dist', import.meta.url).pathname;
 let pass = 0, fail = 0;
 const ck = (n, ok, extra) => { ok ? pass++ : fail++; console.log((ok?'  ok   ':'  FAIL ')+n+(extra?'  ['+extra+']':'')); };
 
+const { execFileSync } = await import('node:child_process');
+const ROOT = new URL('..', import.meta.url).pathname;
+execFileSync(process.execPath, ['build.mjs', '--out', 'dist/test-old-build.html'], { cwd: ROOT, env: { ...process.env, VEC_BUILD_DATE: '2026-01-15' }, stdio: 'ignore' });
+execFileSync(process.execPath, ['tools/make-licence.mjs', '--org', 'Lapsed Maint Co', '--seats', '4', '--maint', '2026-06-30', '--template', 'dist/test-old-build.html', '--id', 'LIC-TEST-LAPSED'], { cwd: ROOT, stdio: 'ignore' });
 const b = await chromium.launch();
 
 async function page(file) {
@@ -168,6 +172,47 @@ console.log('\n— Station file round-trip —');
   await p.waitForTimeout(400);
   ck('junk file refused, station unchanged', await p.locator('[data-cfg="ct1p"]').inputValue() === '300');
   await p.close();
+}
+
+console.log('\n— Licence model: perpetual + maintenance —');
+{
+  const fsp = await import('node:fs');
+  // (a) maintenance current
+  const a = await page('845-VEC-northgate-power-services.html');
+  const barA = (await a.p.locator('#licBar').textContent()).replace(/\s+/g,' ');
+  ck('current maintenance: bar shows the updates-to date', barA.includes('Updates to 7 Sep 2027'), barA.slice(0,110));
+  ck('current maintenance: not marked lapsed', !(await a.p.locator('#licBar').evaluate(e => e.classList.contains('lapsed'))));
+  ck('current maintenance: footer line names the term', (await a.p.locator('#licFoot').textContent()).includes('maintenance to 7 Sep 2027'));
+  await a.p.close();
+
+  // (b) maintenance lapsed, build inside the term -> still fully licensed
+  const b2 = await page('845-VEC-lapsed-maint-co.html');
+  const barB = (await b2.p.locator('#licBar').textContent()).replace(/\s+/g,' ');
+  ck('lapsed maintenance: still Licensed', /^Licensed/.test(barB), barB.slice(0,60));
+  ck('lapsed maintenance: bar carries lapsed class', await b2.p.locator('#licBar').evaluate(e => e.classList.contains('lapsed')));
+  ck('lapsed maintenance: says this version stays licensed', barB.includes('Maintenance lapsed 30 Jun 2026') && barB.includes('stays fully licensed'));
+  ck('lapsed maintenance: NOT evaluation', !barB.includes('Evaluation'));
+  await b2.p.locator('.rail-i[data-el="51P"]').click(); await b2.p.waitForTimeout(200);
+  await b2.p.locator('#addSheet').click(); await b2.p.waitForTimeout(200);
+  await b2.p.locator('.tab[data-view="v-sheet"]').click(); await b2.p.waitForTimeout(200);
+  const sheetB = await b2.p.locator('#sheetOut').inputValue();
+  ck('lapsed maintenance: exported sheet is still stamped Licensed, not evaluation',
+     sheetB.includes('Licensed to Lapsed Maint Co') && sheetB.includes('maintenance lapsed 30 Jun 2026') && !sheetB.includes('EVALUATION'));
+  await b2.p.close();
+
+  // (c) a build dated AFTER the maintenance term -> evaluation, with a specific reason.
+  //     make-licence refuses to mint this, so splice the lapsed licence into today's build.
+  const lapsedHtml = fsp.readFileSync(D + '/845-VEC-lapsed-maint-co.html', 'utf8');
+  const blk = lapsedHtml.match(/\{"p":"[^"]+","s":"[^"]+"\}/)[0];
+  const todayHtml = fsp.readFileSync(D + '/845-VEC-unlicensed.html', 'utf8').replace('{"p":"","s":""}', blk);
+  fsp.writeFileSync(D + '/test-outside.html', todayHtml);
+  const c = await page('test-outside.html');
+  const barC = (await c.p.locator('#licBar').textContent()).replace(/\s+/g,' ');
+  ck('build outside maintenance: runs as Evaluation', barC.includes('Evaluation'));
+  ck('build outside maintenance: explains why, with both dates', barC.includes('newer than the maintenance term') && barC.includes('30 Jun 2026'), barC.slice(0,200));
+  ck('build outside maintenance: signature was still valid (no badsig wording)', !barC.includes('Contact the publisher'));
+  await c.p.close();
+  fsp.unlinkSync(D + '/test-outside.html');
 }
 
 await b.close();

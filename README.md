@@ -24,7 +24,8 @@ been online, which is the environment it is actually used in.
 | `tests/` | 49 checks: crypto correctness, licence behaviour, and the calculations. |
 | `docs/install-guide.src.html` | The customer-facing setup guide. |
 | `desktop/` | Tauri project for native Windows/macOS installers. **Not built here** — see its README. |
-| `keys/` | Your private signing key. Git-ignored. Never commit it. |
+| `keys/public-key.b64` | The public half. Committed — every build embeds it. |
+| `keys/signing-key.pem` | The private half. Git-ignored. Never commit it. |
 | `licences/register.csv` | Who holds which licence. Git-ignored. |
 
 ---
@@ -33,6 +34,7 @@ been online, which is the environment it is actually used in.
 
 ```bash
 node tools/make-keys.mjs     # once, ever — then back the private key up offline
+                             # and COMMIT keys/public-key.b64 so CI builds embed your real key
 node tools/fetch-fonts.mjs   # once, or when you want to refresh the faces
 node build.mjs
 node tests/run.mjs
@@ -62,11 +64,25 @@ node tools/make-licence.mjs \
   --org    "Northgate Power Services" \
   --site   "Calgary Operations" \
   --seats  12 \
-  --expires 2027-09-07        # omit for perpetual
+  --maint  2027-09-07          # maintenance end; defaults to 12 months from today
 ```
 
 Writes `dist/845-VEC-northgate-power-services.html` — the file that customer
 downloads — and appends a row to `licences/register.csv`.
+
+### The model: perpetual + maintenance
+
+| Field | Meaning | Lapses → |
+|---|---|---|
+| *(none)* | The right to use. **Never expires.** | — |
+| `maint` | Date up to which the customer is entitled to new builds. | Bar notes *maintenance lapsed*; the copy stays **fully licensed** and exports are still stamped Licensed. A build dated **after** `maint` runs as evaluation until they renew. |
+| `expires` | Hard expiry. Trials and subscription seats only. | Evaluation. |
+
+`make-licence.mjs` refuses to mint a file whose build date is after the
+`--maint` you give it, since the customer's copy would open as evaluation.
+
+**Renewal** is: mint a fresh file from the current build with a later `--maint`,
+keeping the same `--id`, and send it. **Perpetual with no updates** is `--no-maint`.
 
 ---
 
