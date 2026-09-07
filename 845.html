@@ -361,6 +361,15 @@ svg.phasor{display:block; width:100%; height:auto;}
 /* ---- startup diagnostic -------------------------------------------- *
    Shown only when the page cannot run. It is deliberately styled without
    custom properties, so it is legible even if nothing else loaded.        */
+/* Visible by default and removed by the script below. If scripting is
+   blocked — an in-app file preview, a sanitising viewer, a strict policy —
+   nothing of ours runs, so a notice that JS must switch ON could never
+   appear. This one is already on, and only a working script takes it away. */
+#noRun{margin:0; padding:14px 18px; background:#8a5a00; color:#fff;
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+#noRun strong{display:block; font-size:14px; margin-bottom:3px;}
+#noRun ol{margin:7px 0 0; padding-left:20px;}
+#noRun li{margin-bottom:3px;}
 #bootMsg{display:none; margin:0; padding:14px 18px; background:#7f1d1d; color:#fff;
   font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
 #bootMsg.on{display:block;}
@@ -403,6 +412,24 @@ svg.phasor{display:block; width:100%; height:auto;}
     file in a browser that allows it, and everything works offline from then on.
   </div>
 </noscript>
+
+<div id="noRun">
+  <strong>This preview is not running the calculations.</strong>
+  The layout below has drawn, but the element list and every value are computed
+  by the page as it loads, and this viewer is not letting that happen &mdash; file
+  previews inside apps commonly strip scripts out for safety. Nothing is wrong
+  with the file.
+  <ol>
+    <li>Save it to your device, then open it in a browser &mdash; Safari, Chrome or Edge.</li>
+    <li>On iPhone: share the file to <em>Files</em>, then tap it there and choose to open in Safari.</li>
+    <li>It is built for a laptop screen; on a phone the three columns stack and it is cramped but usable.</li>
+  </ol>
+</div>
+<script>
+/* Runs while the page is still parsing, so the notice never flashes on a
+   normal load. If this script is blocked the notice simply stays. */
+(function () { var n = document.getElementById('noRun'); if (n) n.parentNode.removeChild(n); })();
+</script>
 
 <div id="bootMsg" role="alert"></div>
 
