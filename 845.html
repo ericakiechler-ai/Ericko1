@@ -475,25 +475,99 @@ svg.phasor{display:block; width:100%; height:auto;}
 
         <div class="blk">
           <div class="blk-h"><h3>Power transformer</h3><span class="hint">nameplate</span></div>
-          <div class="grid2">
-            <div class="f"><label for="cfg_mva">Rating</label><input id="cfg_mva" type="number" step="0.1" data-cfg="mva"><span class="u">MVA (self-cooled base)</span></div>
-            <div class="f"><label for="cfg_vg">Vector group</label>
-              <select id="cfg_vg" data-cfg="vg">
-                <option value="YNyn0">YNyn0 &mdash; 0&deg;</option>
-                <option value="Dd0">Dd0 &mdash; 0&deg;</option>
-                <option value="Dyn1">Dyn1 &mdash; LV lags 30&deg;</option>
-                <option value="YNd1">YNd1 &mdash; LV lags 30&deg;</option>
-                <option value="Dyn11">Dyn11 &mdash; LV leads 30&deg;</option>
-                <option value="YNd11">YNd11 &mdash; LV leads 30&deg;</option>
-                <option value="Dyn5">Dyn5 &mdash; LV lags 150&deg;</option>
-                <option value="Dyn7">Dyn7 &mdash; LV lags 210&deg;</option>
-              </select><span class="u">clock notation</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_mva">ONAN rating</label><input id="cfg_mva" type="number" step="0.1" data-cfg="mva"><span class="u">MVA, self-cooled</span></div>
+            <div class="f"><label for="cfg_mva2">ONAF 1</label><input id="cfg_mva2" type="number" step="0.1" data-cfg="mva2"><span class="u">MVA, first fan stage</span></div>
+            <div class="f"><label for="cfg_mva3">ONAF 2</label><input id="cfg_mva3" type="number" step="0.1" data-cfg="mva3"><span class="u">MVA, second stage</span></div>
+            <div class="f wide"><label for="cfg_mvaBase">Protection base rating</label>
+              <select id="cfg_mvaBase" data-cfg="mvaBase">
+                <option value="onan">ONAN &mdash; self-cooled</option>
+                <option value="onaf1">ONAF 1</option>
+                <option value="onaf2">ONAF 2 &mdash; top rating</option>
+              </select><span class="u">every per-unit value and rated current follows this</span></div>
             <div class="f"><label for="cfg_kv1">W1 voltage</label><input id="cfg_kv1" type="number" step="0.01" data-cfg="kv1"><span class="u">kV, line&ndash;line</span></div>
             <div class="f"><label for="cfg_kv2">W2 voltage</label><input id="cfg_kv2" type="number" step="0.01" data-cfg="kv2"><span class="u">kV, line&ndash;line</span></div>
             <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="1" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_z">Impedance</label><input id="cfg_z" type="number" step="0.01" data-cfg="z"><span class="u">% on the base rating</span></div>
+            <div class="f"><label for="cfg_xr">X / R</label><input id="cfg_xr" type="number" step="0.1" data-cfg="xr"><span class="u">at the transformer</span></div>
             <div class="f"><label for="cfg_rot">Phase rotation</label>
               <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select>
               <span class="u">as configured in relay</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Windings and vector group</h3><span class="hint">connection &amp; clock</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_w1c">W1 connection</label>
+              <select id="cfg_w1c" data-cfg="w1c">
+                <option value="D">Delta &mdash; D</option>
+                <option value="Y">Star, neutral not brought out &mdash; Y</option>
+                <option value="YN">Star, neutral available &mdash; YN</option>
+                <option value="Z">Zigzag &mdash; Z</option>
+                <option value="ZN">Zigzag, neutral available &mdash; ZN</option>
+              </select><span class="u">HV winding</span></div>
+            <div class="f"><label for="cfg_w2c">W2 connection</label>
+              <select id="cfg_w2c" data-cfg="w2c">
+                <option value="D">Delta &mdash; d</option>
+                <option value="Y">Star, neutral not brought out &mdash; y</option>
+                <option value="YN">Star, neutral available &mdash; yn</option>
+                <option value="Z">Zigzag &mdash; z</option>
+                <option value="ZN">Zigzag, neutral available &mdash; zn</option>
+              </select><span class="u">LV winding</span></div>
+            <div class="f"><label for="cfg_clk">Clock number</label>
+              <select id="cfg_clk" data-cfg="clk">
+                <option value="0">0 &mdash; in phase</option>
+                <option value="1">1 &mdash; LV lags 30&deg;</option>
+                <option value="2">2 &mdash; LV lags 60&deg;</option>
+                <option value="3">3 &mdash; LV lags 90&deg;</option>
+                <option value="4">4 &mdash; LV lags 120&deg;</option>
+                <option value="5">5 &mdash; LV lags 150&deg;</option>
+                <option value="6">6 &mdash; LV lags 180&deg;</option>
+                <option value="7">7 &mdash; LV lags 210&deg;</option>
+                <option value="8">8 &mdash; LV lags 240&deg;</option>
+                <option value="9">9 &mdash; LV lags 270&deg;</option>
+                <option value="10">10 &mdash; LV lags 300&deg;</option>
+                <option value="11">11 &mdash; LV leads 30&deg;</option>
+              </select><span class="u">any group, not a fixed list</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>On-load tap changer</h3><span class="hint">what the slope must absorb</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_oltcW">Tapped winding</label>
+              <select id="cfg_oltcW" data-cfg="oltcW">
+                <option value="1">W1</option><option value="2">W2</option><option value="0">None fitted</option>
+              </select><span class="u">where the OLTC sits</span></div>
+            <div class="f"><label for="cfg_oltcHi">Range, raise</label><input id="cfg_oltcHi" type="number" step="0.1" data-cfg="oltcHi"><span class="u">% above mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcLo">Range, lower</label><input id="cfg_oltcLo" type="number" step="0.1" data-cfg="oltcLo"><span class="u">% below mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcN">Steps</label><input id="cfg_oltcN" type="number" step="1" data-cfg="oltcN"><span class="u">total tap positions</span></div>
+            <div class="f"><label for="cfg_oltcPos">Present position</label><input id="cfg_oltcPos" type="number" step="0.1" data-cfg="oltcPos"><span class="u">% from mid-tap, as found</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Neutral earthing</h3><span class="hint">sets the ground fault current</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_gnd1">W1 neutral</label>
+              <select id="cfg_gnd1" data-cfg="gnd1">
+                <option value="none">Unearthed or delta</option>
+                <option value="solid">Solidly earthed</option>
+                <option value="ngrOhm">Earthing resistor &mdash; ohms</option>
+                <option value="ngrA">Earthing resistor &mdash; rated amps</option>
+                <option value="react">Earthing reactor &mdash; ohms</option>
+              </select><span class="u">HV star point</span></div>
+            <div class="f"><label for="cfg_gnd1v">W1 value</label><input id="cfg_gnd1v" type="number" step="0.1" data-cfg="gnd1v"><span class="u">&Omega; or A, per the choice</span></div>
+            <div class="f"><label for="cfg_gnd2">W2 neutral</label>
+              <select id="cfg_gnd2" data-cfg="gnd2">
+                <option value="none">Unearthed or delta</option>
+                <option value="solid">Solidly earthed</option>
+                <option value="ngrOhm">Earthing resistor &mdash; ohms</option>
+                <option value="ngrA">Earthing resistor &mdash; rated amps</option>
+                <option value="react">Earthing reactor &mdash; ohms</option>
+              </select><span class="u">LV star point</span></div>
+            <div class="f"><label for="cfg_gnd2v">W2 value</label><input id="cfg_gnd2v" type="number" step="0.1" data-cfg="gnd2v"><span class="u">&Omega; or A, per the choice</span></div>
           </div>
         </div>
 
@@ -828,7 +902,17 @@ function curveTime(name, M, tdm) {
    CONFIGURATION
    ================================================================== */
 const SAMPLE = {
-  mva: 20, kv1: 115, kv2: 13.8, vg: 'Dyn1', freq: 60, rot: 'ABC',
+  /* ratings by cooling stage; the protection base is chosen separately */
+  mva: 20, mva2: 26.7, mva3: 33.3, mvaBase: 'onan',
+  kv1: 115, kv2: 13.8, freq: 60, rot: 'ABC',
+  /* connection and clock number, which together give any vector group */
+  w1c: 'D', w2c: 'YN', clk: 1,
+  /* short-circuit impedance on the base rating, and the X/R behind it */
+  z: 8.5, xr: 12,
+  /* on-load tap changer: which winding, its range, and where it sits now */
+  oltcW: '1', oltcHi: 10, oltcLo: 10, oltcN: 16, oltcPos: 0,
+  /* neutral earthing per winding */
+  gnd1: 'none', gnd1v: 0, gnd2: 'ngrA', gnd2v: 400,
   ct1p: 150, ct1s: 5, ct1c: 'wye', ct2p: 1200, ct2s: 5, ct2c: 'wye',
   ctgp: 200, ctgs: 5, refw: '2',
   vtp: 13800, vts: 120, vtc: 'wye', vtw: '2',
@@ -837,27 +921,70 @@ const SAMPLE = {
 let CFG = Object.assign({}, SAMPLE);
 
 /* clock number -> phase shift of W2 relative to W1, degrees (lag negative) */
-const CLOCK = { YNyn0: 0, Dd0: 0, Dyn1: -30, YNd1: -30, Dyn11: +30, YNd11: +30, Dyn5: -150, Dyn7: -210 };
+/* Clock number n means the LV lags the HV by n x 30 degrees. Naming the
+   connections and the clock separately covers every group rather than the
+   handful a fixed list can hold. */
+const CONN = { D: 'D', Y: 'Y', YN: 'YN', Z: 'Z', ZN: 'ZN' };
+const vgName = c => (CONN[c.w1c] || 'Y') + (CONN[c.w2c] || 'yn').toLowerCase() + Number(c.clk);
+const clockShift = c => -30 * Number(c.clk || 0);
+const earthed = w => w === 'YN' || w === 'ZN';
 
 /* derived base quantities */
 function base() {
   const c = CFG;
-  const Ir1p = c.mva * 1e6 / (Math.sqrt(3) * c.kv1 * 1e3);   // W1 rated primary A
-  const Ir2p = c.mva * 1e6 / (Math.sqrt(3) * c.kv2 * 1e3);   // W2 rated primary A
+  /* the rating protection is set against, not necessarily the nameplate top */
+  const mvaB = c.mvaBase === 'onaf2' ? (+c.mva3 || +c.mva) :
+               c.mvaBase === 'onaf1' ? (+c.mva2 || +c.mva) : +c.mva;
+  const Ir1p = mvaB * 1e6 / (Math.sqrt(3) * c.kv1 * 1e3);   // W1 rated primary A
+  const Ir2p = mvaB * 1e6 / (Math.sqrt(3) * c.kv2 * 1e3);   // W2 rated primary A
   const ctr1 = c.ct1p / c.ct1s, ctr2 = c.ct2p / c.ct2s, ctrg = c.ctgp / c.ctgs;
-  const vtr  = c.vtp / c.vts;
+  const vtr  = c.vtr != null ? c.vtr : c.vtp / c.vts;
   const vLLs = c.vts;                       // nominal secondary L-L
   const vLNs = c.vtc === 'wye' ? c.vts / Math.sqrt(3) : c.vts;
+
+  /* Through-fault current from the short-circuit impedance. The infinite-bus
+     figure is the one relied on for stability and instantaneous grading; a
+     real source impedance only reduces it. */
+  const zpu = Math.max(0.001, (+c.z || 0.001) / 100);
+  const Ift1 = Ir1p / zpu, Ift2 = Ir2p / zpu;
+
+  /* The tap changer moves the ratio, and with it the current the relay sees on
+     the tapped winding. The spread across the range is what the differential
+     slope has to absorb before any CT error is counted. */
+  const hi = +c.oltcHi || 0, lo = +c.oltcLo || 0;
+  const tapNow = 1 + (+c.oltcPos || 0) / 100;
+  const tapMis = (hi + lo) / 2 / 100;          /* worst departure from mid-tap */
+
+  /* Earth-fault current available to the ground elements and to REF. */
+  const gfc = (mode, val, kv) => {
+    const vln = kv * 1000 / Math.sqrt(3);
+    /* base impedance in ohms is kV squared over MVA; both are already in
+       those units, so no further scaling belongs here */
+    if (mode === 'solid')  return vln / Math.max(1e-6, zpu * (kv * kv / mvaB));
+    if (mode === 'ngrA')   return +val || 0;
+    if (mode === 'ngrOhm') return (+val > 0) ? vln / +val : 0;
+    if (mode === 'react')  return (+val > 0) ? vln / +val : 0;
+    return 0;                                  /* unearthed or delta */
+  };
+  const conn1 = c.w1c, conn2 = c.w2c;
+  const Igf1 = earthed(conn1) ? gfc(c.gnd1, c.gnd1v, +c.kv1) : 0;
+  const Igf2 = earthed(conn2) ? gfc(c.gnd2, c.gnd2v, +c.kv2) : 0;
+
   return {
-    Ir1p, Ir2p, ctr1, ctr2, ctrg, vtr, vLLs, vLNs,
+    Ir1p, Ir2p, ctr1, ctr2, ctrg, vtr, vLLs, vLNs, mvaB,
+    Ift1, Ift2, zpu, tapNow, tapMis, Igf1, Igf2,
+    vg: vgName(c),
     Ir1s: Ir1p / ctr1,                      // W1 rated current, CT secondary A
     Ir2s: Ir2p / ctr2,
-    shift: CLOCK[c.vg] == null ? 0 : CLOCK[c.vg],
+    shift: clockShift(c),
     ctPri: w => (w === 1 ? c.ct1p : c.ct2p),
     ctSec: w => (w === 1 ? c.ct1s : c.ct2s),
     ctr:   w => (w === 1 ? ctr1 : ctr2),
     IrS:   w => (w === 1 ? Ir1p / ctr1 : Ir2p / ctr2),
-    IrP:   w => (w === 1 ? Ir1p : Ir2p)
+    IrP:   w => (w === 1 ? Ir1p : Ir2p),
+    Ift:   w => (w === 1 ? Ift1 : Ift2),
+    Igf:   w => (w === 1 ? Igf1 : Igf2),
+    conn:  w => (w === 1 ? conn1 : conn2)
   };
 }
 
@@ -1005,10 +1132,24 @@ reg({
         });
       });
     });
-    const notes = [
-      { lvl: 'note', lb: 'Vector group', txt: CFG.vg + ' places W2 ' + (sh === 0 ? 'in phase with' : (sh < 0 ? Math.abs(sh) + '° behind' : sh + '° ahead of') + '') + ' W1. The W2 triple is injected at ' + fmt(wrap(180 + sh), 0) + '° so that through-current lands on the relay\'s internal compensation and nets to zero differential.' },
-      { lvl: 'note', lb: 'Reference', txt: 'Per-unit is referred to each winding\'s own rated current — ' + fmt(b.Ir1s, 3) + ' A secondary on W1, ' + fmt(b.Ir2s, 3) + ' A secondary on W2. The two secondary currents differ in magnitude; that mismatch is the relay\'s magnitude compensation working, not an error.' }
-    ];
+    const notes = [];
+    /* The slope exists mainly to cover the tap changer. Say what it must cover
+       and whether the setting does, since that is the number that decides
+       whether a healthy transformer trips at the end of its range. */
+    if (CFG.oltcW !== '0' && b.tapMis > 0) {
+      const need = (b.tapMis + 0.10) * 100;
+      notes.push({ lvl: s.s1 < need ? 'warn' : 'good', lb: 'Slope 1 against the tap range',
+        txt: 'The tap changer moves W' + CFG.oltcW + ' by \u00b1' + fmt(b.tapMis * 100, 1) +
+          '% about mid-tap. Allowing 5% for CT error and 5% for the relay\'s own matching, slope 1 needs to be above about ' +
+          fmt(need, 0) + '%; it is set to ' + fmt(s.s1, 0) + '%. ' +
+          (s.s1 < need
+            ? 'That is not enough. A healthy transformer at the end of its tap range will produce a differential the slope does not cover.'
+            : 'That covers it. Prove the through-current point at the as-found tap of ' + fmt(CFG.oltcPos, 1) +
+              '%, not only at mid-tap \u2014 mid-tap is the one position where the mismatch is zero.') });
+    }
+    notes.push(
+      { lvl: 'note', lb: 'Vector group', txt: base().vg + ' places W2 ' + (sh === 0 ? 'in phase with' : (sh < 0 ? Math.abs(sh) + '° behind' : sh + '° ahead of') + '') + ' W1. The W2 triple is injected at ' + fmt(wrap(180 + sh), 0) + '° so that through-current lands on the relay\'s internal compensation and nets to zero differential.' },
+      { lvl: 'note', lb: 'Reference', txt: 'Per-unit is referred to each winding\'s own rated current — ' + fmt(b.Ir1s, 3) + ' A secondary on W1, ' + fmt(b.Ir2s, 3) + ' A secondary on W2. The two secondary currents differ in magnitude; that mismatch is the relay\'s magnitude compensation working, not an error.' });
     if (o.ph === 'A' && sh !== 0)
       notes.push({ lvl: 'warn', lb: 'Single-phase', txt: 'With a ' + sh + '° group the relay\'s delta compensation mixes phases, so a single-phase injection spills differential current into a second phase and the measured slope will not match the setting. Use the balanced 3-phase set unless you are deliberately proving the compensation matrix.' });
     if (CFG.ct1c === 'delta' || CFG.ct2c === 'delta')
@@ -1665,7 +1806,15 @@ function renderCfg() {
     ['W2 rated current', fmt(b.Ir2p, 1), 'A primary'], ['W2 at CT secondary', fmt(b.Ir2s, 3), 'A sec'],
     ['W1 CT ratio', fmt(b.ctr1, 1) + ':1', ''], ['W2 CT ratio', fmt(b.ctr2, 1) + ':1', ''],
     ['VT ratio', fmt(b.vtr, 1) + ':1', ''], ['Nominal secondary', fmt(b.vLNs, 2), 'V L-N'],
-    ['Group shift', (b.shift > 0 ? '+' : '') + b.shift + '°', 'W2 vs W1'],
+    ['Vector group', b.vg, 'shift ' + fmtA(b.shift)],
+    ['Base rating', fmt(b.mvaB, 1) + ' MVA', { onan: 'ONAN', onaf1: 'ONAF 1', onaf2: 'ONAF 2' }[CFG.mvaBase] || 'ONAN'],
+    ['Through fault, W1', fmt(b.Ift1, 0), 'A pri at ' + fmt(CFG.z, 2) + '%'],
+    ['Through fault, W2', fmt(b.Ift2, 0), 'A pri'],
+    ['Through fault, W1 sec', fmt(b.Ift1 / b.ctr1, 2), 'A · ' + fmt(b.Ift1 / b.Ir1p, 1) + ' pu'],
+    ['Tap spread', CFG.oltcW === '0' ? 'no OLTC' : '±' + fmt(b.tapMis * 100, 1) + '%',
+      CFG.oltcW === '0' ? '' : 'on W' + CFG.oltcW + ', now ' + fmt(CFG.oltcPos, 1) + '%'],
+    ['Earth fault, W1', b.Igf1 > 0 ? fmt(b.Igf1, 0) + ' A' : 'none', earthed(CFG.w1c) ? 'available' : 'not earthed'],
+    ['Earth fault, W2', b.Igf2 > 0 ? fmt(b.Igf2, 0) + ' A' : 'none', earthed(CFG.w2c) ? 'available' : 'not earthed'],
     ['CT margin', fmt(CFG.ct1p / b.Ir1p, 2) + ' / ' + fmt(CFG.ct2p / b.Ir2p, 2) + '×', 'W1 / W2 vs rated']
   ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
 
@@ -1676,6 +1825,42 @@ function renderCfg() {
   if (CFG.ct2p < b.Ir2p) n.push({ lvl: 'bad', lb: 'W2 CT undersized', txt: 'The W2 CT primary (' + CFG.ct2p + ' A) is below the winding rated current (' + fmt(b.Ir2p, 1) + ' A).' });
   if (CFG.cmc !== '6x') n.push({ lvl: 'warn', lb: 'Amp mode', txt: 'One current triple is configured. The 87T and 87G tests drive both windings and need the 6 × 12.5 A arrangement.' });
   else n.push({ lvl: 'note', lb: 'Amp mode', txt: 'Two triples, ' + fmt(CFG.imax, 1) + ' A per channel. Triple A feeds W1, triple B feeds W2 throughout this tool.' });
+  /* the slope has to cover the tap range, the CT error and the relay's own
+     mismatch before it covers anything real */
+  if (CFG.oltcW !== '0' && b.tapMis > 0) {
+    const need = (b.tapMis + 0.05 + 0.05) * 100;
+    n.push({ lvl: 'note', lb: 'Tap range vs slope 1',
+      txt: 'The tap changer moves W' + CFG.oltcW + ' by ±' + fmt(b.tapMis * 100, 1) +
+        '% about mid-tap. With 5% for CT error and 5% for the relay\'s own matching, slope 1 has to sit above about ' +
+        fmt(need, 0) + '% or a healthy transformer at the end of its range will look like an internal fault. ' +
+        'It is currently found at ' + fmt(CFG.oltcPos, 1) + '%, which is where the differential should be proved.' });
+  }
+  if (CFG.oltcW !== '0' && Math.abs(+CFG.oltcPos) > Math.max(+CFG.oltcHi, +CFG.oltcLo) + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Tap out of range', txt: 'The present tap position of ' + fmt(CFG.oltcPos, 1) +
+      '% is outside the declared range of +' + fmt(CFG.oltcHi, 1) + '% / −' + fmt(CFG.oltcLo, 1) + '%.' });
+
+  /* earthing decides whether the ground elements have anything to measure */
+  [[1, CFG.w1c, CFG.gnd1, b.Igf1], [2, CFG.w2c, CFG.gnd2, b.Igf2]].forEach(([w, conn, mode, ig]) => {
+    if (!earthed(conn)) {
+      if (mode !== 'none') n.push({ lvl: 'bad', lb: 'W' + w + ' cannot be earthed',
+        txt: 'W' + w + ' is connected ' + conn + ', which has no star point to earth, but an earthing arrangement is set against it. Zero-sequence current cannot flow out of that winding, so its ground elements and REF have nothing to measure.' });
+      return;
+    }
+    if (ig > 0 && ig < 50) n.push({ lvl: 'warn', lb: 'W' + w + ' earth fault current is small',
+      txt: 'The W' + w + ' earthing arrangement limits earth fault current to about ' + fmt(ig, 0) +
+        ' A primary, which is ' + fmt(ig / b.ctrg, 3) + ' A through a ' + CFG.ctgp + ':' + CFG.ctgs +
+        ' ground CT. Set REF and the ground overcurrent elements against that figure, not against the phase CT rating.' });
+    else if (ig > 0) n.push({ lvl: 'note', lb: 'W' + w + ' earth fault current',
+      txt: 'About ' + fmt(ig, 0) + ' A primary available, ' + fmt(ig / b.ctrg, 2) + ' A through the ground CT.' });
+  });
+
+  if (b.Ift1 / b.Ir1p > 0 && CFG.z > 0)
+    n.push({ lvl: 'note', lb: 'Through fault',
+      txt: 'At ' + fmt(CFG.z, 2) + '% impedance a through fault reaches ' + fmt(b.Ift1 / b.Ir1p, 1) +
+        ' times rating — ' + fmt(b.Ift1, 0) + ' A primary on W1 and ' + fmt(b.Ift2, 0) + ' A on W2, ' +
+        'or ' + fmt(b.Ift1 / b.ctr1, 1) + ' A and ' + fmt(b.Ift2 / b.ctr2, 1) +
+        ' A at the CT secondaries. That is the current the differential has to stay stable through, and the level any instantaneous element must sit above.' });
+
   const hi = 8 * Math.max(CFG.ct1s, CFG.ct2s);
   if (hi > CFG.imax) n.push({ lvl: 'note', lb: 'Headroom', txt: 'A typical 50P setting of 8 ×CT would call for ' + fmt(hi, 1) + ' A secondary, past the ' + fmt(CFG.imax, 1) + ' A channel limit. Instantaneous elements at that level usually need the 3 × 32 A mode.' });
   $('#cfgNotes').innerHTML = n.map(noteHTML).join('');
@@ -1686,7 +1871,7 @@ const noteHTML = n => '<div class="note ' + (n.lvl === 'note' ? '' : n.lvl) + '"
 function chipStrip() {
   const b = base();
   $('#topChips').innerHTML = [
-    ['<span class="dot"></span>' + CFG.mva + ' MVA', CFG.kv1 + '/' + CFG.kv2 + ' kV ' + CFG.vg],
+    ['<span class="dot"></span>' + fmt(b.mvaB, 1) + ' MVA', CFG.kv1 + '/' + CFG.kv2 + ' kV ' + b.vg],
     ['CT', CFG.ct1p + ':' + CFG.ct1s + ' · ' + CFG.ct2p + ':' + CFG.ct2s],
     ['VT', CFG.vtp + ':' + CFG.vts + ' ' + CFG.vtc],
     ['CMC', CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A'],
@@ -1846,7 +2031,7 @@ function renderVector() {
     '<thead><tr><th>Phase</th><th class="n">IW1 pu</th><th class="n">IW2 pu</th><th class="n">Idiff pu</th><th class="n">Irest pu</th></tr></thead><tbody>' +
     rows.map(r => '<tr><td class="chname ' + PHC[r.k] + '">' + r.nm + '</td><td class="n">' + fmt(r.p1, 3) + '</td><td class="n">' + fmt(r.p2, 3) +
       '</td><td class="n">' + fmt(r.id, 3) + '</td><td class="n">' + fmt(r.ir, 3) + '</td></tr>').join('') +
-    '<tr class="grp"><td colspan="5">W2 rotated ' + fmtA(-b.shift) + ' to undo the ' + CFG.vg + ' group shift · restraint as max(|IW1|,|IW2|)</td></tr></tbody>';
+    '<tr class="grp"><td colspan="5">W2 rotated ' + fmtA(-b.shift) + ' to undo the ' + b.vg + ' group shift · restraint as max(|IW1|,|IW2|)</td></tr></tbody>';
 
   /* --- symmetrical components ------------------------------------- */
   const sv = seq(Vp[0], Vp[1], Vp[2]), s1 = seq(I1[0], I1[1], I1[2]), s2 = seq(I2[0], I2[1], I2[2]);
@@ -1884,7 +2069,7 @@ function renderSheet() {
   const rows = ST.sheet || [];
   $('#sheetCount').textContent = rows.length;
   const hdr = '# 845-VEC test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
-    '\n# ' + CFG.mva + ' MVA  ' + CFG.kv1 + '/' + CFG.kv2 + ' kV  ' + CFG.vg +
+    '\n# ' + CFG.mva + ' MVA  ' + CFG.kv1 + '/' + CFG.kv2 + ' kV  ' + base().vg +
     '\t CT ' + CFG.ct1p + ':' + CFG.ct1s + ' / ' + CFG.ct2p + ':' + CFG.ct2s +
     '\t VT ' + CFG.vtp + ':' + CFG.vts + '\t CMC ' + (CFG.cmc === '6x' ? '6x12.5A' : CFG.cmc === '3x' ? '3x32A' : '1x64A') + '\n\n';
   $('#sheetOut').value = rows.length
