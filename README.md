@@ -20,6 +20,10 @@ by accent colour so they are never confused on screen — 845 teal, 889 indigo, 
 — and the two Siemens ones are deliberately achromatic, which is both a nod to SIPROTEC's austere
 hardware and a way of marking them as a different platform rather than more Multilins.
 
+Each tool also ships a **static edition** (`<tag>-static.html`) with every value already
+computed into the page and no script in it at all, so it opens in viewers that strip scripts
+— in-app file previews especially. It cannot recompute; it is the reference copy.
+
 `omicron/` holds the generated Test Universe test plans — CSVs built from these tools
 rather than typed alongside them, plus a build guide per device covering the module map,
 the amplifier arrangement and the thing about that relay most likely to be got wrong.

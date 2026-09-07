@@ -23,6 +23,7 @@ What it contains instead is everything the OCC needs, in formats that carry no s
 | `<relay>-TestUniverse-build-guide.md` | Module-by-module instructions for assembling that relay's OCC from those values — one per device |
 | `xlsx/<relay>-test-plan.xlsx` | The same plan as an Excel workbook — a front sheet, the steps ready to fill in, the channel long form and the build guide, in one file per relay |
 | `build-testplan.js` | The generator |
+| `build-static.js` | Builds the no-script static edition of each tool |
 | `build-workbooks.py` | Turns the CSVs into the workbooks |
 
 There is a build guide for every device:

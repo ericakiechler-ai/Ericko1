@@ -11,6 +11,7 @@
    lands in the page, so the two cannot disagree.
 
    Usage:  node build-static.js 845
+           node build-static.js all
    ------------------------------------------------------------------ */
 'use strict';
 const fs = require('fs');
@@ -19,17 +20,25 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
 const REPO = path.resolve(__dirname, '..');
 const TOOLS = {
-  '845': { file: '845.html', tag: '845-VEC', title: 'GE Multilin 845 transformer protection' }
+  '845':   { file: '845.html',   tag: '845-VEC',   title: 'GE Multilin 845 transformer protection' },
+  '850':   { file: '850.html',   tag: '850-FDR',   title: 'GE Multilin 850 feeder protection' },
+  '869':   { file: '869.html',   tag: '869-MTR',   title: 'GE Multilin 869 motor protection' },
+  '889':   { file: '889.html',   tag: '889-GEN',   title: 'GE Multilin 889 generator protection' },
+  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens SIPROTEC 5 7SJ85 overcurrent' },
+  '7sd82': { file: '7SD82.html', tag: '7SD82-DIF', title: 'Siemens SIPROTEC 5 7SD82 line differential' }
 };
 
 const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 (async () => {
-  const key = (process.argv[2] || '845');
-  const T = TOOLS[key];
-  if (!T) { console.error('unknown tool: ' + key); process.exit(1); }
-
+  const arg = (process.argv[2] || '845').toLowerCase();
+  const keys = arg === 'all' ? Object.keys(TOOLS) : [arg];
   const browser = await chromium.launch();
+
+  for (const key of keys) {
+  const T = TOOLS[key];
+  if (!T) { console.error('unknown tool: ' + key); continue; }
+
   const page = await browser.newPage({ viewport: { width: 1500, height: 1200 } });
   await page.goto('file://' + path.join(REPO, T.file));
   await page.waitForTimeout(1200);
@@ -39,6 +48,7 @@ const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
     Array.prototype.map.call(document.querySelectorAll('style'), s => s.textContent).join('\n'));
 
   const head = await page.evaluate(() => ({
+    brand: document.querySelector('.brand').innerHTML,
     chips: document.querySelector('#topChips').innerHTML,
     derived: document.querySelector('#derived') ? document.querySelector('#derived').innerHTML : '',
     cfgNotes: document.querySelector('#cfgNotes') ? document.querySelector('#cfgNotes').innerHTML : '',
@@ -113,15 +123,18 @@ const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
     await page.waitForTimeout(100);
     const pts = await page.$$eval('[data-pt]', els => els.map(e => e.dataset.pt));
     const caps = [];
-    for (const pt of pts) {
+    for (let k = 0; k < pts.length; k++) {
+      const pt = pts[k];
       await page.evaluate(x => { const e = document.querySelector('[data-pt="' + x + '"]'); if (e) e.click(); }, pt);
       await page.waitForTimeout(70);
-      caps.push(await page.evaluate(() => {
-        const row = document.querySelector('[data-pt]:not(:scope)');
-        const sel = document.querySelector('#outPane [data-pt][style*="accent-soft"]');
+      const cap = await page.evaluate(x => {
+        const row = document.querySelector('[data-pt="' + x + '"]');
         const chan = document.querySelector('#outPane .chan');
-        return { name: sel ? sel.children[0].innerText.trim() : '', chan: chan ? chan.outerHTML : '' };
-      }));
+        return { name: row && row.children[0] ? row.children[0].innerText.trim() : '',
+                 chan: chan ? chan.outerHTML : '' };
+      }, pt);
+      cap.idx = k + 1;
+      caps.push(cap);
     }
     allPoints[a] = caps;
   }
@@ -131,9 +144,8 @@ const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
     return document.querySelector('#methodDoc').innerHTML;
   });
 
-  await browser.close();
+  await page.close();
 
-  const dedupe = arr => { const seen = {}, out = []; arr.forEach(x => { if (x && !seen[x]) { seen[x] = 1; out.push(x); } }); return out; };
   const kvTable = rows => rows.length
     ? '<dl class="readout">' + rows.map(r =>
         '<div><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) +
@@ -154,9 +166,16 @@ const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
       kvTable(b.set) + '</div>' +
       (b.opt.length ? '<div class="blk"><div class="blk-h"><h3>Test options</h3></div>' + kvTable(b.opt) + '</div>' : '') +
       (allPoints[a] && allPoints[a].length
-        ? '<div class="blk"><div class="blk-h"><h3>Test-set channels, every point</h3>' +
-          '<span class="hint">' + allPoints[a].length + ' point' + (allPoints[a].length > 1 ? 's' : '') + '</span></div>' +
-          dedupe(allPoints[a].map(c => c.chan)).join('') + '</div>'
+        ? '<div class="blk"><div class="blk-h"><h3>' +
+          (allPoints[a].some(c => c.chan) ? 'Test-set channels, every step' : 'Every step') + '</h3>' +
+          '<span class="hint">' + allPoints[a].filter(c => c.chan).length + ' of ' +
+          allPoints[a].length + ' inject</span></div>' +
+          allPoints[a].map(c => c.chan
+            ? '<div class="ptstep"><div class="ptlab"><span class="ptn">' + c.idx + '</span>' +
+              esc(c.name) + '</div>' + c.chan + '</div>'
+            : '<div class="ptstep noinj"><div class="ptlab"><span class="ptn">' + c.idx + '</span>' +
+              esc(c.name) + '</div><p class="noinjp">No analogue injection at this step &mdash; ' +
+              'it is binary, link or timing work.</p></div>').join('') + '</div>'
         : '') +
       '</section>';
   });
@@ -195,7 +214,17 @@ ${css}
   color:var(--ink-3); margin:34px 0 8px; padding-bottom:5px; border-bottom:1px solid var(--line-strong);}
 section.el{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
   padding:16px 18px; margin-bottom:14px;}
-section.el .chan{margin-bottom:10px;}
+section.el .chan{margin-bottom:0;}
+.ptstep{margin-bottom:12px;}
+.ptlab{display:flex; align-items:baseline; gap:8px; margin-bottom:4px;
+  font-family:var(--f-disp); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-2); font-weight:600;}
+.ptlab .ptn{font-family:var(--f-num); font-size:11px; font-weight:600; color:var(--accent-ink);
+  background:var(--accent); border-radius:3px; padding:1px 6px; letter-spacing:0; flex:none;}
+.ptstep.noinj .ptlab{color:var(--ink-3);}
+.ptstep.noinj .ptlab .ptn{background:var(--surface-3); color:var(--ink-2);}
+.noinjp{margin:0; padding:8px 11px; border:1px dashed var(--line-strong); border-radius:var(--r);
+  background:var(--surface-2); color:var(--ink-3); font-size:12px;}
 .doc{max-width:100%;}
 @media (max-width:700px){ .wrapS{padding:0 10px 40px;} section.el{padding:12px 11px;} }
 </style>
@@ -210,10 +239,7 @@ section.el .chan{margin-bottom:10px;}
 </div>
 
 <header class="topbar">
-  <div class="brand">
-    <span class="mark">845<em>&#8901;</em>VEC</span>
-    <span class="sub">Multilin 845 &nbsp;/&nbsp; Omicron CMC 356</span>
-  </div>
+  <div class="brand">${head.brand}</div>
   <div class="chipstrip">${head.chips}</div>
 </header>
 
@@ -249,7 +275,11 @@ section.el .chan{margin-bottom:10px;}
 
   const out = path.join(REPO, T.tag + '-static.html');
   fs.writeFileSync(out, doc);
-  console.log(T.tag + '-static.html  ' + rails.length + ' functions, ' +
-    Object.values(allPoints).reduce((a, b) => a + b.length, 0) + ' test points, ' +
-    (doc.length / 1024).toFixed(0) + ' KB');
+  const scripts = (doc.match(/<script/gi) || []).length;
+  console.log((T.tag + '-static.html').padEnd(24) + String(rails.length).padStart(2) + ' functions, ' +
+    String(Object.values(allPoints).reduce((a, b) => a + b.length, 0)).padStart(3) + ' test points, ' +
+    (doc.length / 1024).toFixed(0).padStart(4) + ' KB, ' + scripts + ' scripts');
+  }
+
+  await browser.close();
 })();
