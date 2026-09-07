@@ -847,7 +847,7 @@ function lineSVG(geo, W) {
   return '<svg class="ln" viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="Feeder line diagram">' + s + '</svg>';
 }
 function timelineSVG(states, W) {
-  const Wd = W || 660, H = 112, m = 10, bandY = 44, bandH = 30;
+  const Wd = W || 660, H = 124, m = 10, bandY = 56, bandH = 30;
   const raw = states.map(s => Math.max(0, s.dur || 0));
   const tot = raw.reduce((a, b) => a + b, 0) || 1;
   const floorW = tot * 0.07;
@@ -868,9 +868,10 @@ function timelineSVG(states, W) {
            (st.dur >= 1 ? fmt(st.dur, 2) + ' s' : fmt(st.dur * 1000, 0) + ' ms') + '</text>';
     }
     if (st.ev) {
-      const row = (evN++ % 2) ? 12 : 0;
-      s += '<line class="tl-ev" x1="' + x.toFixed(1) + '" y1="' + (bandY - 22 + row) + '" x2="' + x.toFixed(1) + '" y2="' + (bandY + bandH + 4) + '"/>';
-      s += '<text class="tl-evlab" x="' + (x + 3).toFixed(1) + '" y="' + (bandY - 25 + row) + '">' + st.ev + '</text>';
+      /* two rows, both clear of the state label that sits at bandY - 7 */
+      const row = (evN++ % 2) ? 13 : 0;
+      s += '<line class="tl-ev" x1="' + x.toFixed(1) + '" y1="' + (bandY - 34 + row) + '" x2="' + x.toFixed(1) + '" y2="' + (bandY + bandH + 4) + '"/>';
+      s += '<text class="tl-evlab" x="' + (x + 3).toFixed(1) + '" y="' + (bandY - 37 + row) + '">' + st.ev + '</text>';
     }
     x += wpx;
   });
@@ -2329,6 +2330,8 @@ $('#addSheet').addEventListener('click', () => {
   if (!L) return;
   L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
   save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
   const btn = $('#addSheet');
   btn.textContent = L.R.points.length + ' points added — see Test sheet';
   setTimeout(() => { btn.textContent = 'Add these test points to sheet'; }, 2200);

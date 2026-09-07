@@ -840,6 +840,38 @@ function dcSVG(g, W) {
 /* ==================================================================
    PHASORS
    ================================================================== */
+function timelineSVG(states, W) {
+  const Wd = W || 660, H = 124, m = 10, bandY = 56, bandH = 30;
+  const raw = states.map(s => Math.max(0, s.dur || 0));
+  const tot = raw.reduce((a, b) => a + b, 0) || 1;
+  const floorW = tot * 0.07;
+  const w = raw.map(d => Math.max(d, floorW));
+  const wt = w.reduce((a, b) => a + b, 0) || 1;
+  const usable = Wd - 2 * m;
+  let x = m, s = '', evN = 0;
+  s += '<line class="tl-axis" x1="' + m + '" y1="' + (bandY + bandH + 1) + '" x2="' + (Wd - m) + '" y2="' + (bandY + bandH + 1) + '"/>';
+  states.forEach((st, k) => {
+    const wpx = usable * w[k] / wt;
+    s += '<rect class="tl-' + (st.kind || 'load') + '" x="' + x.toFixed(1) + '" y="' + bandY + '" width="' + wpx.toFixed(1) + '" height="' + bandH + '" stroke="none"/>';
+    s += '<rect class="tl-seg" x="' + x.toFixed(1) + '" y="' + bandY + '" width="' + wpx.toFixed(1) + '" height="' + bandH + '" fill="none"/>';
+    if (st.sel) s += '<rect class="tl-sel" x="' + (x + 1).toFixed(1) + '" y="' + (bandY - 1) + '" width="' + Math.max(2, wpx - 2).toFixed(1) + '" height="' + (bandH + 2) + '"/>';
+    const cxx = x + wpx / 2;
+    if (wpx > 26) {
+      s += '<text class="tl-lab" x="' + cxx.toFixed(1) + '" y="' + (bandY - 7) + '" text-anchor="middle">' + st.lab + '</text>';
+      s += '<text class="tl-dur" x="' + cxx.toFixed(1) + '" y="' + (bandY + bandH + 14) + '" text-anchor="middle">' +
+           (st.dur >= 1 ? fmt(st.dur, 2) + ' s' : fmt(st.dur * 1000, 0) + ' ms') + '</text>';
+    }
+    if (st.ev) {
+      /* two rows, both clear of the state label that sits at bandY - 7 */
+      const row = (evN++ % 2) ? 13 : 0;
+      s += '<line class="tl-ev" x1="' + x.toFixed(1) + '" y1="' + (bandY - 34 + row) + '" x2="' + x.toFixed(1) + '" y2="' + (bandY + bandH + 4) + '"/>';
+      s += '<text class="tl-evlab" x="' + (x + 3).toFixed(1) + '" y="' + (bandY - 37 + row) + '">' + st.ev + '</text>';
+    }
+    x += wpx;
+  });
+  s += '<text class="tl-dur" x="' + m + '" y="' + (H - 4) + '">total ' + fmt(tot, 2) + ' s · segment widths are not to scale below ' + fmt(floorW, 2) + ' s</text>';
+  return '<svg class="tl" viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="Sequence timeline">' + s + '</svg>';
+}
 function phasorSVG(data, size) {
   const S = size || 300, C = S / 2, R = S * 0.365;
   const vs = (data.v || []).filter(x => x && isFinite(x.mag));
@@ -1938,6 +1970,8 @@ $('#addSheet').addEventListener('click', () => {
   if (!L) return;
   L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
   save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
   const btn = $('#addSheet');
   btn.textContent = L.R.points.length + ' points added — see Test sheet';
   setTimeout(() => { btn.textContent = 'Add these test points to sheet'; }, 2200);

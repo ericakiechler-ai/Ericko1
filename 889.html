@@ -2374,6 +2374,8 @@ $('#addSheet').addEventListener('click', () => {
   if (!L) return;
   L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
   save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
   const btn = $('#addSheet');
   btn.textContent = L.R.points.length + ' points added — see Test sheet';
   setTimeout(() => { btn.textContent = 'Add these test points to sheet'; }, 2200);
