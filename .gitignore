@@ -9,3 +9,7 @@ dist/845-VEC-*.html
 licences/
 
 node_modules/
+
+# Generated at build time from the licensed dist file — never a tracked artifact,
+# because it carries a specific customer's licence.
+desktop/frontend/index.html

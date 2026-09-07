@@ -1,0 +1,8 @@
+The desktop build's frontend is generated, not stored.
+
+  node build.mjs
+  node tools/make-licence.mjs --org "Customer" --site "Site" --seats 10
+  cp dist/845-VEC-customer.html desktop/frontend/index.html
+
+Committing a built index.html here would put one customer's licence into
+version control and ship it to the next customer.
