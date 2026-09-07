@@ -358,6 +358,19 @@ svg.phasor{display:block; width:100%; height:auto;}
   .tw,.chan{break-inside:avoid;}
 }
 
+/* ---- startup diagnostic -------------------------------------------- *
+   Shown only when the page cannot run. It is deliberately styled without
+   custom properties, so it is legible even if nothing else loaded.        */
+#bootMsg{display:none; margin:0; padding:14px 18px; background:#7f1d1d; color:#fff;
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+#bootMsg.on{display:block;}
+#bootMsg h4{margin:0 0 4px; font:600 14px/1.3 inherit;}
+#bootMsg code{display:block; margin:7px 0 0; padding:8px 10px; background:rgba(0,0,0,.32);
+  border-radius:4px; font:12px/1.5 ui-monospace,Consolas,monospace; white-space:pre-wrap; word-break:break-word;}
+#bootMsg button{margin-top:9px; padding:5px 11px; border:1px solid rgba(255,255,255,.5);
+  background:transparent; color:#fff; border-radius:4px; cursor:pointer; font:inherit;}
+#bootMsg a{color:#fff;}
+
 /* ---- product footer ------------------------------------------------ */
 .pfoot{max-width:1500px; margin:28px auto 0; padding:16px 18px 26px;
   border-top:1px solid var(--line); color:var(--ink-3);
@@ -379,6 +392,20 @@ svg.phasor{display:block; width:100%; height:auto;}
 </style>
 </head>
 <body>
+
+<noscript>
+  <div style="margin:0;padding:14px 18px;background:#7f1d1d;color:#fff;
+       font:13px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+    <strong style="font-size:14px;">JavaScript is turned off, so this tool cannot calculate.</strong><br>
+    Every value here is computed in your browser when the page loads &mdash; nothing is
+    pre-baked into the file. With scripting disabled the layout still draws but the element
+    list stays empty and no control responds. Enable JavaScript for this page, or open the
+    file in a browser that allows it, and everything works offline from then on.
+  </div>
+</noscript>
+
+<div id="bootMsg" role="alert"></div>
+
 <div class="shell">
 
   <header class="topbar">
@@ -655,6 +682,35 @@ svg.phasor{display:block; width:100%; height:auto;}
 </footer>
 
 <script>
+/* Report a failure on the page. A tool that silently does nothing is worse
+   than one that says what went wrong, especially on a machine where nobody
+   is going to open the developer console. */
+(function () {
+  var shown = false;
+  window.__bootFail = function (what, detail) {
+    if (shown) return; shown = true;
+    var el = document.getElementById('bootMsg');
+    if (!el) { alert(what + '\n\n' + detail); return; }
+    el.className = 'on';
+    el.innerHTML = '<h4>' + what + '</h4>' +
+      '<div>The page drew but the calculations could not start, so no control will respond. ' +
+      'Send the text below and it can be fixed \u2014 it names the exact failure.</div>' +
+      '<code id="bootDetail"></code>' +
+      '<button type="button" id="bootCopy">Copy this text</button>';
+    document.getElementById('bootDetail').textContent =
+      detail + '\n\nBrowser: ' + navigator.userAgent + '\nPage: ' + location.protocol;
+    document.getElementById('bootCopy').addEventListener('click', function () {
+      var t = document.getElementById('bootDetail'), r = document.createRange();
+      r.selectNodeContents(t);
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      try { document.execCommand('copy'); this.textContent = 'Copied'; } catch (e) {}
+    });
+  };
+  window.addEventListener('error', function (e) {
+    window.__bootFail('This tool could not start in this browser',
+      (e.message || 'Script error') + '\nat line ' + (e.lineno || '?') + ', column ' + (e.colno || '?'));
+  });
+})();
 "use strict";
 /* ==================================================================
    845-VEC  -  vector / test-value calculator
@@ -764,7 +820,7 @@ function base() {
     Ir1p, Ir2p, ctr1, ctr2, ctrg, vtr, vLLs, vLNs,
     Ir1s: Ir1p / ctr1,                      // W1 rated current, CT secondary A
     Ir2s: Ir2p / ctr2,
-    shift: CLOCK[c.vg] ?? 0,
+    shift: CLOCK[c.vg] == null ? 0 : CLOCK[c.vg],
     ctPri: w => (w === 1 ? c.ct1p : c.ct2p),
     ctSec: w => (w === 1 ? c.ct1s : c.ct2s),
     ctr:   w => (w === 1 ? ctr1 : ctr2),
@@ -1975,10 +2031,16 @@ $('#themeBtn').addEventListener('click', () => {
 /* ==================================================================
    INIT
    ================================================================== */
-load();
-renderCfg();
-renderRail();
-renderElement();
+try {
+  load();
+  renderCfg();
+  renderRail();
+  renderElement();
+} catch (err) {
+  window.__bootFail('This tool could not start in this browser',
+    (err && err.message ? err.message : String(err)) +
+    (err && err.stack ? '\n\n' + err.stack.split('\n').slice(0, 4).join('\n') : ''));
+}
 </script>
 </body>
 </html>
