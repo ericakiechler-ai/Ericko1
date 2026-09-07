@@ -1,4 +1,7 @@
-import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+/* Prefer the pinned devDependency; fall back to a global install for a dev box
+   that has Playwright installed system-wide and has not run `npm install`. */
+const { chromium } = await import('playwright').catch(() =>
+  import('/opt/node22/lib/node_modules/playwright/index.mjs'));
 const D = new URL('../dist', import.meta.url).pathname;
 let pass = 0, fail = 0;
 const ck = (n, ok, extra) => { ok ? pass++ : fail++; console.log((ok?'  ok   ':'  FAIL ')+n+(extra?'  ['+extra+']':'')); };
