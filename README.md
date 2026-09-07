@@ -5,7 +5,8 @@ values: magnitude, angle and frequency, per output channel, ready to type into T
 
 | File | Relay | Scope |
 |------|-------|-------|
-| `index.html` | **Multilin 845** transformer protection | 21 elements, two-winding differential with vector-group compensation |
+| `index.html` | **The suite** | Landing page — what each tool covers, what ships with it, and the licence terms |
+| `845.html` | **Multilin 845** transformer protection | 21 elements, two-winding differential with vector-group compensation |
 | `889.html` | **Multilin 889** generator protection | 27 elements, machine differential plus the impedance plane |
 | `850.html` | **Multilin 850** feeder protection | 27 elements, autoreclose sequences, distance zones and fault location |
 | `869.html` | **Multilin 869** motor protection | 20 elements, thermal model checked against the motor's own damage curve |

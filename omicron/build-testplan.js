@@ -18,7 +18,7 @@ const RELAYS = {
   '850': { file: '850.html', tag: '850-FDR', title: 'Multilin 850 feeder protection' },
   '869': { file: '869.html', tag: '869-MTR', title: 'Multilin 869 motor protection' },
   '889': { file: '889.html', tag: '889-GEN', title: 'Multilin 889 generator protection' },
-  '845': { file: 'index.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
+  '845': { file: '845.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
   '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' },
   '7sd82': { file: '7SD82.html', tag: '7SD82-DIF', title: 'Siemens 7SD82 SIPROTEC 5 line differential',
     /* A differential plan is not one plan. What can be injected depends on how

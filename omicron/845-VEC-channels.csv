@@ -1,5 +1,5 @@
 # 845-VEC — Multilin 845 transformer protection
-# generated 2026-09-05 12:27 from index.html
+# generated 2026-09-07 01:42 from 845.html
 # configuration: mva=20; kv1=115; kv2=13.8; vg=Dyn1; freq=60; rot=ABC; ct1p=150; ct1s=5; ct1c=wye; ct2p=1200; ct2s=5; ct2c=wye; ctgp=200; ctgs=5; refw=2; vtp=13800; vts=120; vtc=wye; vtw=2; cmc=6x; imax=12.5; vmax=300
 # All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
 # Values shown are for the tool's sample configuration — re-generate after entering real station data.

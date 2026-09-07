@@ -1,4 +1,22 @@
 <!doctype html>
+<!--
+  7SJ85-SIP — Siemens SIPROTEC 5 7SJ85 overcurrent
+  Part of Relay Test-Value Calculators.
+
+  Copyright (c) 2026 Eric Kiechler. All rights reserved.
+  Licensed per-user. See the licence terms at the foot of the page.
+
+  NOT A SUBSTITUTE FOR ENGINEERING JUDGEMENT. This tool computes proposed
+  secondary injection values from settings entered by its user. It does not
+  read the relay, it cannot know the relay's firmware or its as-built wiring,
+  and the values it produces are a starting point to be verified against the
+  device and the drawings before any current or voltage is applied to plant.
+  The user remains responsible for the test and for the safety of it.
+
+  Not affiliated with, endorsed by, or a product of General Electric, GE
+  Vernova, Siemens AG, or OMICRON electronics. Product names are used to
+  identify the equipment this tool is designed to be used with.
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -290,6 +308,25 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
   .work{grid-template-columns:1fr;} .pane{padding:0 0 14px;} body{background:#fff;}
   .tw,.chan,.phbox{break-inside:avoid;}
 }
+
+/* ---- product footer ------------------------------------------------ */
+.pfoot{max-width:1500px; margin:28px auto 0; padding:16px 18px 26px;
+  border-top:1px solid var(--line); color:var(--ink-3);
+  font-family:var(--f-body); font-size:11px; line-height:1.6;}
+.pfoot .prow{display:flex; flex-wrap:wrap; gap:10px 26px; align-items:baseline;}
+.pfoot .pname{font-family:var(--f-disp); font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+.pfoot .psep{color:var(--line-strong);}
+.pfoot details{margin-top:10px;}
+.pfoot summary{cursor:pointer; color:var(--ink-2); font-size:11px;
+  padding:3px 0; user-select:none;}
+.pfoot summary:hover{color:var(--ink);}
+.pfoot .pbody{margin-top:8px; padding:12px 14px; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); max-width:74ch;}
+.pfoot .pbody p{margin:0 0 9px;}
+.pfoot .pbody p:last-child{margin-bottom:0;}
+.pfoot .pbody strong{color:var(--ink-2);}
+@media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
 </style>
 </head>
 <body>
@@ -536,6 +573,52 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
   </section>
 
 </div>
+
+<footer class="pfoot">
+  <div class="prow">
+    <span class="pname">7SJ85-SIP</span>
+    <span>Siemens SIPROTEC 5 7SJ85 overcurrent</span>
+    <span class="psep">|</span>
+    <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
+    <span class="psep">|</span>
+    <span>Licensed per user &mdash; not for redistribution.</span>
+  </div>
+  <details>
+    <summary>Licence, disclaimer and trademark notice</summary>
+    <div class="pbody">
+      <p><strong>Licence.</strong> This file is licensed to one named user, who may install
+      it on the machines they personally use and may not redistribute, resell, sublicense or
+      publish it. A site or team licence covering named users at one location is available
+      separately. Nothing here transfers ownership of the software.</p>
+      <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
+      settings typed in by its user. The tool does not read the device, does not know its
+      firmware revision or its as-built wiring, and cannot tell whether the settings entered
+      match the ones in service. Treat what it produces as a proposal to be checked against
+      the relay and the drawings.</p>
+      <p><strong>Verify before you inject.</strong> Confirm the CT and VT ratios, the curve
+      constants and at least the first timing point against the device's own prediction before
+      accepting the rest of a table. Curve constants move between firmware revisions; if the
+      first point disagrees, every other time in that table is wrong by the same factor.</p>
+      <p><strong>No warranty.</strong> The software is provided as is, without warranty of any
+      kind, express or implied, including but not limited to the warranties of merchantability
+      and fitness for a particular purpose. To the maximum extent permitted by law the author is
+      not liable for any claim, damage, loss or other liability arising from the software or its
+      use &mdash; including damage to plant, loss of production, or injury. Commissioning
+      protection equipment is hazardous work and remains the responsibility of the competent
+      person carrying it out.</p>
+      <p><strong>Trademarks.</strong> Multilin is a trademark of GE Vernova. SIPROTEC and DIGSI
+      are trademarks of Siemens AG. CMC and Test Universe are trademarks of OMICRON electronics
+      GmbH. These names are used only to identify the equipment this tool is designed to be used
+      with. This tool is an independent work: it is not affiliated with, endorsed by, sponsored
+      by or a product of any of those companies, and no setting file, firmware or source
+      material of theirs is included in it.</p>
+      <p><strong>Fonts.</strong> Barlow Condensed and IBM Plex are used under the SIL Open Font
+      Licence 1.1 and are loaded from Google Fonts where a connection is available. With no
+      connection the page falls back to system fonts and every calculation is unaffected.</p>
+    </div>
+  </details>
+</footer>
+
 <script>
 "use strict";
 /* ==================================================================

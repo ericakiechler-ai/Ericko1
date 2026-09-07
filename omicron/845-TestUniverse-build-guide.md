@@ -6,7 +6,7 @@ re-point of the test object.
 
 Values below are for the tool's **sample** transformer: 20 MVA, 115 / 13.8 kV, **Dyn1**,
 60 Hz, W1 CT 150:5 wye, W2 CT 1200:5 wye, ground CT 200:5, VT 13800:120 wye on W2, REF on
-W2. Enter your real transformer in `index.html` and re-run the generator.
+W2. Enter your real transformer in `845.html` and re-run the generator.
 
 ---
 
