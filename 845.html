@@ -462,7 +462,12 @@ svg.phasor{display:block; width:100%; height:auto;}
           <h2>Station and test-set configuration</h2>
           <p class="desc">Everything below comes off the transformer nameplate, the CT/VT schedule and the
              relay's <em>System Setup</em> pages. Every element calculation is referred to these values, so get
-             them right once and the rest follows. Values shown on load are a worked sample, not your station.</p>
+             them right once and the rest follows.</p>
+          <div class="note warn" style="margin-top:9px;"><span class="lb">Enter your station first</span>
+            <span>The values loaded are a worked sample, not your transformer. Change the CT primary and
+            secondary for each winding, the ground CT, and the VT primary and secondary to match your
+            schedule &mdash; every element, every injection value and every channel limit check follows
+            from them. Your entries are kept in this browser, so they are still here next time.</span></div>
         </div>
       </div>
 
@@ -1628,8 +1633,9 @@ function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST }))
 function load() {
   try {
     const r = JSON.parse(localStorage.getItem(STORE) || 'null');
-    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); }
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); return true; }
   } catch (e) {}
+  return false;
 }
 const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
 function defaults(el) {
@@ -2059,10 +2065,14 @@ $('#themeBtn').addEventListener('click', () => {
    INIT
    ================================================================== */
 try {
-  load();
+  const restored = load();
   renderCfg();
   renderRail();
   renderElement();
+  /* Nothing saved means nothing has been entered: open on Setup, where the
+     CT and VT ratios go, rather than on element results computed from the
+     worked sample. Once a station is entered, later visits open on Elements. */
+  if (!restored) setTab('v-setup');
 } catch (err) {
   window.__bootFail('This tool could not start in this browser',
     (err && err.message ? err.message : String(err)) +
