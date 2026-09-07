@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      - run: npx playwright install --with-deps chromium
+      - run: npm install && npx playwright install --with-deps chromium
       # A build that has not passed the calculation and licence tests must never
       # reach a customer, so this gates everything below it.
       # Throwaway keypair for the test run only: overwrites keys/public-key.b64 in
@@ -42,6 +42,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
       - uses: swatinem/rust-cache@v2
         with: { workspaces: './desktop/src-tauri -> target' }
 
@@ -70,6 +72,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: installers-${{ matrix.os }}
+          if-no-files-found: error
           path: |
             desktop/src-tauri/target/**/release/bundle/**/*.msi
             desktop/src-tauri/target/**/release/bundle/**/*.exe

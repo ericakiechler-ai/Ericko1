@@ -12,3 +12,6 @@ node_modules/
 # Generated at build time from the licensed dist file — never a tracked artifact,
 # because it carries a specific customer's licence.
 desktop/frontend/index.html
+
+# Scratch builds the test suite generates.
+dist/test-*.html
