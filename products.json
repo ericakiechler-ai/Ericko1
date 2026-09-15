@@ -1,0 +1,11 @@
+{
+  "_comment": "One pipeline, licensed tool by tool. A tool is built into dist/ and may be licensed only when released is true; released requires reviewed (the calculation review the 845 had). Promotion steps are in README.md.",
+  "tools": {
+    "845":   { "file": "src/845-vec.html",   "tag": "845-VEC",   "title": "GE Multilin 845 transformer protection",     "reviewed": true,  "released": true  },
+    "850":   { "file": "src/850-fdr.html",   "tag": "850-FDR",   "title": "GE Multilin 850 feeder protection",          "reviewed": false, "released": false },
+    "869":   { "file": "src/869-mtr.html",   "tag": "869-MTR",   "title": "GE Multilin 869 motor protection",           "reviewed": false, "released": false },
+    "889":   { "file": "src/889-gen.html",   "tag": "889-GEN",   "title": "GE Multilin 889 generator protection",       "reviewed": false, "released": false },
+    "7sj85": { "file": "src/7sj85-sip.html", "tag": "7SJ85-SIP", "title": "Siemens SIPROTEC 5 7SJ85 overcurrent",       "reviewed": false, "released": false },
+    "7sd82": { "file": "src/7sd82-dif.html", "tag": "7SD82-DIF", "title": "Siemens SIPROTEC 5 7SD82 line differential", "reviewed": false, "released": false }
+  }
+}

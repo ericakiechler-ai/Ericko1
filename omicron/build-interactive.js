@@ -24,7 +24,7 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
 const REPO = path.resolve(__dirname, '..');
 const TOOLS = {
-  '845': { file: '845.html', tag: '845-VEC', title: 'GE Multilin 845 transformer protection' }
+  '845': { file: 'src/845-vec.html', tag: '845-VEC', title: 'GE Multilin 845 transformer protection' }
 };
 
 /* Seventeen curves is too many to enumerate against every threshold.
@@ -290,7 +290,7 @@ ${rules.join('\n')}
 </body>
 </html>`;
 
-  const out = path.join(REPO, T.tag + '-interactive.html');
+  const out = path.join(REPO, 'static', T.tag + '-interactive.html');
   fs.writeFileSync(out, doc);
   console.log((T.tag + '-interactive.html').padEnd(28) + plan.length + ' functions, ' +
     combos + ' pre-computed combinations, ' + rules.length + ' CSS rules, ' +

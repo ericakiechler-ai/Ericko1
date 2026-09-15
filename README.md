@@ -1,8 +1,23 @@
-# 845-VEC — publisher repository
+# Relay Test-Value Calculators — publisher repository
 
-Relay test-value calculator for **GE Multilin 845** transformer protection, mapped
-to **Omicron CMC 356** outputs. This repository builds the shippable product,
-issues licences, and holds the customer documentation.
+Six relay test-value calculators, each mapping a relay's settings to **Omicron
+CMC 356** injection values, plus the generators that turn them into Test Universe
+build guides, test-plan CSVs and Excel workbooks. This repository builds the
+shippable product, issues licences, and holds the customer documentation.
+
+**One pipeline, licensed tool by tool.** `products.json` is the single gate: a
+tool is built into `dist/` and can be licensed only when it is `released`, and it
+is released only after the calculation review the 845 had. Today that is the
+845 alone.
+
+| Tool | Relay | Reviewed | Released |
+|---|---|---|---|
+| `src/845-vec.html` | GE Multilin 845 transformer | ✅ | ✅ sellable |
+| `src/850-fdr.html` | GE Multilin 850 feeder | — | — |
+| `src/869-mtr.html` | GE Multilin 869 motor | — | — |
+| `src/889-gen.html` | GE Multilin 889 generator | REF fix only | — |
+| `src/7sj85-sip.html` | Siemens SIPROTEC 5 7SJ85 | — | — |
+| `src/7sd82-dif.html` | Siemens SIPROTEC 5 7SD82 line differential | — | — |
 
 The product itself is a single self-contained HTML file. No installer, no
 account, no activation, no network access — it works on a machine that has never
@@ -14,7 +29,12 @@ been online, which is the environment it is actually used in.
 
 | Path | What it is |
 |---|---|
-| `src/845-vec.html` | The application source. This is the file you edit. |
+| `products.json` | The release manifest. Which tools may be built and licensed. |
+| `src/845-vec.html` | The 845 — the released product source. |
+| `src/<tool>.html` | The other five, imported from the suite with history; unreleased. |
+| `omicron/` | Test-plan generators, build guides, CSVs and `xlsx/` workbooks (see its README). |
+| `static/` | Generated no-script editions of each tool. Regenerate; do not edit. |
+| `site/index.html` | The suite landing page. |
 | `src/fonts.css` | Generated. Bundled woff2 faces so the tool renders identically offline. |
 | `tools/ed25519-verify.cjs` | Signature verification. Inlined into every build **and** used by the licence tool to self-check. One implementation, two consumers. |
 | `tools/make-keys.mjs` | Generates your signing keypair. Run once, ever. |
@@ -44,10 +64,28 @@ node tests/run.mjs
 > issue or renew a licence for any existing customer. Leak it and anyone can mint
 > licences in your name. Back it up offline, in two places, today.
 
+## Promoting a tool
+
+A tool moves from imported to sellable only through these steps, in order.
+Skipping the first is how a wrong injection value reaches a substation.
+
+1. **Calculation review.** Read every `compute()` the way the 845 was read:
+   trace each injected quantity from setting to channel, with real ratios, and
+   check the notes say what the code does. Fix, test, commit.
+2. **Wire the product slots** into its source: the `<style>/*__FONTS__*/</style>`
+   slot, the licence bar markup, `<script>/*__ED25519__*/</script>`, the `LIC`
+   runtime, `VERSION`/`BUILD_DATE`, and the station save/load — copy them from
+   `src/845-vec.html`. The `product` check in `LIC.boot` must match the tool's tag.
+3. **Tests.** Add a suite under `tests/` that drives the built file from `file://`
+   with the network blocked, checks the licence states, and asserts at least one
+   computed value per element group.
+4. Set `reviewed: true`, then `released: true` in `products.json`.
+5. `node build.mjs --tool <id>` and `node tools/make-licence.mjs --tool <id> …`.
+
 ## Releasing
 
 ```bash
-node build.mjs      # rebuild from src/
+node build.mjs      # rebuild the released 845 from src/ (--tool <id> for another released tool)
 node tests/run.mjs  # 49 checks — a build that fails these must not ship
 ```
 
@@ -171,6 +209,10 @@ erased it and it could not move between the seats a site licence covers.
 ## Known gaps
 
 Honest list, in the order I would tackle them.
+
+0. **Five of the six tools are unreviewed.** They were imported from a sibling
+   branch with their history and only checked for the one REF scaling bug (found
+   and fixed in the 889). Nothing about them is sellable until step 1 above.
 
 1. **No native installer yet.** `desktop/` holds a complete Tauri project and
    `.github/workflows/desktop.yml` builds real installers on real runners, but

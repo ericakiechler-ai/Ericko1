@@ -49,12 +49,17 @@ if (!fs.existsSync(keyPath)) {
 }
 const privateKey = crypto.createPrivateKey(fs.readFileSync(keyPath));
 
+const TOOL = arg('tool', '845');
+const PROD = JSON.parse(fs.readFileSync('products.json', 'utf8')).tools[TOOL];
+if (!PROD) { console.error(`Unknown --tool '${TOOL}'. See products.json.`); process.exit(1); }
+if (!PROD.released) { console.error(`${PROD.tag} is not released - it cannot be licensed. See README, "Promoting a tool".`); process.exit(1); }
+
 const issued = new Date().toISOString().slice(0, 10);
 const id = arg('id', 'LIC-' + issued.slice(0, 4) + '-' + crypto.randomBytes(3).toString('hex').toUpperCase());
 
 /* Canonical JSON: keys sorted, no whitespace. Both signer and verifier must
    produce byte-identical input, so the ordering is not left to chance. */
-const payload = { expires: expires || null, id, issued, maint: maint || null, org, product: '845-VEC', seats, site, type: 'site', v: 2 };
+const payload = { expires: expires || null, id, issued, maint: maint || null, org, product: PROD.tag, seats, site, type: 'site', v: 2 };
 const canon = JSON.stringify(payload, Object.keys(payload).sort());
 const msg = Buffer.from(canon, 'utf8');
 const sig = crypto.sign(null, msg, privateKey);
@@ -67,7 +72,7 @@ if (!ok) { console.error('FATAL: the licence just signed does not verify. Not wr
 
 const block = JSON.stringify({ p: msg.toString('base64'), s: sig.toString('base64') });
 
-const tpl = path.resolve(arg('template', path.join('dist', '845-VEC-unlicensed.html')));
+const tpl = path.resolve(arg('template', path.join('dist', PROD.tag + '-unlicensed.html')));
 if (!fs.existsSync(tpl)) { console.error(`Build first:  node build.mjs`); process.exit(1); }
 let html = fs.readFileSync(tpl, 'utf8');
 const buildDate = (html.match(/const BUILD_DATE = '(\d{4}-\d{2}-\d{2})'/) || [])[1];
@@ -81,7 +86,7 @@ if (!html.includes(MARK)) { console.error('Template has no licence slot — rebu
 html = html.replace(MARK, block);
 
 const slug = org.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
-const out = path.join(process.cwd(), 'dist', `845-VEC-${slug}.html`);
+const out = path.join(process.cwd(), 'dist', `${PROD.tag}-${slug}.html`);
 fs.writeFileSync(out, html);
 
 fs.mkdirSync('licences', { recursive: true });

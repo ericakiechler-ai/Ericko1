@@ -15,12 +15,12 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
 const REPO = path.resolve(__dirname, '..');
 const RELAYS = {
-  '850': { file: '850.html', tag: '850-FDR', title: 'Multilin 850 feeder protection' },
-  '869': { file: '869.html', tag: '869-MTR', title: 'Multilin 869 motor protection' },
-  '889': { file: '889.html', tag: '889-GEN', title: 'Multilin 889 generator protection' },
-  '845': { file: '845.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
-  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' },
-  '7sd82': { file: '7SD82.html', tag: '7SD82-DIF', title: 'Siemens 7SD82 SIPROTEC 5 line differential',
+  '850': { file: 'src/850-fdr.html', tag: '850-FDR', title: 'Multilin 850 feeder protection' },
+  '869': { file: 'src/869-mtr.html', tag: '869-MTR', title: 'Multilin 869 motor protection' },
+  '889': { file: 'src/889-gen.html', tag: '889-GEN', title: 'Multilin 889 generator protection' },
+  '845': { file: 'src/845-vec.html', tag: '845-VEC', title: 'Multilin 845 transformer protection' },
+  '7sj85': { file: 'src/7sj85-sip.html', tag: '7SJ85-SIP', title: 'Siemens 7SJ85 SIPROTEC 5 overcurrent' },
+  '7sd82': { file: 'src/7sd82-dif.html', tag: '7SD82-DIF', title: 'Siemens 7SD82 SIPROTEC 5 line differential',
     /* A differential plan is not one plan. What can be injected depends on how
        the two ends are staged, so the same tool is read twice: once as the
        device is found on a first visit, and once looped back at the local end,

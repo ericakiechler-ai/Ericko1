@@ -20,12 +20,12 @@ const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 
 const REPO = path.resolve(__dirname, '..');
 const TOOLS = {
-  '845':   { file: '845.html',   tag: '845-VEC',   title: 'GE Multilin 845 transformer protection' },
-  '850':   { file: '850.html',   tag: '850-FDR',   title: 'GE Multilin 850 feeder protection' },
-  '869':   { file: '869.html',   tag: '869-MTR',   title: 'GE Multilin 869 motor protection' },
-  '889':   { file: '889.html',   tag: '889-GEN',   title: 'GE Multilin 889 generator protection' },
-  '7sj85': { file: '7SJ85.html', tag: '7SJ85-SIP', title: 'Siemens SIPROTEC 5 7SJ85 overcurrent' },
-  '7sd82': { file: '7SD82.html', tag: '7SD82-DIF', title: 'Siemens SIPROTEC 5 7SD82 line differential' }
+  '845':   { file: 'src/845-vec.html',   tag: '845-VEC',   title: 'GE Multilin 845 transformer protection' },
+  '850':   { file: 'src/850-fdr.html',   tag: '850-FDR',   title: 'GE Multilin 850 feeder protection' },
+  '869':   { file: 'src/869-mtr.html',   tag: '869-MTR',   title: 'GE Multilin 869 motor protection' },
+  '889':   { file: 'src/889-gen.html',   tag: '889-GEN',   title: 'GE Multilin 889 generator protection' },
+  '7sj85': { file: 'src/7sj85-sip.html', tag: '7SJ85-SIP', title: 'Siemens SIPROTEC 5 7SJ85 overcurrent' },
+  '7sd82': { file: 'src/7sd82-dif.html', tag: '7SD82-DIF', title: 'Siemens SIPROTEC 5 7SD82 line differential' }
 };
 
 const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -273,7 +273,7 @@ section.el .chan{margin-bottom:0;}
 </body>
 </html>`;
 
-  const out = path.join(REPO, T.tag + '-static.html');
+  const out = path.join(REPO, 'static', T.tag + '-static.html');
   fs.writeFileSync(out, doc);
   const scripts = (doc.match(/<script/gi) || []).length;
   console.log((T.tag + '-static.html').padEnd(24) + String(rails.length).padStart(2) + ' functions, ' +

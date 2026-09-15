@@ -3,8 +3,9 @@
 keys/signing-key.pem
 
 # Per-customer builds and the register of who holds what.
-dist/845-VEC-*.html
-!dist/845-VEC-unlicensed.html
+dist/*.html
+!dist/*-unlicensed.html
+!dist/*-setup-guide*.html
 licences/
 
 node_modules/

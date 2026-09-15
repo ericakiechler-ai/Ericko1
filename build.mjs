@@ -18,9 +18,15 @@ const VERSION = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
    maintenance-term logic. Never set it for a release. */
 const BUILD = process.env.VEC_BUILD_DATE || new Date().toISOString().slice(0, 10);
 if (!/^\d{4}-\d{2}-\d{2}$/.test(BUILD)) { console.error('VEC_BUILD_DATE must be YYYY-MM-DD'); process.exit(1); }
-const OUT = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : 'dist/845-VEC-unlicensed.html';
+/* Only a released tool is built. products.json is the single gate: a tool
+   that has not had its calculation review is not something a customer can buy. */
+const TOOL = process.argv.includes('--tool') ? process.argv[process.argv.indexOf('--tool') + 1] : '845';
+const P = JSON.parse(fs.readFileSync('products.json', 'utf8')).tools[TOOL];
+if (!P) { console.error(`Unknown tool '${TOOL}'. See products.json.`); process.exit(1); }
+if (!P.released) { console.error(`${P.tag} is not released (reviewed: ${P.reviewed}). Promote it in products.json first - see README.`); process.exit(1); }
+const OUT = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : `dist/${P.tag}-unlicensed.html`;
 
-let html = fs.readFileSync('src/845-vec.html', 'utf8');
+let html = fs.readFileSync(P.file, 'utf8');
 
 /* -- fonts ---------------------------------------------------------------- */
 const fontsPath = 'src/fonts.css';
@@ -63,7 +69,7 @@ fs.writeFileSync(out, html);
 
 /* -- customer setup guide -------------------------------------------------- */
 const guideSrc = 'docs/install-guide.src.html';
-if (fs.existsSync(guideSrc) && OUT === 'dist/845-VEC-unlicensed.html') {
+if (fs.existsSync(guideSrc) && TOOL === '845' && OUT === 'dist/845-VEC-unlicensed.html') {
   let g = fs.readFileSync(guideSrc, 'utf8')
     .replace('/*__FONTS__*/', fs.readFileSync(fontsPath, 'utf8'))
     .replaceAll('__VERSION__', 'v' + VERSION)

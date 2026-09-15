@@ -1,0 +1,5 @@
+{
+  "type": "commonjs",
+  "private": true,
+  "description": "The suite generators are CommonJS; this keeps them so under the repo-wide ESM setting."
+}
