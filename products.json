@@ -26,8 +26,8 @@
       "file": "src/889-gen.html",
       "tag": "889-GEN",
       "title": "GE Multilin 889 generator protection",
-      "reviewed": false,
-      "released": false
+      "reviewed": true,
+      "released": true
     },
     "7sj85": {
       "file": "src/7sj85-sip.html",

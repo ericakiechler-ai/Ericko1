@@ -4,7 +4,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 
-const suites = ['tests/ed25519.test.mjs', 'tests/app.test.mjs', 'tests/850.test.mjs', 'tests/869.test.mjs'];
+const suites = ['tests/ed25519.test.mjs', 'tests/app.test.mjs', 'tests/850.test.mjs', 'tests/869.test.mjs', 'tests/889.test.mjs'];
 let bad = 0;
 for (const s of suites) {
   console.log(`\n════ ${s}`);

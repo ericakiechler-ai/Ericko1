@@ -8,14 +8,14 @@ shippable product, issues licences, and holds the customer documentation.
 **One pipeline, licensed tool by tool.** `products.json` is the single gate: a
 tool is built into `dist/` and can be licensed only when it is `released`, and it
 is released only after the calculation review the 845 had. Today that is the
-845, the 850 and the 869.
+845, 850, 869 and 889.
 
 | Tool | Relay | Reviewed | Released |
 |---|---|---|---|
 | `src/845-vec.html` | GE Multilin 845 transformer | ✅ | ✅ sellable |
 | `src/850-fdr.html` | GE Multilin 850 feeder | ✅ [record](docs/reviews/850-FDR.md) | ✅ sellable |
 | `src/869-mtr.html` | GE Multilin 869 motor | ✅ [record](docs/reviews/869-MTR.md) | ✅ sellable |
-| `src/889-gen.html` | GE Multilin 889 generator | REF fix only | — |
+| `src/889-gen.html` | GE Multilin 889 generator | ✅ [record](docs/reviews/889-GEN.md) | ✅ sellable |
 | `src/7sj85-sip.html` | Siemens SIPROTEC 5 7SJ85 | — | — |
 | `src/7sd82-dif.html` | Siemens SIPROTEC 5 7SD82 line differential | — | — |
 
@@ -86,7 +86,7 @@ Skipping the first is how a wrong injection value reaches a substation.
 
 ```bash
 node build.mjs      # rebuild the released 845 from src/ (--tool <id> for another released tool)
-node tests/run.mjs  # 133 checks — a build that fails these must not ship
+node tests/run.mjs  # 171 checks — a build that fails these must not ship
 ```
 
 `tests/run.mjs` is the gate. It verifies the Ed25519 implementation against RFC
