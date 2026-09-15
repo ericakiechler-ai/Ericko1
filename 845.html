@@ -476,20 +476,20 @@ svg.phasor{display:block; width:100%; height:auto;}
         <div class="blk">
           <div class="blk-h"><h3>Power transformer</h3><span class="hint">nameplate</span></div>
           <div class="grid3">
-            <div class="f"><label for="cfg_mva">ONAN rating</label><input id="cfg_mva" type="number" step="0.1" data-cfg="mva"><span class="u">MVA, self-cooled</span></div>
-            <div class="f"><label for="cfg_mva2">ONAF 1</label><input id="cfg_mva2" type="number" step="0.1" data-cfg="mva2"><span class="u">MVA, first fan stage</span></div>
-            <div class="f"><label for="cfg_mva3">ONAF 2</label><input id="cfg_mva3" type="number" step="0.1" data-cfg="mva3"><span class="u">MVA, second stage</span></div>
+            <div class="f"><label for="cfg_mva">ONAN rating</label><input id="cfg_mva" type="number" step="any" inputmode="decimal" data-cfg="mva"><span class="u">MVA, self-cooled</span></div>
+            <div class="f"><label for="cfg_mva2">ONAF 1</label><input id="cfg_mva2" type="number" step="any" inputmode="decimal" data-cfg="mva2"><span class="u">MVA, first fan stage</span></div>
+            <div class="f"><label for="cfg_mva3">ONAF 2</label><input id="cfg_mva3" type="number" step="any" inputmode="decimal" data-cfg="mva3"><span class="u">MVA, second stage</span></div>
             <div class="f wide"><label for="cfg_mvaBase">Protection base rating</label>
               <select id="cfg_mvaBase" data-cfg="mvaBase">
                 <option value="onan">ONAN &mdash; self-cooled</option>
                 <option value="onaf1">ONAF 1</option>
                 <option value="onaf2">ONAF 2 &mdash; top rating</option>
               </select><span class="u">every per-unit value and rated current follows this</span></div>
-            <div class="f"><label for="cfg_kv1">W1 voltage</label><input id="cfg_kv1" type="number" step="0.01" data-cfg="kv1"><span class="u">kV, line&ndash;line</span></div>
-            <div class="f"><label for="cfg_kv2">W2 voltage</label><input id="cfg_kv2" type="number" step="0.01" data-cfg="kv2"><span class="u">kV, line&ndash;line</span></div>
-            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="1" data-cfg="freq"><span class="u">Hz</span></div>
-            <div class="f"><label for="cfg_z">Impedance</label><input id="cfg_z" type="number" step="0.01" data-cfg="z"><span class="u">% on the base rating</span></div>
-            <div class="f"><label for="cfg_xr">X / R</label><input id="cfg_xr" type="number" step="0.1" data-cfg="xr"><span class="u">at the transformer</span></div>
+            <div class="f"><label for="cfg_kv1">W1 voltage</label><input id="cfg_kv1" type="number" step="any" inputmode="decimal" data-cfg="kv1"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_kv2">W2 voltage</label><input id="cfg_kv2" type="number" step="any" inputmode="decimal" data-cfg="kv2"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="any" inputmode="decimal" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_z">Impedance</label><input id="cfg_z" type="number" step="any" inputmode="decimal" data-cfg="z"><span class="u">% on the base rating</span></div>
+            <div class="f"><label for="cfg_xr">X / R</label><input id="cfg_xr" type="number" step="any" inputmode="decimal" data-cfg="xr"><span class="u">at the transformer</span></div>
             <div class="f"><label for="cfg_rot">Phase rotation</label>
               <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select>
               <span class="u">as configured in relay</span></div>
@@ -540,10 +540,10 @@ svg.phasor{display:block; width:100%; height:auto;}
               <select id="cfg_oltcW" data-cfg="oltcW">
                 <option value="1">W1</option><option value="2">W2</option><option value="0">None fitted</option>
               </select><span class="u">where the OLTC sits</span></div>
-            <div class="f"><label for="cfg_oltcHi">Range, raise</label><input id="cfg_oltcHi" type="number" step="0.1" data-cfg="oltcHi"><span class="u">% above mid-tap</span></div>
-            <div class="f"><label for="cfg_oltcLo">Range, lower</label><input id="cfg_oltcLo" type="number" step="0.1" data-cfg="oltcLo"><span class="u">% below mid-tap</span></div>
-            <div class="f"><label for="cfg_oltcN">Steps</label><input id="cfg_oltcN" type="number" step="1" data-cfg="oltcN"><span class="u">total tap positions</span></div>
-            <div class="f"><label for="cfg_oltcPos">Present position</label><input id="cfg_oltcPos" type="number" step="0.1" data-cfg="oltcPos"><span class="u">% from mid-tap, as found</span></div>
+            <div class="f"><label for="cfg_oltcHi">Range, raise</label><input id="cfg_oltcHi" type="number" step="any" inputmode="decimal" data-cfg="oltcHi"><span class="u">% above mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcLo">Range, lower</label><input id="cfg_oltcLo" type="number" step="any" inputmode="decimal" data-cfg="oltcLo"><span class="u">% below mid-tap</span></div>
+            <div class="f"><label for="cfg_oltcN">Steps</label><input id="cfg_oltcN" type="number" step="any" inputmode="decimal" data-cfg="oltcN"><span class="u">total tap positions</span></div>
+            <div class="f"><label for="cfg_oltcPos">Present position</label><input id="cfg_oltcPos" type="number" step="any" inputmode="decimal" data-cfg="oltcPos"><span class="u">% from mid-tap, as found</span></div>
           </div>
         </div>
 
@@ -558,7 +558,7 @@ svg.phasor{display:block; width:100%; height:auto;}
                 <option value="ngrA">Earthing resistor &mdash; rated amps</option>
                 <option value="react">Earthing reactor &mdash; ohms</option>
               </select><span class="u">HV star point</span></div>
-            <div class="f"><label for="cfg_gnd1v">W1 value</label><input id="cfg_gnd1v" type="number" step="0.1" data-cfg="gnd1v"><span class="u">&Omega; or A, per the choice</span></div>
+            <div class="f"><label for="cfg_gnd1v">W1 value</label><input id="cfg_gnd1v" type="number" step="any" inputmode="decimal" data-cfg="gnd1v"><span class="u">&Omega; or A, per the choice</span></div>
             <div class="f"><label for="cfg_gnd2">W2 neutral</label>
               <select id="cfg_gnd2" data-cfg="gnd2">
                 <option value="none">Unearthed or delta</option>
@@ -567,24 +567,24 @@ svg.phasor{display:block; width:100%; height:auto;}
                 <option value="ngrA">Earthing resistor &mdash; rated amps</option>
                 <option value="react">Earthing reactor &mdash; ohms</option>
               </select><span class="u">LV star point</span></div>
-            <div class="f"><label for="cfg_gnd2v">W2 value</label><input id="cfg_gnd2v" type="number" step="0.1" data-cfg="gnd2v"><span class="u">&Omega; or A, per the choice</span></div>
+            <div class="f"><label for="cfg_gnd2v">W2 value</label><input id="cfg_gnd2v" type="number" step="any" inputmode="decimal" data-cfg="gnd2v"><span class="u">&Omega; or A, per the choice</span></div>
           </div>
         </div>
 
         <div class="blk">
           <div class="blk-h"><h3>Current transformers</h3><span class="hint">CT schedule</span></div>
           <div class="grid3">
-            <div class="f"><label for="cfg_ct1p">W1 primary</label><input id="cfg_ct1p" type="number" step="1" data-cfg="ct1p"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct1p">W1 primary</label><input id="cfg_ct1p" type="number" step="any" inputmode="decimal" data-cfg="ct1p"><span class="u">A</span></div>
             <div class="f"><label for="cfg_ct1s">W1 secondary</label>
               <select id="cfg_ct1s" data-cfg="ct1s"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
             <div class="f"><label for="cfg_ct1c">W1 connection</label>
               <select id="cfg_ct1c" data-cfg="ct1c"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">at relay</span></div>
-            <div class="f"><label for="cfg_ct2p">W2 primary</label><input id="cfg_ct2p" type="number" step="1" data-cfg="ct2p"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ct2p">W2 primary</label><input id="cfg_ct2p" type="number" step="any" inputmode="decimal" data-cfg="ct2p"><span class="u">A</span></div>
             <div class="f"><label for="cfg_ct2s">W2 secondary</label>
               <select id="cfg_ct2s" data-cfg="ct2s"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
             <div class="f"><label for="cfg_ct2c">W2 connection</label>
               <select id="cfg_ct2c" data-cfg="ct2c"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">at relay</span></div>
-            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="1" data-cfg="ctgp"><span class="u">A (50G/51G, REF)</span></div>
+            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="any" inputmode="decimal" data-cfg="ctgp"><span class="u">A (50G/51G, REF)</span></div>
             <div class="f"><label for="cfg_ctgs">Ground CT sec.</label>
               <select id="cfg_ctgs" data-cfg="ctgs"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
             <div class="f"><label for="cfg_refw">REF winding</label>
@@ -595,8 +595,8 @@ svg.phasor{display:block; width:100%; height:auto;}
         <div class="blk">
           <div class="blk-h"><h3>Voltage transformers</h3><span class="hint">VT schedule</span></div>
           <div class="grid2">
-            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="1" data-cfg="vtp"><span class="u">V, line&ndash;line</span></div>
-            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="0.1" data-cfg="vts"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="any" inputmode="decimal" data-cfg="vtp"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="any" inputmode="decimal" data-cfg="vts"><span class="u">V, line&ndash;line</span></div>
             <div class="f"><label for="cfg_vtc">VT connection</label>
               <select id="cfg_vtc" data-cfg="vtc">
                 <option value="wye">Wye (4-wire)</option>
@@ -617,8 +617,8 @@ svg.phasor{display:block; width:100%; height:auto;}
                 <option value="1x">1 &times; 64 A &mdash; triples paralleled, single phase</option>
               </select>
               <span class="u">Set to match how the CMC is actually wired &mdash; the channel table and the limit checks follow this.</span></div>
-            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="0.1" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
-            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="1" data-cfg="vmax"><span class="u">V</span></div>
+            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="any" inputmode="decimal" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
+            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="any" inputmode="decimal" data-cfg="vmax"><span class="u">V</span></div>
           </div>
         </div>
 
@@ -1052,6 +1052,13 @@ function vPickup(s, b) {
   if (s.vu === 'kV_pri') return { sec: s.vpkp * 1000 / b.vtr, pri: s.vpkp * 1000 };
   return { sec: s.vpkp * b.vLNs, pri: s.vpkp * b.vLNs * b.vtr };                                     /* ×VT (L-N) */
 }
+/* Show a user-supplied multiple exactly as it was entered. Rounding it to a
+   fixed place made a label disagree with the current beneath it — "2.8x
+   pickup" against an injection of 2.75x, which reads as a test-set error on
+   the record rather than as a rounded caption. */
+const fmtX = v => !isFinite(v) ? '\u2014'
+  : String(Math.round(v * 1000) / 1000);
+
 const multiplesOf = str => String(str || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
 
 /* Build a standard overcurrent injection point. */
@@ -1117,7 +1124,7 @@ reg({
         const T2 = o.ph === '3ph' ? P3(i2s, a2) : [P(i2s, a2), P(0, 0), P(0, 0)];
         pts.push({
           id: '87-' + Ir + '-' + tag,
-          name: 'Irest ' + fmt(Ir, 2) + ' pu — ' + (tag === 'op' ? 'above' : 'below') + ' slope',
+          name: 'Irest ' + fmtX(Ir) + ' pu — ' + (tag === 'op' ? 'above' : 'below') + ' slope',
           detail: 'Idiff required ' + fmt(req(Ir), 3) + ' pu · applied ' + fmt(Id, 3) + ' pu (' + (tag === 'op' ? '+' : '−') + fmt(o.marg, 0) + '%)'
             + (flip ? ' · W2 driven to zero, W1 carries the whole differential' : ''),
           expect: verdict,
@@ -1128,7 +1135,7 @@ reg({
             v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
             i: [{ lab: 'IW1 L1', cls: 'ch-l1', mag: i1s, ang: a1 }, { lab: 'IW2 L1', cls: 'ch-l3', mag: i2s, ang: a2, alt: true }]
           },
-          sheet: ['87T', 'Irest ' + fmt(Ir, 2) + ' pu ' + verdict, fmt(i1s, 3) + ' A @ ' + fmt(a1, 1) + '°', fmt(i2s, 3) + ' A @ ' + fmt(wrap(a2), 1) + '°', verdict]
+          sheet: ['87T', 'Irest ' + fmtX(Ir) + ' pu ' + verdict, fmt(i1s, 3) + ' A @ ' + fmt(a1, 1) + '°', fmt(i2s, 3) + ' A @ ' + fmt(wrap(a2), 1) + '°', verdict]
         });
       });
     });
@@ -1282,7 +1289,7 @@ function mkIOC(ansi, nm, q, dflt) {
           p.sec * f * K, o.iang, p.w, verdict, vt === 'op' ? 'Operate within ' + fmt(s.dly, 2) + ' s' : 'No operation'),
           { verdict: vt, sheet: [ansi, 'Pickup ' + rel, fmt(p.sec * f * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', '—', verdict] }));
       });
-      pts.push(Object.assign(ocPoint('ioctm', 'Timing at ' + fmt(o.tm, 1) + '× pickup',
+      pts.push(Object.assign(ocPoint('ioctm', 'Timing at ' + fmtX(o.tm) + '× pickup',
         'Step from prefault zero straight to the test value', p.sec * o.tm * K, o.iang, p.w,
         fmt(s.dly, 3) + ' s', 'Measured from application of current to trip contact'),
         { verdict: 'nu', sheet: [ansi, 'Timing ' + fmt(o.tm, 1) + '×', fmt(p.sec * o.tm * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', fmt(s.dly, 3) + ' s', 'TIME'] }));
@@ -1317,10 +1324,10 @@ function mkTOC(ansi, nm, q, dflt) {
       });
       multiplesOf(o.muls).forEach(M => {
         const t = curveTime(s.crv, M, s.tdm);
-        pts.push(Object.assign(ocPoint('t' + M, 'Timing at ' + fmt(M, 1) + '× pickup',
+        pts.push(Object.assign(ocPoint('t' + M, 'Timing at ' + fmtX(M) + '× pickup',
           s.crv + ' · TDM ' + fmt(s.tdm, 2), p.sec * M * K, o.iang, p.w,
           t == null ? 'no operation' : fmt(t, 3) + ' s', t == null ? 'Multiple is below the curve asymptote' : 'Predicted from the curve equation'),
-          { verdict: 'nu', sheet: [ansi, 'Timing ' + fmt(M, 1) + '×', fmt(p.sec * M * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 3) + ' s', 'TIME'] }));
+          { verdict: 'nu', sheet: [ansi, 'Timing ' + fmtX(M) + '×', fmt(p.sec * M * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 3) + ' s', 'TIME'] }));
       });
       const notes = [{ lvl: 'note', lb: 'Quantity', txt: qi.txt },
         { lvl: 'warn', lb: 'Curve constants', txt: 'Times come from the published ' + s.crv + ' equation. Curve constants have moved between firmware revisions — check the first timing point against the relay\'s own prediction before you accept the rest.' }];
@@ -1433,7 +1440,7 @@ reg({
     };
     pts.push(mk(p.sec * (1 - m), 'Pickup — below threshold', fmt((1 - m) * 100, 0) + '% of setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'));
     pts.push(mk(p.sec * (1 + m), 'Pickup — above threshold', fmt((1 + m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'));
-    pts.push(mk(p.sec * o.tv, 'Timing at ' + fmt(o.tv, 2) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time'));
+    pts.push(mk(p.sec * o.tv, 'Timing at ' + fmtX(o.tv) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time'));
     pts.push(mk(Math.max(0, s.block * 0.8), 'Below minimum operating voltage', 'Proves the element blocks rather than operating on a dead bus', 'BLOCKED', 'no', 'Element inhibited'));
     return {
       readout: [{ k: 'Pickup', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Pickup', v: fmt(p.pri / 1000, 2), u: 'kV pri L-N' },
@@ -1466,7 +1473,7 @@ reg({
       points: [
         mk(p.sec * (1 + m), 'Pickup — above threshold', fmt((1 + m) * 100, 0) + '% of setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'),
         mk(p.sec * (1 - m), 'Pickup — below threshold', fmt((1 - m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'),
-        mk(p.sec * o.tv, 'Timing at ' + fmt(o.tv, 2) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time')
+        mk(p.sec * o.tv, 'Timing at ' + fmtX(o.tv) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time')
       ],
       notes: [{ lvl: 'warn', lb: 'Channel limit', txt: 'Sustained overvoltage on all three channels is the case most likely to run the amplifier warm. Keep the timing run only as long as the delay plus a margin.' }]
     };
@@ -1631,7 +1638,7 @@ reg({
     const pts = multiplesOf(o.muls).map(M => {
       const I = Ith * M, num_ = I * I - Math.pow(s.ip * Ibs, 2), den = I * I - Ith * Ith;
       const t = den > 0 && num_ > 0 ? tau * Math.log(num_ / den) : null;
-      return Object.assign(ocPoint('th' + M, 'Operate at ' + fmt(M, 2) + '× thermal setting',
+      return Object.assign(ocPoint('th' + M, 'Operate at ' + fmtX(M) + '× thermal setting',
         'Applied ' + fmt(I, 3) + ' A sec · prior load ' + fmt(s.ip, 2) + '× Ib', I, o.iang, w,
         t == null ? 'no operation' : fmt(t, 1) + ' s', t == null ? 'Below the thermal asymptote k·Ib' : fmt(t / 60, 2) + ' minutes'),
         { verdict: 'nu', sheet: ['49', fmt(M, 2) + '× k·Ib', fmt(I, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 1) + ' s', 'TIME'] });
@@ -1902,18 +1909,26 @@ function fieldHTML(f, v, ns) {
   if (f.t === 'sel') ctl = '<select id="' + id + '" data-' + ns + '="' + f.k + '">' +
     f.opts.map(([val, lab]) => '<option value="' + esc(val) + '"' + (String(v) === String(val) ? ' selected' : '') + '>' + esc(lab) + '</option>').join('') + '</select>';
   else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
-  else ctl = '<input id="' + id + '" type="number" step="' + (f.step || 0.01) + '" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  /* step drives only the spinner increment; "any" keeps the browser from
+     rejecting a value that does not land on it, which a relay setting rarely
+     does. The suggested increment is kept in the title for the spinner. */
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
   const wide = f.t === 'sel' && f.opts.some(o => o[1].length > 22);
   return '<div class="f' + (wide || f.t === 'txt' ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
     (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
 }
 
-function renderElement() {
+/* keepForms: leave the settings inputs exactly as the user is typing them.
+   Rebuilding them mid-entry rewrote the field from the parsed number, so a
+   half-typed "0." became "0" and a decimal could never be completed. */
+function renderElement(keepForms) {
   const { el, s, o } = curSettings();
   document.querySelectorAll('.rail-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.el === el.ansi)));
   $('#setHint').textContent = 'ANSI ' + el.ansi;
-  $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
-  $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  if (!keepForms) {
+    $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
+    $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  }
 
   let R;
   try { R = el.compute(s, o); }
@@ -1996,19 +2011,23 @@ const PRESETS = {
 function rowsHTML(id, vals, unit) {
   return vals.map((p, k) =>
     '<div class="vin-row"><span class="lbl ' + PHC[k] + '">' + PH[k] + '</span>' +
-    '<input type="number" step="0.01" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
-    '<input type="number" step="0.5" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
+    '<input type="number" step="any" inputmode="decimal" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
 }
 
 const r2 = a => a.map(p => [Math.round(p[0] * 1000) / 1000, Math.round(wrap(p[1]) * 10) / 10]);
-function renderVector() {
+/* keepInputs: same reason as renderElement — do not rewrite the boxes the
+   user is typing into. */
+function renderVector(keepInputs) {
   if (!ST.vec) ST.vec = PRESETS['Balanced load'](base());
   ST.vec = { v: r2(ST.vec.v), i1: r2(ST.vec.i1), i2: r2(ST.vec.i2) };
   const V = ST.vec, b = base();
   $('#presets').innerHTML = Object.keys(PRESETS).map(k => '<button class="pbtn" type="button" data-preset="' + esc(k) + '">' + esc(k) + '</button>').join('');
-  $('#vIn').innerHTML = rowsHTML('v', V.v);
-  $('#i1In').innerHTML = rowsHTML('i1', V.i1);
-  $('#i2In').innerHTML = rowsHTML('i2', V.i2);
+  if (!keepInputs) {
+    $('#vIn').innerHTML = rowsHTML('v', V.v);
+    $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+    $('#i2In').innerHTML = rowsHTML('i2', V.i2);
+  }
 
   const Vp = V.v.map(p => pol(p[0], p[1])), I1 = V.i1.map(p => pol(p[0], p[1])), I2 = V.i2.map(p => pol(p[0], p[1]));
   const ph = {
@@ -2190,22 +2209,19 @@ document.addEventListener('input', e => {
   } else if (t.dataset.set || t.dataset.opt) {
     const ns = t.dataset.set ? 'set' : 'opt', k = t.dataset[ns], el = elByAnsi(ST.el);
     ST[ns][el.ansi] = ST[ns][el.ansi] || {};
-    ST[ns][el.ansi][k] = t.type === 'number' ? parseFloat(t.value) : t.value;
+    if (t.type === 'number') {
+      const v = parseFloat(t.value);
+      /* An empty box, a lone minus or a trailing point are all stages of
+         typing a number. Hold the last good value and let the entry finish. */
+      if (isFinite(v)) ST[ns][el.ansi][k] = v;
+    } else ST[ns][el.ansi][k] = t.value;
     save();
-    const focus = t.id;
-    let pos = null;
-    try { pos = t.selectionStart; } catch (err) {}
-    renderElement();
-    const back = document.getElementById(focus);
-    if (back) { back.focus(); if (pos != null) { try { back.setSelectionRange(pos, pos); } catch (err) {} } }
+    renderElement(true);
   } else if (t.dataset.vec) {
     const [g, i, j] = t.dataset.vec.split('.');
     const v = parseFloat(t.value);
     if (isFinite(v)) { ST.vec[g][+i][+j] = v; save(); }
-    const focus = t.dataset.vec;
-    renderVector();
-    const back = document.querySelector('[data-vec="' + focus + '"]');
-    if (back) back.focus();
+    renderVector(true);
   }
 });
 
