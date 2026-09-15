@@ -1245,7 +1245,7 @@ reg({
     const It = o.thru * b.ctSec(w), Ig = It * b.ctSec(w) / CFG.ctgs;
     pts.push({
       id: 'refstab', name: 'Through-fault stability',
-      detail: 'Phase L1 and ground input driven in opposition at ' + fmt(o.thru, 1) + ' ×CT — an external ground fault.',
+      detail: 'Phase L1 and ground input driven in opposition at ' + fmtX(o.thru) + ' ×CT — an external ground fault.',
       expect: 'RESTRAIN', expectSub: 'No operation at any point of the ramp', verdict: 'no',
       channels: chans(P3(b.vLNs, 0), [P(It, 0, 'W' + w + ' phase L1'), P(0, 0), P(0, 0)], null)
         .concat([{ ch: 'I ' + (CFG.cmc === '6x' ? 'B-L1' : 'aux'), cls: 'ch-n', mag: Ig, unit: 'A', ang: 180, freq: CFG.freq, note: 'ground / neutral CT input, reversed polarity' }]),
@@ -1292,7 +1292,7 @@ function mkIOC(ansi, nm, q, dflt) {
       pts.push(Object.assign(ocPoint('ioctm', 'Timing at ' + fmtX(o.tm) + '× pickup',
         'Step from prefault zero straight to the test value', p.sec * o.tm * K, o.iang, p.w,
         fmt(s.dly, 3) + ' s', 'Measured from application of current to trip contact'),
-        { verdict: 'nu', sheet: [ansi, 'Timing ' + fmt(o.tm, 1) + '×', fmt(p.sec * o.tm * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', fmt(s.dly, 3) + ' s', 'TIME'] }));
+        { verdict: 'nu', sheet: [ansi, 'Timing ' + fmtX(o.tm) + '×', fmt(p.sec * o.tm * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', fmt(s.dly, 3) + ' s', 'TIME'] }));
       const notes = [{ lvl: 'note', lb: 'Quantity', txt: qi.txt }];
       if (q === 'negseq') notes.push({ lvl: 'warn', lb: '×3 factor', txt: 'The current in the channel table is already three times the setting. A balanced three-phase set injected in reverse rotation gives I2 = I instead, if you would rather test that way.' });
       return {
@@ -1527,12 +1527,12 @@ reg({
         const target = s.vhz * f;
         const Vreq = target * Vb * (ft / CFG.freq);        /* V = (V/Hz)pu · Vbase · f/fnom */
         const v = P3(Vreq, 0).map(q => (q.f = ft, q));
-        pts.push({ id: 'vh' + ft + f, name: fmt(ft, 1) + ' Hz — ' + rel + ' threshold',
-          detail: fmt(target, 3) + ' pu V/Hz requires ' + fmt(Vreq, 2) + ' V secondary at ' + fmt(ft, 1) + ' Hz',
+        pts.push({ id: 'vh' + ft + f, name: fmtX(ft) + ' Hz — ' + rel + ' threshold',
+          detail: fmt(target, 3) + ' pu V/Hz requires ' + fmt(Vreq, 2) + ' V secondary at ' + fmtX(ft) + ' Hz',
           expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 1) + ' s' : 'No operation', verdict: vt,
           channels: chans(v, nullTriple(), null, ft),
           phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
-          sheet: ['24', fmt(ft, 1) + ' Hz ' + rel, fmt(Vreq, 2) + ' V', fmt(ft, 1) + ' Hz', verdict] });
+          sheet: ['24', fmtX(ft) + ' Hz ' + rel, fmt(Vreq, 2) + ' V', fmtX(ft) + ' Hz', verdict] });
       });
     });
     return {
@@ -1641,7 +1641,7 @@ reg({
       return Object.assign(ocPoint('th' + M, 'Operate at ' + fmtX(M) + '× thermal setting',
         'Applied ' + fmt(I, 3) + ' A sec · prior load ' + fmt(s.ip, 2) + '× Ib', I, o.iang, w,
         t == null ? 'no operation' : fmt(t, 1) + ' s', t == null ? 'Below the thermal asymptote k·Ib' : fmt(t / 60, 2) + ' minutes'),
-        { verdict: 'nu', sheet: ['49', fmt(M, 2) + '× k·Ib', fmt(I, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 1) + ' s', 'TIME'] });
+        { verdict: 'nu', sheet: ['49', fmtX(M) + '× k·Ib', fmt(I, 3) + ' A @ ' + fmt(o.iang, 0) + '°', t == null ? '—' : fmt(t, 1) + ' s', 'TIME'] });
     });
     return {
       readout: [{ k: 'Base Ib', v: fmt(Ibs, 3), u: 'A sec' }, { k: 'k·Ib', v: fmt(Ith, 3), u: 'A sec' },
@@ -1669,7 +1669,7 @@ reg({
       Object.assign(ocPoint('bf2', 'Current detector — below threshold', fmt((1 - m) * 100, 0) + '% of detector setting',
         Ipk * (1 - m), o.iang, w, 'NO PICKUP', 'Detector must drop out'),
         { verdict: 'no', sheet: ['50BF', 'Detector below', fmt(Ipk * (1 - m), 3) + ' A', '—', 'NO PICKUP'] }),
-      Object.assign(ocPoint('bf3', 'Retrip timing', 'Initiate asserted with current held at ' + fmt(o.imul, 1) + '× detector and never removed',
+      Object.assign(ocPoint('bf3', 'Retrip timing', 'Initiate asserted with current held at ' + fmtX(o.imul) + '× detector and never removed',
         Ipk * o.imul, o.iang, w, fmt(s.t1, 3) + ' s', 'Timer 1 — retrip output'),
         { verdict: 'nu', sheet: ['50BF', 'Retrip t1', fmt(Ipk * o.imul, 3) + ' A', fmt(s.t1, 3) + ' s', 'TIME'] }),
       Object.assign(ocPoint('bf4', 'Backup trip timing', 'Same state, second stage', Ipk * o.imul, o.iang, w,

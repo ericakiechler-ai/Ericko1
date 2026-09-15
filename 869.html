@@ -352,12 +352,12 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
         <div class="blk">
           <div class="blk-h"><h3>Motor nameplate</h3><span class="hint">and data sheet</span></div>
           <div class="grid2">
-            <div class="f"><label for="cfg_kv">Rated voltage</label><input id="cfg_kv" type="number" step="0.01" data-cfg="kv"><span class="u">kV, line&ndash;line</span></div>
-            <div class="f"><label for="cfg_fla">Full load current</label><input id="cfg_fla" type="number" step="0.1" data-cfg="fla"><span class="u">A primary &mdash; FLA</span></div>
-            <div class="f"><label for="cfg_sf">Service factor</label><input id="cfg_sf" type="number" step="0.01" data-cfg="sf"><span class="u">&times; FLA</span></div>
-            <div class="f"><label for="cfg_hp">Rated output</label><input id="cfg_hp" type="number" step="1" data-cfg="hp"><span class="u">hp</span></div>
-            <div class="f"><label for="cfg_pf">Rated power factor</label><input id="cfg_pf" type="number" step="0.01" data-cfg="pf"><span class="u">lagging</span></div>
-            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="1" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_kv">Rated voltage</label><input id="cfg_kv" type="number" step="any" inputmode="decimal" data-cfg="kv"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_fla">Full load current</label><input id="cfg_fla" type="number" step="any" inputmode="decimal" data-cfg="fla"><span class="u">A primary &mdash; FLA</span></div>
+            <div class="f"><label for="cfg_sf">Service factor</label><input id="cfg_sf" type="number" step="any" inputmode="decimal" data-cfg="sf"><span class="u">&times; FLA</span></div>
+            <div class="f"><label for="cfg_hp">Rated output</label><input id="cfg_hp" type="number" step="any" inputmode="decimal" data-cfg="hp"><span class="u">hp</span></div>
+            <div class="f"><label for="cfg_pf">Rated power factor</label><input id="cfg_pf" type="number" step="any" inputmode="decimal" data-cfg="pf"><span class="u">lagging</span></div>
+            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="any" inputmode="decimal" data-cfg="freq"><span class="u">Hz</span></div>
             <div class="f"><label for="cfg_rot">Phase rotation</label>
               <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select><span class="u">as configured in relay</span></div>
             <div class="f"><label for="cfg_type">Motor type</label>
@@ -368,12 +368,12 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
         <div class="blk">
           <div class="blk-h"><h3>Starting data</h3><span class="hint">thermal limit sheet</span></div>
           <div class="grid2">
-            <div class="f"><label for="cfg_lra">Locked rotor current</label><input id="cfg_lra" type="number" step="0.1" data-cfg="lra"><span class="u">&times; FLA</span></div>
-            <div class="f"><label for="cfg_lrtc">Safe stall time &mdash; cold</label><input id="cfg_lrtc" type="number" step="0.5" data-cfg="lrtc"><span class="u">s at locked rotor</span></div>
-            <div class="f"><label for="cfg_lrth">Safe stall time &mdash; hot</label><input id="cfg_lrth" type="number" step="0.5" data-cfg="lrth"><span class="u">s at locked rotor</span></div>
-            <div class="f"><label for="cfg_acc">Acceleration time</label><input id="cfg_acc" type="number" step="0.1" data-cfg="acc"><span class="u">s at rated voltage</span></div>
-            <div class="f"><label for="cfg_start">Starts per hour</label><input id="cfg_start" type="number" step="1" data-cfg="start"><span class="u">nameplate limit</span></div>
-            <div class="f"><label for="cfg_tbs">Time between starts</label><input id="cfg_tbs" type="number" step="1" data-cfg="tbs"><span class="u">minutes</span></div>
+            <div class="f"><label for="cfg_lra">Locked rotor current</label><input id="cfg_lra" type="number" step="any" inputmode="decimal" data-cfg="lra"><span class="u">&times; FLA</span></div>
+            <div class="f"><label for="cfg_lrtc">Safe stall time &mdash; cold</label><input id="cfg_lrtc" type="number" step="any" inputmode="decimal" data-cfg="lrtc"><span class="u">s at locked rotor</span></div>
+            <div class="f"><label for="cfg_lrth">Safe stall time &mdash; hot</label><input id="cfg_lrth" type="number" step="any" inputmode="decimal" data-cfg="lrth"><span class="u">s at locked rotor</span></div>
+            <div class="f"><label for="cfg_acc">Acceleration time</label><input id="cfg_acc" type="number" step="any" inputmode="decimal" data-cfg="acc"><span class="u">s at rated voltage</span></div>
+            <div class="f"><label for="cfg_start">Starts per hour</label><input id="cfg_start" type="number" step="any" inputmode="decimal" data-cfg="start"><span class="u">nameplate limit</span></div>
+            <div class="f"><label for="cfg_tbs">Time between starts</label><input id="cfg_tbs" type="number" step="any" inputmode="decimal" data-cfg="tbs"><span class="u">minutes</span></div>
           </div>
         </div>
 
@@ -389,20 +389,20 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
                 <option value="iec">IEC 60255-8 thermal replica</option>
               </select>
               <span class="u">Curve constants differ by product. Fitting from the relay&rsquo;s own curve removes the guess.</span></div>
-            <div class="f"><label for="cfg_cm">Curve multiplier</label><input id="cfg_cm" type="number" step="0.1" data-cfg="cm"><span class="u">CM</span></div>
-            <div class="f"><label for="cfg_ca">Constant A</label><input id="cfg_ca" type="number" step="0.1" data-cfg="ca"><span class="u">seconds &mdash; fit to your relay</span></div>
-            <div class="f"><label for="cfg_cn">Exponent n</label><input id="cfg_cn" type="number" step="0.1" data-cfg="cn"><span class="u">usually 2</span></div>
+            <div class="f"><label for="cfg_cm">Curve multiplier</label><input id="cfg_cm" type="number" step="any" inputmode="decimal" data-cfg="cm"><span class="u">CM</span></div>
+            <div class="f"><label for="cfg_ca">Constant A</label><input id="cfg_ca" type="number" step="any" inputmode="decimal" data-cfg="ca"><span class="u">seconds &mdash; fit to your relay</span></div>
+            <div class="f"><label for="cfg_cn">Exponent n</label><input id="cfg_cn" type="number" step="any" inputmode="decimal" data-cfg="cn"><span class="u">usually 2</span></div>
             <div class="f"><label for="cfg_cref">Curve asymptote</label>
               <select id="cfg_cref" data-cfg="cref"><option value="fla">At FLA (1.0 ×FLA)</option><option value="sf">At service-factor amps</option></select>
               <span class="u">where the curve goes vertical</span></div>
-            <div class="f"><label for="cfg_fitI">Fit point &mdash; current</label><input id="cfg_fitI" type="number" step="0.1" data-cfg="fitI"><span class="u">&times; FLA, off the relay curve</span></div>
-            <div class="f"><label for="cfg_fitT">Fit point &mdash; time</label><input id="cfg_fitT" type="number" step="0.1" data-cfg="fitT"><span class="u">s at that current</span></div>
-            <div class="f"><label for="cfg_k">Negative-sequence K</label><input id="cfg_k" type="number" step="0.5" data-cfg="k"><span class="u">rotor heating factor</span></div>
-            <div class="f"><label for="cfg_hcr">Hot / cold ratio</label><input id="cfg_hcr" type="number" step="0.01" data-cfg="hcr"><span class="u">hot curve &divide; cold curve</span></div>
-            <div class="f"><label for="cfg_taur">Cooling &tau; &mdash; running</label><input id="cfg_taur" type="number" step="1" data-cfg="taur"><span class="u">minutes</span></div>
-            <div class="f"><label for="cfg_taus">Cooling &tau; &mdash; stopped</label><input id="cfg_taus" type="number" step="1" data-cfg="taus"><span class="u">minutes</span></div>
-            <div class="f"><label for="cfg_tau_i">IEC &tau;</label><input id="cfg_tau_i" type="number" step="0.5" data-cfg="tau_i"><span class="u">minutes &mdash; replica model only</span></div>
-            <div class="f"><label for="cfg_kf">IEC k factor</label><input id="cfg_kf" type="number" step="0.01" data-cfg="kf"><span class="u">&times; FLA &mdash; replica model only</span></div>
+            <div class="f"><label for="cfg_fitI">Fit point &mdash; current</label><input id="cfg_fitI" type="number" step="any" inputmode="decimal" data-cfg="fitI"><span class="u">&times; FLA, off the relay curve</span></div>
+            <div class="f"><label for="cfg_fitT">Fit point &mdash; time</label><input id="cfg_fitT" type="number" step="any" inputmode="decimal" data-cfg="fitT"><span class="u">s at that current</span></div>
+            <div class="f"><label for="cfg_k">Negative-sequence K</label><input id="cfg_k" type="number" step="any" inputmode="decimal" data-cfg="k"><span class="u">rotor heating factor</span></div>
+            <div class="f"><label for="cfg_hcr">Hot / cold ratio</label><input id="cfg_hcr" type="number" step="any" inputmode="decimal" data-cfg="hcr"><span class="u">hot curve &divide; cold curve</span></div>
+            <div class="f"><label for="cfg_taur">Cooling &tau; &mdash; running</label><input id="cfg_taur" type="number" step="any" inputmode="decimal" data-cfg="taur"><span class="u">minutes</span></div>
+            <div class="f"><label for="cfg_taus">Cooling &tau; &mdash; stopped</label><input id="cfg_taus" type="number" step="any" inputmode="decimal" data-cfg="taus"><span class="u">minutes</span></div>
+            <div class="f"><label for="cfg_tau_i">IEC &tau;</label><input id="cfg_tau_i" type="number" step="any" inputmode="decimal" data-cfg="tau_i"><span class="u">minutes &mdash; replica model only</span></div>
+            <div class="f"><label for="cfg_kf">IEC k factor</label><input id="cfg_kf" type="number" step="any" inputmode="decimal" data-cfg="kf"><span class="u">&times; FLA &mdash; replica model only</span></div>
           </div>
       </div>
 
@@ -410,14 +410,14 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
         <div class="blk">
           <div class="blk-h"><h3>Instrument transformers</h3><span class="hint">CT / VT schedule</span></div>
           <div class="grid3">
-            <div class="f"><label for="cfg_ctp">Phase CT primary</label><input id="cfg_ctp" type="number" step="1" data-cfg="ctp"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ctp">Phase CT primary</label><input id="cfg_ctp" type="number" step="any" inputmode="decimal" data-cfg="ctp"><span class="u">A</span></div>
             <div class="f"><label for="cfg_cts">Phase CT sec.</label>
               <select id="cfg_cts" data-cfg="cts"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
-            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="1" data-cfg="ctgp"><span class="u">A &mdash; core balance</span></div>
+            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="any" inputmode="decimal" data-cfg="ctgp"><span class="u">A &mdash; core balance</span></div>
             <div class="f"><label for="cfg_ctgs">Ground CT sec.</label>
               <select id="cfg_ctgs" data-cfg="ctgs"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
-            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="1" data-cfg="vtp"><span class="u">V, L&ndash;L</span></div>
-            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="0.1" data-cfg="vts"><span class="u">V, L&ndash;L</span></div>
+            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="any" inputmode="decimal" data-cfg="vtp"><span class="u">V, L&ndash;L</span></div>
+            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="any" inputmode="decimal" data-cfg="vts"><span class="u">V, L&ndash;L</span></div>
             <div class="f"><label for="cfg_vtc">VT connection</label>
               <select id="cfg_vtc" data-cfg="vtc"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">as wired</span></div>
             <div class="f"><label for="cfg_diff">Differential CT</label>
@@ -435,8 +435,8 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
                 <option value="1x">1 &times; 64 A &mdash; triples paralleled, single phase</option>
               </select>
               <span class="u">Locked-rotor current is several times FLA, so the high-current arrangement is usually the one you need.</span></div>
-            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="0.1" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
-            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="1" data-cfg="vmax"><span class="u">V</span></div>
+            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="any" inputmode="decimal" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
+            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="any" inputmode="decimal" data-cfg="vmax"><span class="u">V</span></div>
           </div>
         </div>
 
@@ -934,6 +934,13 @@ function phasorLegend(data) {
 const num = (k, l, d, u, st) => ({ k, l, d, u, t: 'num', step: st == null ? 0.01 : st });
 const sel = (k, l, d, o, u) => ({ k, l, d, u, t: 'sel', opts: o });
 const txt = (k, l, d, u) => ({ k, l, d, u, t: 'txt' });
+/* Show a user-supplied multiple exactly as it was entered. Rounding it to a
+   fixed place made a label disagree with the current beneath it — "2.8x
+   pickup" against an injection of 2.75x, which reads as a test-set error on
+   the record rather than as a rounded caption. */
+const fmtX = v => !isFinite(v) ? '\u2014'
+  : String(Math.round(v * 1000) / 1000);
+
 const multiplesOf = s => String(s || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
 const ELEMENTS = [];
 const reg = e => { ELEMENTS.push(e); return e; };
@@ -1018,15 +1025,15 @@ reg({
         ? (() => {
             const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = M * b.flaSec;
             const v = P3(b.vLNs, 0), i = [P(I, la), P(I, la - 120), P(I * 0.5, la + 120, 'reduced to half')];
-            return { id: 't' + M, name: 'Timing at ' + fmt(M, 2) + ' ×FLA', detail: note,
+            return { id: 't' + M, name: 'Timing at ' + fmtX(M) + ' ×FLA', detail: note,
               expect: fmtT(t), expectSub: 'Equivalent heating current ' + fmt(iF, 3) + ' ×FLA, not ' + fmt(M, 2),
               verdict: 'nu', iFla: iF,
               channels: chans(v, i, null),
               phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
                         i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
-              sheet: ['49', 'Timing ' + fmt(M, 2) + ' ×FLA unbalanced', fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * 0.5, 3) + ' A', fmtT(t), 'TIME'] };
+              sheet: ['49', 'Timing ' + fmtX(M) + ' ×FLA unbalanced', fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * 0.5, 3) + ' A', fmtT(t), 'TIME'] };
           })()
-        : motorPoint('t' + M, 'Timing at ' + fmt(M, 2) + ' ×FLA', note + ' · ' + (hot ? 'hot' : 'cold') + ' curve',
+        : motorPoint('t' + M, 'Timing at ' + fmtX(M) + ' ×FLA', note + ' · ' + (hot ? 'hot' : 'cold') + ' curve',
             iF, fmtT(t), 'From the ' + (hot ? 'hot' : 'cold') + ' overload curve', 'nu');
       p.tcc = { i: iF, t: t || 1e5 };
       if (p.sheet) p.sheet[0] = '49';
@@ -1064,7 +1071,7 @@ reg({
     multiplesOf(o.muls).forEach(M => {
       const t = thermalTime(M, false), rate = tcuRate(M, false);
       const tAlarm = t ? t * s.alarm / 100 : null, tLock = t ? t * s.lock / 100 : null;
-      const p = motorPoint('a' + M, 'Accumulate at ' + fmt(M, 1) + ' ×FLA',
+      const p = motorPoint('a' + M, 'Accumulate at ' + fmtX(M) + ' ×FLA',
         'Capacity rises at ' + fmt(rate, 3) + ' % per second from a cold start',
         M, fmtT(tAlarm) + ' to alarm', 'Trip at ' + fmtT(tLock) + ' · hold the current, do not interrupt it', 'nu');
       p.tcc = { i: M, t: t || 1e5 };
@@ -1115,7 +1122,7 @@ reg({
     };
     push(seqA, 'Stopped', 'stop', o.tload, null, 'Stopped', 'No current, motor at rest', 0, 0, 'READY', 'Start supervision idle', 'nu');
     push(seqA, 'Accelerating', 'start', CFG.acc, 'START', 'Successful start — acceleration',
-      'Current stepped to ' + fmt(iA, 2) + ' ×FLA and held for the nameplate acceleration time of ' + fmtT(CFG.acc),
+      'Current stepped to ' + fmtX(iA) + ' ×FLA and held for the nameplate acceleration time of ' + fmtT(CFG.acc),
       b.vLNs * 0.85, iA, 'NO TRIP', 'Inside the ' + fmtT(s.tacc) + ' limit', 'no');
     push(seqA, 'Running', 'run', 10, 'TRANSITION', 'Successful start — running',
       'Current dropped to full load, below the ' + fmt(s.trans, 2) + ' ×FLA transition level', b.vLNs, 1.0,
@@ -1123,11 +1130,11 @@ reg({
     const seqB = [];
     push(seqB, 'Stopped', 'stop', o.tload, null, 'Stalled start — stopped', 'No current, motor at rest', 0, 0, 'READY', '', 'nu');
     push(seqB, 'Stalled', 'fault', s.tacc * 1.3, 'START', 'Stalled start — current never drops',
-      'Current held at ' + fmt(iA, 2) + ' ×FLA past the ' + fmtT(s.tacc) + ' limit — the motor never accelerates',
+      'Current held at ' + fmtX(iA) + ' ×FLA past the ' + fmtT(s.tacc) + ' limit — the motor never accelerates',
       b.vLNs * 0.85, iA, 'TRIP AT ' + fmtT(s.tacc), 'Incomplete sequence, or the thermal curve first — see the note below', 'op');
     const tTh = thermalTime(iA, false), tThHot = thermalTime(iA, true);
     const notes = [
-      { lvl: 'note', lb: 'Two timers race', txt: 'At ' + fmt(iA, 2) + ' ×FLA the acceleration timer expires at ' + fmtT(s.tacc) + ' and the cold thermal curve at ' + fmtT(tTh) + '. Whichever is shorter is what actually trips, and the relay should report which. Confirm the target flags, not just that something operated.' },
+      { lvl: 'note', lb: 'Two timers race', txt: 'At ' + fmtX(iA) + ' ×FLA the acceleration timer expires at ' + fmtT(s.tacc) + ' and the cold thermal curve at ' + fmtT(tTh) + '. Whichever is shorter is what actually trips, and the relay should report which. Confirm the target flags, not just that something operated.' },
       { lvl: 'note', lb: 'Reduced voltage', txt: 'The start states are shown at 85% of nominal voltage because a real start pulls the terminal voltage down. If the relay has voltage-dependent start supervision this matters; if not, run them at nominal.' }
     ];
     if (tThHot && tThHot < CFG.acc)
@@ -1351,7 +1358,7 @@ reg({
       });
       const It = o.thru * b.flaSec;
       pts.push({ id: 'stab', name: 'Through-current stability',
-        detail: 'All three phase leads bundled through the window in the correct direction at ' + fmt(o.thru, 1) + ' ×FLA',
+        detail: 'All three phase leads bundled through the window in the correct direction at ' + fmtX(o.thru) + ' ×FLA',
         expect: 'RESTRAIN', expectSub: 'A balanced set through the window sums to zero', verdict: 'no',
         channels: chans(P3(b.vLNs, 0), P3(It, 0), null),
         phasor: { v: [], i: P3(It, 0).map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
@@ -1369,13 +1376,13 @@ reg({
       });
       const It = o.thru * b.flaSec, Id = It * s.slp / 100 * 1.1;
       pts.push({ id: 'slope', name: 'Slope — above the characteristic',
-        detail: 'Through current ' + fmt(o.thru, 1) + ' ×FLA with a differential ' + fmt(s.slp * 1.1, 0) + '% of it',
+        detail: 'Through current ' + fmtX(o.thru) + ' ×FLA with a differential ' + fmt(s.slp * 1.1, 0) + '% of it',
         expect: 'OPERATE', expectSub: 'Line end ' + fmt(It, 3) + ' A, neutral end ' + fmt(It - Id, 3) + ' A', verdict: 'op',
         channels: chans(P3(b.vLNs, 0), P3(It, 0), P3(Math.max(0, It - Id), 180)),
         phasor: { v: [], i: [{ lab: 'I line', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'I ntl', cls: 'ch-l3', mag: Math.max(0, It - Id), ang: 180, alt: true }] },
         sheet: ['87M', 'Slope above', fmt(It, 3) + ' A @ 0°', fmt(Math.max(0, It - Id), 3) + ' A @ 180°', 'OPERATE'] });
       pts.push({ id: 'stab', name: 'Through-current stability',
-        detail: 'Both ends matched at ' + fmt(o.thru, 1) + ' ×FLA in opposition',
+        detail: 'Both ends matched at ' + fmtX(o.thru) + ' ×FLA in opposition',
         expect: 'RESTRAIN', expectSub: 'Zero differential', verdict: 'no',
         channels: chans(P3(b.vLNs, 0), P3(It, 0), P3(It, 180)),
         phasor: { v: [], i: [{ lab: 'I line', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'I ntl', cls: 'ch-l3', mag: It, ang: 180, alt: true }] },
@@ -1427,7 +1434,7 @@ function mkIOC(ansi, nm, q, dflt, unit) {
         pts.push(mk(p.sec * f, 'Pickup — ' + rel + ' threshold',
           fmt(f * 100, 0) + '% of setting · ' + fmt(p.sec * f, 3) + ' A secondary', verdict,
           vt === 'op' ? 'Operate within ' + fmtT(s.dly) : 'No operation', vt)));
-      pts.push(mk(p.sec * o.tm, 'Timing at ' + fmt(o.tm, 1) + '× pickup', 'Step from prefault load straight to the test value',
+      pts.push(mk(p.sec * o.tm, 'Timing at ' + fmtX(o.tm) + '× pickup', 'Step from prefault load straight to the test value',
         fmtT(s.dly), 'Measured from application of current to trip', 'nu'));
       if (s.inhib > 0) pts.push(mk(b.lraSec, 'Blocked during start',
         'Full locked-rotor current from standstill — the element must stay blocked for ' + fmtT(s.inhib),
@@ -1470,7 +1477,7 @@ function mkTOC(ansi, nm, q, dflt, crv) {
           vt === 'op' ? 'Long operate time — let the curve run out' : 'No operation', vt)));
       multiplesOf(o.muls).forEach(M => {
         const t = curveTime(s.crv, M, s.tdm);
-        pts.push(mk(p.sec * M, 'Timing at ' + fmt(M, 1) + '× pickup', s.crv + ' · TDM ' + fmt(s.tdm, 2),
+        pts.push(mk(p.sec * M, 'Timing at ' + fmtX(M) + '× pickup', s.crv + ' · TDM ' + fmt(s.tdm, 2),
           t == null ? 'no operation' : fmtT(t), 'Predicted from the curve equation', 'nu'));
       });
       return {
@@ -1545,7 +1552,7 @@ function mkVolt(ansi, nm, over) {
           fmt((over ? 1 + m : 1 - m) * 100, 0) + '% of setting, motor on load', 'OPERATE', 'op', 'Operate after ' + fmtT(s.dly)),
         mk(p.sec * (over ? 1 - m : 1 + m), 'Pickup — ' + (over ? 'below' : 'above') + ' threshold',
           fmt((over ? 1 - m : 1 + m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'),
-        mk(p.sec * o.tv, 'Timing at ' + fmt(o.tv, 2) + '× pickup', 'Step from nominal to the test level', fmtT(s.dly), 'nu', 'Definite time')
+        mk(p.sec * o.tv, 'Timing at ' + fmtX(o.tv) + '× pickup', 'Step from nominal to the test level', fmtT(s.dly), 'nu', 'Definite time')
       ];
       if (!over) {
         pts.push(mk(Math.max(0, s.block * 0.8), 'Below minimum operating voltage',
@@ -1883,18 +1890,26 @@ function fieldHTML(f, v, ns) {
   if (f.t === 'sel') ctl = '<select id="' + id + '" data-' + ns + '="' + f.k + '">' +
     f.opts.map(([val, lab]) => '<option value="' + esc(val) + '"' + (String(v) === String(val) ? ' selected' : '') + '>' + esc(lab) + '</option>').join('') + '</select>';
   else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
-  else ctl = '<input id="' + id + '" type="number" step="' + (f.step || 0.01) + '" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  /* step drives only the spinner increment; "any" keeps the browser from
+     rejecting a value that does not land on it, which a relay setting rarely
+     does. */
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
   const wide = (f.t === 'sel' && f.opts.some(o => o[1].length > 22)) || f.t === 'txt';
   return '<div class="f' + (wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
     (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
 }
 
-function renderElement() {
+/* keepForms: leave the settings inputs exactly as the user is typing them.
+   Rebuilding them mid-entry rewrote the field from the parsed number, so a
+   half-typed "0." became "0" and a decimal could never be completed. */
+function renderElement(keepForms) {
   const { el, s, o } = curSettings();
   document.querySelectorAll('.rail-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.el === el.ansi)));
   $('#setHint').textContent = 'ANSI ' + el.ansi;
-  $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
-  $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  if (!keepForms) {
+    $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
+    $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  }
 
   let R;
   try { R = el.compute(s, o); }
@@ -1987,18 +2002,22 @@ const PRESETS = {
 function rowsHTML(id, vals) {
   return vals.map((p, k) =>
     '<div class="vin-row"><span class="lbl ' + PHC[k] + '">' + PH[k] + '</span>' +
-    '<input type="number" step="0.01" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
-    '<input type="number" step="0.5" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
+    '<input type="number" step="any" inputmode="decimal" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
 }
 const r2 = a => a.map(p => [Math.round(p[0] * 1000) / 1000, Math.round(wrap(p[1]) * 10) / 10]);
 
-function renderVector() {
+/* keepInputs: same reason as renderElement — do not rewrite the boxes the
+   user is typing into. */
+function renderVector(keepInputs) {
   if (!ST.vec) ST.vec = PRESETS['Full load'](base());
   ST.vec = { v: r2(ST.vec.v), i1: r2(ST.vec.i1) };
   const V = ST.vec, b = base();
   $('#presets').innerHTML = Object.keys(PRESETS).map(k => '<button class="pbtn" type="button" data-preset="' + esc(k) + '">' + esc(k) + '</button>').join('');
-  $('#vIn').innerHTML = rowsHTML('v', V.v);
-  $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+  if (!keepInputs) {
+    $('#vIn').innerHTML = rowsHTML('v', V.v);
+    $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+  }
 
   const Vp = V.v.map(p => pol(p[0], p[1])), Ip = V.i1.map(p => pol(p[0], p[1]));
   const ph = {
@@ -2188,20 +2207,18 @@ document.addEventListener('input', e => {
   } else if (t.dataset.set || t.dataset.opt) {
     const ns = t.dataset.set ? 'set' : 'opt', k = t.dataset[ns], el = elByAnsi(ST.el);
     ST[ns][el.ansi] = ST[ns][el.ansi] || {};
-    ST[ns][el.ansi][k] = t.type === 'number' ? parseFloat(t.value) : t.value;
+    if (t.type === 'number') {
+      const v = parseFloat(t.value);
+      /* An empty box, a lone minus or a trailing point are all stages of
+         typing a number. Hold the last good value and let the entry finish. */
+      if (isFinite(v)) ST[ns][el.ansi][k] = v;
+    } else ST[ns][el.ansi][k] = t.value;
     save();
-    const focus = t.id;
-    let pos = null; try { pos = t.selectionStart; } catch (err) {}
-    renderElement();
-    const back = document.getElementById(focus);
-    if (back) { back.focus(); if (pos != null) { try { back.setSelectionRange(pos, pos); } catch (err) {} } }
+    renderElement(true);
   } else if (t.dataset.vec) {
     const [g, i, j] = t.dataset.vec.split('.'), v = parseFloat(t.value);
     if (isFinite(v)) { ST.vec[g][+i][+j] = v; save(); }
-    const focus = t.dataset.vec;
-    renderVector();
-    const back = document.querySelector('[data-vec="' + focus + '"]');
-    if (back) back.focus();
+    renderVector(true);
   }
 });
 document.addEventListener('click', e => {
