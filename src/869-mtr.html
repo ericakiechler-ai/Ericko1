@@ -22,9 +22,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>869 Motor Test Calculator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>/*__FONTS__*/</style>
 <style>
 /* ============================================================
    TOKENS — light is the base; dark redefines tokens only.
@@ -310,9 +308,32 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
 .pfoot .pbody p:last-child{margin-bottom:0;}
 .pfoot .pbody strong{color:var(--ink-2);}
 @media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
+
+/* ---- licence bar ---------------------------------------------------- *
+   Always present, never dismissible. In evaluation it is the loudest thing
+   on the page; when licensed it is a quiet single line of provenance.      */
+.licbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:6px 18px; font-family:var(--f-body); font-size:11.5px;
+  border-bottom:1px solid var(--line); background:var(--surface-2); color:var(--ink-3);}
+.licbar .tag{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.1em;
+  font-weight:700; font-size:10px; padding:2px 7px; border-radius:3px;
+  background:var(--surface-3); color:var(--ink-2); white-space:nowrap;}
+.licbar b{color:var(--ink-2); font-weight:600;}
+.licbar.evat{background:var(--warn-bg); color:var(--ink); border-bottom-color:var(--warn);}
+.licbar.evat .tag{background:var(--warn); color:#fff;}
+.licbar.lic .tag{background:var(--accent); color:var(--accent-ink);}
+.licbar.lapsed .maint{color:var(--warn); font-weight:600;}
+@media print{.licbar{background:none !important; border-bottom:1px solid #999; color:#000;}
+  .licbar .tag{border:1px solid #000; background:none !important; color:#000 !important;}}
 </style>
 </head>
 <body>
+<!-- Signed licence. Replaced per customer by tools/make-licence.mjs. The
+     signature covers the payload only; editing either invalidates it. -->
+<script type="application/json" id="licData">{"p":"","s":""}</script>
+
+<div class="licbar" id="licBar"><span class="tag">Checking licence</span></div>
+
 <div class="shell">
 
   <header class="topbar">
@@ -443,6 +464,20 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
       </div>
 
       <div class="blk">
+        <div class="blk-h"><h3>Station file</h3><span class="hint">move this setup between machines</span></div>
+        <div class="sheet-tools">
+          <button class="tbtn" id="saveCfg" type="button">Save station to a file</button>
+          <button class="tbtn" id="loadCfg" type="button">Load station from a file</button>
+          <input type="file" id="cfgFile" accept=".json,application/json" hidden>
+          <span class="chip"><span class="dot"></span><b id="cfgName">unsaved</b></span>
+        </div>
+        <div class="note" style="margin-top:8px;"><span class="lb">Why</span>
+          <span>Your entries live in this browser only. Clearing browsing data erases them, and they do
+          not follow you to another machine. Save a station file once per motor and you can reopen
+          it anywhere, hand it to a colleague on the same licence, or keep it with the job pack.</span></div>
+      </div>
+
+      <div class="blk">
         <div class="blk-h"><h3>Derived base quantities</h3><span class="hint">used by every element below</span></div>
         <dl class="readout" id="derived"></dl>
       </div>
@@ -564,15 +599,29 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
     <span class="psep">|</span>
     <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
     <span class="psep">|</span>
-    <span>Licensed per user &mdash; not for redistribution.</span>
+    <span id="licFoot">Licensed per site &mdash; not for redistribution.</span>
+    <span class="psep">|</span>
+    <span id="verFoot">v__VERSION__ &middot; build __BUILD__</span>
   </div>
   <details>
     <summary>Licence, disclaimer and trademark notice</summary>
     <div class="pbody">
-      <p><strong>Licence.</strong> This file is licensed to one named user, who may install
-      it on the machines they personally use and may not redistribute, resell, sublicense or
-      publish it. A site or team licence covering named users at one location is available
-      separately. Nothing here transfers ownership of the software.</p>
+      <p><strong>Licence.</strong> This copy is licensed to the organisation and site named
+      in the bar at the top of the page, for use by up to the stated number of named users at
+      that location. Those users may install it on the machines they work from. It may not be
+      redistributed, resold, sublicensed, published, or shared outside the licensed site.
+      Additional sites and additional seats are licensed separately. Nothing here transfers
+      ownership of the software.</p>
+      <p><strong>Perpetual, with maintenance.</strong> The licence to use this software does
+      not expire. It covers every build released up to the maintenance date shown in the bar
+      above. When maintenance lapses, the builds you already hold remain fully licensed and
+      keep working; renewing maintenance entitles you to the builds released since. A build
+      dated after your maintenance term runs as an evaluation copy until maintenance is renewed.</p>
+      <p><strong>Provenance.</strong> The licence details shown above are cryptographically
+      signed and are reproduced on every test sheet this copy exports or prints. That is
+      deliberate: a test record should name the tool and the licence that produced it, so a
+      reviewer years later can tell where the numbers came from.</p>
+
       <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
       settings typed in by its user. The tool does not read the device, does not know its
       firmware revision or its as-built wiring, and cannot tell whether the settings entered
@@ -602,8 +651,154 @@ svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
   </details>
 </footer>
 
+<script>/*__ED25519__*/</script>
+
+<script>
+/* ==========================================================================
+   LICENCE  —  offline verification of a signed site/team licence.
+
+   The signature is Ed25519 over the canonical JSON payload. The public key
+   below is embedded at build time; the private key exists only on the
+   publisher's machine, so a licence naming an organisation cannot be forged
+   without it.
+
+   Two deliberate design decisions:
+
+   1. Verification NEVER changes a computed value. An unlicensed copy performs
+      exactly the same arithmetic as a licensed one. Degrading numbers in a
+      tool whose output is injected into live protection equipment would be
+      dangerous, and no commercial argument outweighs that. What the licence
+      controls is provenance: what the page says about itself, and what every
+      exported or printed test sheet is stamped with.
+
+   2. Licences are PERPETUAL WITH A MAINTENANCE TERM. `maint` is the date up to
+      which the customer is entitled to updates. A build dated on or before that
+      date is theirs to use forever, whether or not maintenance has since lapsed;
+      a build dated after it is not covered, and runs as evaluation. `expires`
+      is a separate, harder limit for time-limited or subscription licences: past
+      it the copy is not licensed at all.
+
+   3. Verification fails SAFE, not CLOSED. If the licence is absent, damaged,
+      expired, or the browser cannot do SHA-512, the tool still runs — as a
+      clearly marked evaluation copy. A licensed engineer standing in a
+      substation with no signal must never be locked out of their own tool by
+      a check that could not complete.
+   ========================================================================== */
+var LIC = (function () {
+  'use strict';
+  var PUBKEY = '__PUBKEY__';
+  var state = { ok: false, lapsed: false, checked: false, reason: 'checking', d: null };
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (!m) return iso;
+    var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return Number(m[3]) + ' ' + M[Number(m[2]) - 1] + ' ' + m[1];
+  }
+
+  /* One-line provenance string. Goes in the bar, the footer, and the header of
+     every exported test sheet — the same words in all three places. */
+  function line() {
+    if (!state.ok) return 'EVALUATION COPY — not licensed for commissioning work';
+    var d = state.d;
+    return 'Licensed to ' + d.org + (d.site ? ' — ' + d.site : '') +
+           ' · ' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') +
+           ' · Licence ' + d.id +
+           (d.expires ? ' · valid to ' + fmtDate(d.expires) : ' · perpetual') +
+           (d.maint ? ' · maintenance ' + (state.lapsed ? 'lapsed ' : 'to ') + fmtDate(d.maint) : '');
+  }
+
+  function paint() {
+    var bar = document.getElementById('licBar');
+    if (bar) {
+      bar.className = 'licbar ' + (state.ok ? (state.lapsed ? 'lic lapsed' : 'lic') : 'evat');
+      if (state.ok) {
+        var d = state.d;
+        bar.innerHTML = '<span class="tag">Licensed</span>' +
+          '<span><b>' + esc(d.org) + '</b>' + (d.site ? ' — ' + esc(d.site) : '') + '</span>' +
+          '<span>' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') + '</span>' +
+          '<span>Licence ' + esc(d.id) + '</span>' +
+          '<span>' + (d.expires ? 'Valid to ' + fmtDate(d.expires) : 'Perpetual') + '</span>' +
+          (d.maint
+            ? (state.lapsed
+                ? '<span class="maint">Maintenance lapsed ' + fmtDate(d.maint) + ' — this version stays fully licensed; renew for updates</span>'
+                : '<span>Updates to ' + fmtDate(d.maint) + '</span>')
+            : '');
+      } else {
+        bar.innerHTML = '<span class="tag">Evaluation</span>' +
+          '<span><b>Not licensed for commissioning work.</b> Every calculation is live and correct, ' +
+          'but test sheets exported from this copy are stamped as evaluation output. ' +
+          (state.reason === 'expired'
+             ? 'This licence expired on ' + fmtDate(state.d && state.d.expires) + '.'
+             : state.reason === 'outside-maint'
+             ? 'This build (' + fmtDate(BUILD_DATE) + ') is newer than the maintenance term on your licence, which ended ' +
+               fmtDate(state.d && state.d.maint) + '. Builds released before that date remain fully licensed to you — renew maintenance to use this one.'
+             : state.reason === 'nocrypto'
+             ? 'The licence could not be checked in this browser — if you have bought a licence, this is a support issue, not a fault in your copy.'
+             : 'Contact the publisher for a site licence.') + '</span>';
+      }
+    }
+    var f = document.getElementById('licFoot');
+    if (f) f.textContent = line();
+  }
+
+  function boot() {
+    var el = document.getElementById('licData');
+    var blob;
+    try { blob = JSON.parse(el ? el.textContent : '{}'); } catch (e) { blob = {}; }
+    if (!blob || !blob.p || !blob.s) {
+      state.checked = true; state.reason = 'none'; paint(); return;
+    }
+    var payload, msg, sig, pub;
+    try {
+      msg = ED25519.b64ToBytes(blob.p);
+      sig = ED25519.b64ToBytes(blob.s);
+      pub = ED25519.b64ToBytes(PUBKEY);
+      payload = JSON.parse(new TextDecoder().decode(msg));
+    } catch (e) {
+      state.checked = true; state.reason = 'malformed'; paint(); return;
+    }
+    ED25519.verify(sig, msg, pub).then(function (good) {
+      state.checked = true;
+      if (!good) { state.reason = 'badsig'; paint(); return; }
+      state.d = payload;
+      /* Compare dates as strings — ISO dates sort correctly and this avoids
+         a timezone making a licence expire a day early somewhere. */
+      var today = new Date().toISOString().slice(0, 10);
+      if (payload.product !== '869-MTR') { state.reason = 'wrongproduct'; paint(); return; }
+      /* Hard limit: a time-limited licence past its date is not a licence. */
+      if (payload.expires && payload.expires < today) { state.reason = 'expired'; paint(); return; }
+      /* Maintenance: the build must fall inside the term. Whether the term has
+         since lapsed only changes what the bar says, never whether it is licensed. */
+      if (payload.maint) {
+        if (BUILD_DATE > payload.maint) { state.reason = 'outside-maint'; paint(); return; }
+        state.lapsed = payload.maint < today;
+      }
+      state.ok = true; state.reason = 'ok'; paint();
+    }).catch(function () {
+      state.checked = true; state.reason = 'nocrypto'; paint();
+    });
+  }
+
+  return {
+    boot: boot,
+    line: line,
+    isLicensed: function () { return state.ok; },
+    /* Banner for the top of an exported sheet. */
+    stamp: function () {
+      return state.ok
+        ? '# ' + line()
+        : '# EVALUATION COPY — NOT FOR COMMISSIONING USE\n# Values are correct, but this copy is not licensed to produce test records.';
+    }
+  };
+})();
+</script>
+
 <script>
 "use strict";
+const VERSION = 'v__VERSION__ (__BUILD__)';
+const BUILD_DATE = '__BUILD__';   /* ISO date this file was built; compared against the licence's maintenance term */
 /* ==================================================================
    869-MTR  -  motor protection test-value calculator
    GE Multilin 869 Motor Protection  x  Omicron CMC 356
@@ -629,10 +824,18 @@ const mag   = x => Math.hypot(x.re, x.im);
 const ang   = x => (mag(x) < 1e-12 ? 0 : Math.atan2(x.im, x.re) * R2D);
 const wrap  = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
 const A1 = pol(1, 120), A2 = pol(1, 240);
+/* Phase rotation, honoured everywhere a set is built by hand: the step from
+   L1 to L2 is -120° under ABC and +120° under ACB. */
+const rotS = () => (CFG.rot === 'ACB' ? +120 : -120);
+const rotA = () => [0, rotS(), -rotS()];
+/* Symmetrical components. Under ACB the relay's positive sequence is the set
+   that steps +120°, so what the ABC operator calls "negative" is positive
+   there and the two are exchanged. */
 function seq(ia, ib, ic) {
-  return { z: scale(add(add(ia, ib), ic), 1 / 3),
-    p: scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3),
-    n: scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3) };
+  const z = scale(add(add(ia, ib), ic), 1 / 3);
+  const p = scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3);
+  const n = scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3);
+  return CFG.rot === 'ACB' ? { z, p: n, n: p } : { z, p, n };
 }
 const fmt  = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d));
 const fmtA = v => (!isFinite(v) ? '—' : (wrap(v) >= 0 ? '+' : '−') + Math.abs(wrap(v)).toFixed(1) + '°');
@@ -745,12 +948,17 @@ function chans(v, i1, i2, f, v4) {
   if (v4) out.push({ ch: 'V 4', cls: 'ch-n', mag: v4.m, unit: 'V', ang: v4.a, freq: v4.f == null ? F : v4.f, note: v4.n || '' });
   const p1 = mode === '6x' ? 'I A-' : 'I ';
   if (i1) i1.forEach((p, k) => p && out.push({ ch: p1 + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
-  if (i2 && mode === '6x') i2.forEach((p, k) => p && out.push({ ch: 'I B-' + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  /* A second set is listed whatever the amplifier mode, so a dual-CT test is
+     never shown as a one-sided injection; checkChannels() flags the mode. */
+  if (i2) i2.forEach((p, k) => p && out.push({ ch: 'I B-' + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f,
+    note: (mode === '6x' || !(p.m > 0) ? '' : 'second current set — needs 6 × 12.5 A mode') + (p.n ? (mode === '6x' || !(p.m > 0) ? '' : ' · ') + p.n : '') }));
   return out;
 }
 const P  = (m, a, n) => ({ m, a, n });
 const P3 = (m, a, rot) => { const s = (rot || CFG.rot) === 'ACB' ? +120 : -120;
   return [P(m, a), P(m, a + s), P(m, a - s)]; };
+/* the same set with L2 and L3 exchanged — pure negative sequence for the configured rotation */
+const P3rev = (m, a) => { const s = rotS(); return [P(m, a), P(m, a - s), P(m, a + s)]; };
 const nullTriple = () => [P(0, 0), P(0, 0), P(0, 0)];
 
 function checkChannels(list) {
@@ -763,6 +971,8 @@ function checkChannels(list) {
     n.push({ lvl: 'warn', lb: 'Near limit', txt: 'Peak demand ' + fmt(iMax, 2) + ' A is within 15% of the channel limit. Confirm the amplifier holds it into the relay burden for the whole run — thermal tests are long.' });
   if (vMax > CFG.vmax + 1e-9)
     n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak voltage ' + fmt(vMax, 1) + ' V exceeds the ' + fmt(CFG.vmax, 0) + ' V channel limit.' });
+  if (CFG.cmc !== '6x' && list.some(c => /^I B-/.test(c.ch) && c.mag > 0))
+    n.push({ lvl: 'bad', lb: 'Six currents', txt: 'This point drives two current sets — line end and neutral end. The 3 × 32 A and 1 × 64 A arrangements have one set; switch the test set to 6 × 12.5 A on the Setup tab, or the second set listed above cannot be produced.' });
   return n;
 }
 
@@ -1024,7 +1234,7 @@ reg({
       const p = o.unb === 'half'
         ? (() => {
             const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = M * b.flaSec;
-            const v = P3(b.vLNs, 0), i = [P(I, la), P(I, la - 120), P(I * 0.5, la + 120, 'reduced to half')];
+            const v = P3(b.vLNs, 0), i = [P(I, la), P(I, la + rotS()), P(I * 0.5, la - rotS(), 'reduced to half')];
             return { id: 't' + M, name: 'Timing at ' + fmtX(M) + ' ×FLA', detail: note,
               expect: fmtT(t), expectSub: 'Equivalent heating current ' + fmt(iF, 3) + ' ×FLA, not ' + fmt(M, 2),
               verdict: 'nu', iFla: iF,
@@ -1041,7 +1251,7 @@ reg({
     });
     const tLra = thermalTime(CFG.lra, hot);
     const notes = [
-      { lvl: 'note', lb: 'Equivalent current', txt: 'Ieq = √(I1² + K·I2²) with K = ' + fmt(CFG.k, 1) + '. A balanced injection has no I2 and Ieq is just the applied current; anything unbalanced trips sooner than its magnitude suggests, which is the whole point of the term.' },
+      { lvl: 'note', lb: 'Equivalent current', txt: 'Ieq = √(I1² + K·I2²) with K = ' + fmt(CFG.k, 1) + '. A balanced injection has no I2 and Ieq is just the applied current; anything unbalanced trips sooner than its magnitude suggests, which is the whole point of the term. GE writes it as I_M·√(1 + K·(I2/I1)²) with I_M the per-unit motor current; for one phase reduced in phase with the others the average phase current equals I1, so the two agree. If the relay takes I_M as the highest phase instead, the unbalanced timing points come in shorter than shown — check which the manual states.' },
       { lvl: 'warn', lb: 'Thermal memory', txt: 'The model accumulates. Every point in this table leaves capacity behind, so the second reads short unless the thermal capacity is reset in the relay or given ' + fmt(5 * CFG.taur, 0) + ' minutes to decay at the running time constant. Reset between points if the relay allows it and say so on the record.' }
     ];
     if (CFG.cmode === 'std') notes.push({ lvl: 'warn', lb: 'Curve constant', txt: 'The curve is the general form t = CM·A/(I&#8319;−1) with A = ' + fmt(curveA(), 1) + ' s as entered. Published motor overload families differ by product, so read one point off the relay\'s own curve display and use the fit mode on the Setup tab rather than trusting this default.' });
@@ -1164,15 +1374,15 @@ reg({
   opts: [num('marg', 'Margin either side', 5, '%', 1)],
   compute(s, o) {
     const b = base(), m = o.marg / 100, pts = [];
-    const mk = (iF, name, detail, expect, sub, verdict) => {
+    const mk = (iF, tPlot, name, detail, expect, sub, verdict) => {
       const p = motorPoint('j' + name, name, detail, iF, expect, sub, verdict);
-      p.tcc = { i: iF, t: expect.indexOf('s') > 0 ? s.dly : s.lrdly };
+      p.tcc = { i: iF, t: tPlot };
       p.sheet[0] = '51LR'; return p;
     };
-    pts.push(mk(s.pkp * (1 + m), 'Jam — above pickup', fmt((1 + m) * 100, 0) + '% of the jam setting, motor already running', 'TRIP', 'Operate after ' + fmtT(s.dly), 'op'));
-    pts.push(mk(s.pkp * (1 - m), 'Jam — below pickup', fmt((1 - m) * 100, 0) + '% of the jam setting', 'NO TRIP', 'No operation', 'no'));
-    pts.push(mk(s.lrpkp * (1 + m), 'Locked rotor — above pickup', fmt((1 + m) * 100, 0) + '% of the locked-rotor setting, applied from standstill', 'TRIP', 'Operate after ' + fmtT(s.lrdly), 'op'));
-    const inh = mk(CFG.lra, 'Jam blocked during start', 'Full locked-rotor current applied from standstill — the jam element must stay blocked for the first ' + fmtT(s.inhib), 'JAM BLOCKED', 'A normal start must not look like a jam', 'no');
+    pts.push(mk(s.pkp * (1 + m), s.dly, 'Jam — above pickup', fmt((1 + m) * 100, 0) + '% of the jam setting, motor already running', 'TRIP', 'Operate after ' + fmtT(s.dly), 'op'));
+    pts.push(mk(s.pkp * (1 - m), s.dly, 'Jam — below pickup', fmt((1 - m) * 100, 0) + '% of the jam setting', 'NO TRIP', 'No operation', 'no'));
+    pts.push(mk(s.lrpkp * (1 + m), s.lrdly, 'Locked rotor — above pickup', fmt((1 + m) * 100, 0) + '% of the locked-rotor setting, applied from standstill', 'TRIP', 'Operate after ' + fmtT(s.lrdly), 'op'));
+    const inh = mk(CFG.lra, s.inhib, 'Jam blocked during start', 'Full locked-rotor current applied from standstill — the jam element must stay blocked for the first ' + fmtT(s.inhib), 'JAM BLOCKED', 'A normal start must not look like a jam', 'no');
     pts.push(inh);
     const notes = [
       { lvl: 'warn', lb: 'The blocking point matters most', txt: 'Every healthy start draws far more than the jam pickup. If the start inhibit does not hold for the full ' + fmtT(s.inhib) + ', the motor trips on jam every time it is started — and that is the failure this element is most likely to have in service.' },
@@ -1239,73 +1449,87 @@ reg({
 });
 
 /* ================= 46  CURRENT UNBALANCE ========================== *
- * Reducing one phase to a fraction f of the other two gives
- * I1 = (2+f)/3 and I2 = (1−f)/3, so I2/I1 = (1−f)/(2+f), which
- * inverts to f = (1−2r)/(1+r).  A fully open phase is r = 0.5.       */
+ * Reducing one phase to a fraction f of the other two gives, in units of
+ * the load current, I1 = (2+f)/3 and I2 = (1−f)/3, so I2/I1 = (1−f)/(2+f).
+ * What the relay compares with the setting depends on load (GE 469/869
+ * definition):  I_avg ≥ FLA  →  I2/I1 ;   I_avg < FLA  →  I2/FLA.
+ * The reduced phase is in phase with the others, so I_avg = |I1| exactly and
+ * the two regimes split at load ≥ 1 + r:
+ *    load ≥ 1 + r :  f = (1 − 2r)/(1 + r)        (the relay sees I2/I1 = r)
+ *    load < 1 + r :  f = 1 − 3r/load             (the relay sees I2/FLA = r)
+ * A fully open phase is f = 0, giving 50% when load ≥ 1.5 ×FLA and load/3
+ * below that.                                                            */
+const unbOf = (f, load) => { const i1 = load * (2 + f) / 3, i2 = load * (1 - f) / 3; return i1 >= 1 ? i2 / i1 : i2; };
+const fFor = (r, load) => (load >= 1 + r ? (1 - 2 * r) / (1 + r) : 1 - 3 * r / load);
+const unbMax = load => (load >= 1.5 ? 0.5 : load / 3);
 reg({
   ansi: '46', name: 'Current unbalance', group: 'Current',
-  desc: 'A motor is far more sensitive to unbalance than to overload, because negative-sequence current induces double-frequency rotor currents. The test reduces one phase by the exact amount that produces the ratio wanted, and shows what that does to the thermal model.',
-  fields: [num('rat', 'Pickup ratio I2/I1', 15, '%', 1), num('dly', 'Delay', 5.0, 's', 0.5),
+  desc: 'A motor is far more sensitive to unbalance than to overload, because negative-sequence current induces double-frequency rotor currents. The test reduces one phase by the exact amount that produces the unbalance the relay measures, and shows what that does to the thermal model.',
+  fields: [num('rat', 'Pickup ratio', 15, '% unbalance', 1), num('dly', 'Delay', 5.0, 's', 0.5),
     num('alrm', 'Alarm ratio', 10, '%', 1), num('imin', 'Minimum load', 0.30, '× FLA', 0.05)],
   opts: [num('marg', 'Margin either side', 10, '%', 1), num('iload', 'Load current', 1.0, '× FLA', 0.05)],
   compute(s, o) {
-    const b = base(), m = o.marg / 100, I = o.iload * b.flaSec;
+    const b = base(), m = o.marg / 100, L = Math.max(1e-6, o.iload), I = L * b.flaSec;
     const la = -Math.acos(Math.min(1, CFG.pf)) * R2D;
-    const fFor = r => (1 - 2 * r) / (1 + r);
-    const pts = [];
+    const pts = [], sgn = rotS();
+    const regime = r => (L >= 1 + r ? 'I2/I1' : 'I2/FLA');
     const mk = (r, name, detail, expect, sub, verdict) => {
-      const f = fFor(r);
+      const f = fFor(r, L);
       if (f < 0) return null;
-      const i1 = o.iload * (2 + f) / 3, i2 = o.iload * (1 - f) / 3, ie = ieqPu(i1, i2);
+      const i1 = L * (2 + f) / 3, i2 = L * (1 - f) / 3, ie = ieqPu(i1, i2);
       const v = P3(b.vLNs, 0);
-      const i = [P(I, la), P(I, la - 120), P(I * f, la + 120, 'reduced to ' + fmt(f * 100, 1) + '% of the others')];
+      const i = [P(I, la), P(I, la + sgn), P(I * f, la - sgn, 'reduced to ' + fmt(f * 100, 1) + '% of the others')];
       return { id: name, name, detail, expect, expectSub: sub, verdict, iFla: ie,
         tcc: { i: ie, t: thermalTime(ie, false) || 1e5 },
         channels: chans(v, i, null),
         phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
                   i: i.filter(q => q.m > 0).map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
-        sheet: ['46', name, fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * f, 3) + ' A', 'I2/I1 ' + fmt(r * 100, 1) + '% · Ieq ' + fmt(ie, 3) + ' ×FLA', expect] };
+        sheet: ['46', name, fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * f, 3) + ' A', 'unbalance ' + fmt(r * 100, 1) + '% (' + regime(r) + ') · Ieq ' + fmt(ie, 3) + ' ×FLA', expect] };
     };
-    const r0 = s.rat / 100;
+    const r0 = s.rat / 100, rMax = unbMax(L);
     [[r0 * (1 + m), 'OPERATE', 'op', 'above'], [r0 * (1 - m), 'RESTRAIN', 'no', 'below']].forEach(([r, expect, vt, rel]) => {
-      const f = fFor(r), i1 = o.iload * (2 + f) / 3, i2 = o.iload * (1 - f) / 3;
+      const f = fFor(r, L), i1 = L * (2 + f) / 3, i2 = L * (1 - f) / 3;
       const p = mk(r, 'Ratio — ' + rel + ' threshold',
-        'I2/I1 = ' + fmt(r * 100, 1) + '% · L3 reduced to ' + fmt(f * 100, 1) + '% · Ieq ' + fmt(ieqPu(i1, i2), 3) + ' ×FLA',
+        'Relay sees ' + fmt(r * 100, 1) + '% as ' + regime(r) + ' · L3 reduced to ' + fmt(Math.max(0, f) * 100, 1) + '% · I2/I1 ' + fmt(100 * i2 / i1, 1) + '% · Ieq ' + fmt(ieqPu(i1, i2), 3) + ' ×FLA',
         expect, vt === 'op' ? 'Operate after ' + fmtT(s.dly) : 'No operation', vt);
       if (p) pts.push(p);
     });
-    const pa = mk(s.alrm / 100, 'Alarm threshold', 'I2/I1 = ' + fmt(s.alrm, 1) + '% · below the trip ratio', 'ALARM ONLY', 'Alarm asserts, trip does not', 'wn');
+    const pa = mk(s.alrm / 100, 'Alarm threshold', 'Relay sees ' + fmt(s.alrm, 1) + '% as ' + regime(s.alrm / 100) + ' · below the trip ratio', 'ALARM ONLY', 'Alarm asserts, trip does not', 'wn');
     if (pa) pts.push(pa);
-    const po = mk(0.5, 'Single phasing', 'L3 taken to zero — the deepest a single open phase can go', 'OPERATE', 'I2/I1 = 50%, the ceiling for this method', 'op');
+    const po = mk(rMax, 'Single phasing', 'L3 taken to zero — the deepest a single open phase can go at this load; the relay sees ' + fmt(rMax * 100, 1) + '% (' + regime(rMax) + ')',
+      rMax > r0 ? 'OPERATE' : 'RESTRAIN', rMax > r0 ? 'Above the ' + fmt(s.rat, 0) + '% setting' : 'Only ' + fmt(rMax * 100, 1) + '% at this load — raise the load current to reach the setting', rMax > r0 ? 'op' : 'no');
     if (po) pts.push(po);
     /* the reverse-rotation case is pure negative sequence: I2 = I, I1 = 0 */
-    const ir = P3(I, la), irr = [ir[0], ir[2], ir[1]];
-    pts.push({ id: 'rev', name: 'Reverse rotation', detail: 'Balanced set with L2 and L3 exchanged — all negative sequence',
-      expect: 'OPERATE', expectSub: 'I2/I1 is undefined with I1 at zero; the element should see full unbalance', verdict: 'op',
-      iFla: ieqPu(0, o.iload), tcc: { i: ieqPu(0, o.iload), t: thermalTime(ieqPu(0, o.iload), false) || 1e5 },
+    const irr = P3rev(I, la), uRev = L >= 1 ? Infinity : L;
+    pts.push({ id: 'rev', name: 'Reverse rotation', detail: 'Balanced set with L2 and L3 exchanged — all negative sequence' + (isFinite(uRev) ? '; below FLA the relay sees I2/FLA = ' + fmt(uRev * 100, 1) + '%' : ''),
+      expect: uRev > r0 ? 'OPERATE' : 'RESTRAIN', expectSub: isFinite(uRev) ? (uRev > r0 ? 'Above the setting' : 'Under the setting at this load') : 'I2/I1 is undefined with I1 at zero; the element should see full unbalance', verdict: uRev > r0 ? 'op' : 'no',
+      iFla: ieqPu(0, L), tcc: { i: ieqPu(0, L), t: thermalTime(ieqPu(0, L), false) || 1e5 },
       channels: chans(P3(b.vLNs, 0), irr, null),
       phasor: { v: P3(b.vLNs, 0).map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
                 i: irr.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
-      sheet: ['46', 'Reverse rotation', fmt(I, 3) + ' A reversed', 'I2 = I, Ieq ' + fmt(ieqPu(0, o.iload), 3) + ' ×FLA', 'OPERATE'] });
+      sheet: ['46', 'Reverse rotation', fmt(I, 3) + ' A reversed', 'I2 = I, Ieq ' + fmt(ieqPu(0, L), 3) + ' ×FLA', uRev > r0 ? 'OPERATE' : 'RESTRAIN'] });
     const notes = [
-      { lvl: 'note', lb: 'Exact solve', txt: 'Reducing one phase to a fraction f of the other two gives I2/I1 = (1−f)/(2+f). The channel table inverts it: f = (1−2r)/(1+r) for the ratio you want.' },
+      { lvl: 'note', lb: 'What the relay measures', txt: 'With the average current at or above FLA the unbalance is I2/I1. Below FLA it is I2/FLA, so a lightly loaded motor does not trip on a ratio that carries no heat. At ' + fmt(L, 2) + ' ×FLA load the pickup point is in the ' + regime(r0) + ' regime' + (L < 1 + r0 ? ' — the phase is reduced further than the I2/I1 ratio alone would need' : '') + '.' },
+      { lvl: 'note', lb: 'Exact solve', txt: 'Reducing one phase to a fraction f of the other two gives I1 = (2+f)/3 and I2 = (1−f)/3 of the load current, so I2/I1 = (1−f)/(2+f) and the average current equals I1. For a target unbalance r: f = (1−2r)/(1+r) when load ≥ 1+r, and f = 1 − 3r/load below that.' },
       (() => {
-        const f0 = fFor(r0), a1 = o.iload * (2 + f0) / 3, a2 = o.iload * (1 - f0) / 3, ie0 = ieqPu(a1, a2);
-        return { lvl: 'warn', lb: 'The thermal model sees it too', txt: 'With K = ' + fmt(CFG.k, 1) + ', unbalance makes the thermal model behave as though far more current were flowing. At the ' + fmt(s.rat, 0) + '% trip ratio the positive-sequence current is ' + fmt(a1, 3) + ' ×FLA but the equivalent heating current is ' + fmt(ie0, 3) + ' ×FLA — a penalty of ' + fmt(ie0 / Math.max(1e-9, a1), 3) + '×. Expect the thermal element to be running alongside this one, and decide which you are actually timing.' };
+        const f0 = fFor(r0, L), a1 = L * (2 + f0) / 3, a2 = L * (1 - f0) / 3, ie0 = ieqPu(a1, a2);
+        return { lvl: 'warn', lb: 'The thermal model sees it too', txt: 'With K = ' + fmt(CFG.k, 1) + ', unbalance makes the thermal model behave as though far more current were flowing. At the ' + fmt(s.rat, 0) + '% trip point the positive-sequence current is ' + fmt(a1, 3) + ' ×FLA but the equivalent heating current is ' + fmt(ie0, 3) + ' ×FLA — a penalty of ' + fmt(ie0 / Math.max(1e-9, a1), 3) + '×. Expect the thermal element to be running alongside this one, and decide which you are actually timing.' };
       })(),
-      { lvl: 'note', lb: 'Single phasing', txt: 'A blown fuse on one phase of a delta-fed motor is the classic case. The 50% ceiling in the last-but-one point is the most a single open conductor can produce; anything beyond it needs a reversed phase.' }
+      { lvl: 'note', lb: 'Single phasing', txt: 'A blown fuse on one phase of a delta-fed motor is the classic case. A single open conductor produces at most 50% unbalance, and only when the load is at least 1.5 ×FLA; at ' + fmt(L, 2) + ' ×FLA the ceiling is ' + fmt(rMax * 100, 1) + '%. Anything beyond it needs a reversed phase.' }
     ];
-    if (r0 >= 0.5) notes.push({ lvl: 'bad', lb: 'Setting out of range', txt: 'A ratio of ' + fmt(s.rat, 0) + '% cannot be produced by reducing one phase — 50% at a fully open conductor is the limit for that method.' });
+    if (r0 > rMax) notes.push({ lvl: 'bad', lb: 'Setting out of reach', txt: 'A ' + fmt(s.rat, 0) + '% unbalance cannot be produced by reducing one phase at ' + fmt(L, 2) + ' ×FLA — the ceiling there is ' + fmt(rMax * 100, 1) + '%. Raise the load current option, or use the reverse-rotation point.' });
+    if (L < s.imin) notes.push({ lvl: 'bad', lb: 'Below minimum load', txt: 'The load current of ' + fmt(L, 2) + ' ×FLA is under the ' + fmt(s.imin, 2) + ' ×FLA minimum, so the element is blocked at every point above. Raise the load current option.' });
     return {
-      readout: [{ k: 'Trip ratio', v: fmt(s.rat, 1), u: '% I2/I1' }, { k: 'Alarm ratio', v: fmt(s.alrm, 1), u: '%' },
-        { k: 'Reduce L3 to', v: fmt(Math.max(0, fFor(r0)) * 100, 1), u: '% of others' },
+      readout: [{ k: 'Trip ratio', v: fmt(s.rat, 1), u: '% unbalance' }, { k: 'Alarm ratio', v: fmt(s.alrm, 1), u: '%' },
+        { k: 'Relay measures', v: regime(r0), u: 'at this load' },
+        { k: 'Reduce L3 to', v: fmt(Math.max(0, fFor(r0, L)) * 100, 1), u: '% of others' },
         { k: 'Load current', v: fmt(I, 3), u: 'A sec' }, { k: 'K factor', v: fmt(CFG.k, 1), u: '' }],
       points: pts, tcc: thermalGeo(pts.map(p => ({ i: p.tcc.i, t: p.tcc.t }))), notes
     };
   }
 });
 
-/* ================= 37  UNDERCURRENT =============================== */
+
 reg({
   ansi: '37', name: 'Undercurrent / loss of load', group: 'Current',
   desc: 'Catches a pump losing suction or a coupling shearing. It operates when load falls away, so every step starts from healthy load and works down.',
@@ -1423,7 +1647,7 @@ function mkIOC(ansi, nm, q, dflt, unit) {
     compute(s, o) {
       const b = base(), qi = Q_INFO[q], p = ocPickup(Object.assign({}, s, { e: qi.e }), b), m = o.marg / 100, pts = [];
       const mk = (I, name, detail, expect, sub, verdict) => {
-        const v = P3(b.vLNs, 0), i = [P(I, o.iang), P(0, 0), P(0, 0)];
+        const v = P3(b.vLNs, 0), i = [P(I, o.iang, qi.e === 'G' ? (q === 'sens' ? 'through the core-balance CT window' : 'into the ground CT input') : ''), P(0, 0), P(0, 0)];
         return { id: name, name, detail, expect, expectSub: sub, verdict, iFla: I / b.flaSec,
           channels: chans(v, i, null),
           phasor: { v: v.map((x, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: x.m, ang: x.a })),
@@ -1465,7 +1689,7 @@ function mkTOC(ansi, nm, q, dflt, crv) {
     compute(s, o) {
       const b = base(), qi = Q_INFO[q], p = ocPickup(Object.assign({}, s, { e: qi.e }), b), m = o.marg / 100, pts = [];
       const mk = (I, name, detail, expect, sub, verdict) => {
-        const v = P3(b.vLNs, 0), i = [P(I, o.iang), P(0, 0), P(0, 0)];
+        const v = P3(b.vLNs, 0), i = [P(I, o.iang, qi.e === 'G' ? (q === 'sens' ? 'through the core-balance CT window' : 'into the ground CT input') : ''), P(0, 0), P(0, 0)];
         return { id: name, name, detail, expect, expectSub: sub, verdict,
           channels: chans(v, i, null),
           phasor: { v: v.map((x, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: x.m, ang: x.a })),
@@ -1587,8 +1811,8 @@ reg({
     [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
       const V2 = p.sec * f;
       let v, det;
-      if (o.meth === 'rev') { v = [P(V2, 0), P(V2, 120), P(V2, -120)]; det = 'Balanced set in reverse rotation — every volt applied is negative sequence'; }
-      else { const dV = 3 * V2; v = [P(Math.max(0, b.vLNs - dV), 0, 'depressed by ' + fmt(dV, 2) + ' V'), P(b.vLNs, -120), P(b.vLNs, 120)];
+      if (o.meth === 'rev') { v = P3rev(V2, 0); det = 'Balanced set in reverse rotation — every volt applied is negative sequence'; }
+      else { const dV = 3 * V2; v = [P(Math.max(0, b.vLNs - dV), 0, 'depressed by ' + fmt(dV, 2) + ' V'), P(b.vLNs, rotS()), P(b.vLNs, -rotS())];
              det = 'V L1 dropped ' + fmt(dV, 2) + ' V, giving V2 = ' + fmt(V2, 2) + ' V'; }
       pts.push({ id: 'u' + f, name: 'Pickup — ' + rel + ' threshold', detail: det,
         expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmtT(s.dly) : 'No operation', verdict: vt,
@@ -1596,7 +1820,7 @@ reg({
         phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
         sheet: ['47', 'Pickup ' + rel, fmt(v[0].m, 2) + ' / ' + fmt(v[1].m, 2) + ' / ' + fmt(v[2].m, 2) + ' V', 'V2 ' + fmt(V2, 2) + ' V', verdict] });
     });
-    const vr = [P(b.vLNs, 0), P(b.vLNs, 120), P(b.vLNs, -120)];
+    const vr = P3rev(b.vLNs, 0);
     pts.push({ id: 'rot', name: 'Full phase reversal', detail: 'Nominal balanced set with L2 and L3 exchanged — the motor would run backwards',
       expect: 'OPERATE', expectSub: 'Must block the start, not trip after it', verdict: 'op',
       channels: chans(vr, nullTriple(), null),
@@ -1688,7 +1912,7 @@ reg({
 
 reg({
   ansi: '32', name: 'Underpower / reverse power', group: 'Voltage & frequency',
-  desc: 'Power is set by holding voltage at nominal and solving for the current that produces the required watts at the characteristic angle.',
+  desc: 'Power is set by holding voltage at nominal and solving for the current that produces the required power along the characteristic angle — the quantity P·cos(θ) + Q·sin(θ) the element compares with its setting.',
   fields: [sel('kind', 'Function', 'low', [['low', 'Underpower — loss of load'], ['rev', 'Reverse power']], ''),
     num('pkp', 'Pickup', 20, '% of rated kW', 1),
     num('mta', 'Characteristic angle', 0, 'deg', 1), num('dly', 'Delay', 5.0, 's', 0.5),
@@ -1700,8 +1924,11 @@ reg({
     const Psec = Ppri / (b.vtr * b.ctr);
     const low = s.kind === 'low';
     const mk = (f, name, verdict, vt, detail) => {
-      const Pt = Psec * f, cph = Math.cos(s.mta * D2R);
-      const I = Math.abs(Pt / (3 * V * (Math.abs(cph) < 1e-6 ? 1e-6 : cph)));
+      /* The element measures 3·V·I·cos(φ − θ) with θ the characteristic angle.
+         Placing the current at −θ puts it on the characteristic, where that
+         quantity is 3·V·I exactly, so I = P/(3V) — no cos(θ) division. */
+      const Pt = Psec * f;
+      const I = Pt / (3 * V);
       const aI = (low ? 0 : 180) - s.mta;
       const v = P3(V, 0), i = P3(I, aI);
       return { id: name, name, detail, expect: verdict,
@@ -1721,10 +1948,12 @@ reg({
     return {
       readout: [{ k: 'Rated output', v: fmt(b.kW, 0), u: 'kW' }, { k: 'Pickup', v: fmt(Ppri / 1000, 1), u: 'kW pri' },
         { k: 'Pickup', v: fmt(Psec, 2), u: 'W sec 3φ' },
-        { k: 'Current at 1×', v: fmt(Math.abs(Psec / (3 * V * Math.cos(s.mta * D2R))), 3), u: 'A sec' },
+        { k: 'Current at 1×', v: fmt(Psec / (3 * V), 3), u: 'A sec' },
+        { k: 'Electrical rating', v: fmt(Math.sqrt(3) * CFG.kv * CFG.fla * CFG.pf, 0), u: 'kW = √3·V·FLA·pf' },
         { k: 'Delay', v: fmtT(s.dly), u: '' }],
       points: pts,
       notes: [{ lvl: 'note', lb: 'Three-phase', txt: 'The element sums all three phases. A single-phase injection reads one third of the expected power.' },
+        { lvl: 'warn', lb: 'Rated power base', txt: 'Pickup is taken as a percentage of the shaft rating, ' + fmt(b.kW, 0) + ' kW (hp × 0.7457). If the relay\'s per-unit base is the electrical rating √3·V·FLA·pf = ' + fmt(Math.sqrt(3) * CFG.kv * CFG.fla * CFG.pf, 0) + ' kW, or a rated-power setting entered in kW, scale the pickup accordingly before injecting.' },
         { lvl: 'note', lb: 'Underpower against undercurrent', txt: 'Underpower and the 37 undercurrent element cover the same failure from different angles. Power catches a load that has gone light while the current stays up on magnetising; current is simpler and faster. Confirm which one the plant relies on.' }]
     };
   }
@@ -1790,8 +2019,9 @@ let ST = { el: '49', set: {}, opt: {}, sheet: [], vec: null, pt: null };
 function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST })); } catch (e) {} }
 function load() {
   try { const r = JSON.parse(localStorage.getItem(STORE) || 'null');
-    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); }
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); return true; }
   } catch (e) {}
+  return false;
 }
 const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
 function defaults(el) {
@@ -1893,7 +2123,7 @@ function fieldHTML(f, v, ns) {
   /* step drives only the spinner increment; "any" keeps the browser from
      rejecting a value that does not land on it, which a relay setting rarely
      does. */
-  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
   const wide = (f.t === 'sel' && f.opts.some(o => o[1].length > 22)) || f.t === 'txt';
   return '<div class="f' + (wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
     (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
@@ -1984,20 +2214,20 @@ function renderElement(keepForms) {
    RENDER — vector calculator
    ================================================================== */
 const PRESETS = {
-  'Full load': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
-  'Service factor': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.sfaSec;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
-  'Starting': b => { const I = b.lraSec, la = -80, V = b.vLNs * 0.85;
-    return { v: [[V, 0], [V, -120], [V, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
-  '10% unbalance': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec, f = (1 - 2 * 0.10) / 1.10;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I * f, la + 120]] }; },
-  'Single phasing': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec * 1.3;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [0, 0]] }; },
-  'Light load': b => { const I = b.flaSec * 0.35;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, -55], [I, -175], [I, 65]] }; },
-  'Reverse rotation': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec;
-    return { v: [[b.vLNs, 0], [b.vLNs, 120], [b.vLNs, -120]], i1: [[I, la], [I, la + 120], [I, la - 120]] }; }
+  'Full load': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, s], [b.vLNs, -s]], i1: [[I, la], [I, la + s], [I, la - s]] }; },
+  'Service factor': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.sfaSec, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, s], [b.vLNs, -s]], i1: [[I, la], [I, la + s], [I, la - s]] }; },
+  'Starting': b => { const I = b.lraSec, la = -80, V = b.vLNs * 0.85, s = rotS();
+    return { v: [[V, 0], [V, s], [V, -s]], i1: [[I, la], [I, la + s], [I, la - s]] }; },
+  '10% unbalance': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec, f = (1 - 2 * 0.10) / 1.10, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, s], [b.vLNs, -s]], i1: [[I, la], [I, la + s], [I * f, la - s]] }; },
+  'Single phasing': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec * 1.3, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, s], [b.vLNs, -s]], i1: [[I, la], [I, la + s], [0, 0]] }; },
+  'Light load': b => { const I = b.flaSec * 0.35, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, s], [b.vLNs, -s]], i1: [[I, -55], [I, -55 + s], [I, -55 - s]] }; },
+  'Reverse rotation': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec, s = rotS();
+    return { v: [[b.vLNs, 0], [b.vLNs, -s], [b.vLNs, s]], i1: [[I, la], [I, la - s], [I, la + s]] }; }
 };
 function rowsHTML(id, vals) {
   return vals.map((p, k) =>
@@ -2080,7 +2310,8 @@ const SHEAD = ['Element', 'Test step', 'Quantity 1', 'Quantity 2', 'Expected', '
 function renderSheet() {
   const rows = ST.sheet || [], b = base();
   $('#sheetCount').textContent = rows.length;
-  const hdr = '# 869-MTR test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+  const hdr = LIC.stamp() + '\n' +
+    '# 869-MTR ' + VERSION + '\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
     '\n# ' + CFG.hp + ' hp  ' + CFG.kv + ' kV  FLA ' + CFG.fla + ' A  LRA ' + CFG.lra + ' xFLA  stall ' + CFG.lrtc + '/' + CFG.lrth + ' s' +
     '\t curve CM ' + CFG.cm + ' A ' + fmt(curveA(), 1) + ' K ' + CFG.k +
     '\t CT ' + CFG.ctp + ':' + CFG.cts + '\t CMC ' + (CFG.cmc === '6x' ? '6x12.5A' : CFG.cmc === '3x' ? '3x32A' : '1x64A') + '\n\n';
@@ -2152,11 +2383,15 @@ decay          TCU(t) = TCU&#8320; &middot; e^(&minus;t/&tau;)</div>
        it on the test set.</p>
 
     <h3>Unbalance</h3>
-    <div class="eq">one phase at fraction f:   I1 = (2 + f)/3 ,  I2 = (1 &minus; f)/3
-                          I2/I1 = (1 &minus; f)/(2 + f)
-for a target ratio r:     f = (1 &minus; 2r) / (1 + r)</div>
-    <p>A fully open phase is f&nbsp;=&nbsp;0, giving 50% &mdash; the most a single break can produce and the
-       ceiling for that method. Beyond it you need a reversed phase.</p>
+    <div class="eq">one phase at fraction f:   I1 = (2 + f)/3 ,  I2 = (1 &minus; f)/3   (of the load current)
+                          I2/I1 = (1 &minus; f)/(2 + f) ,  I_avg = I1
+relay measures:           I2/I1  when I_avg &ge; FLA ,  I2/FLA  when I_avg &lt; FLA
+for a target r:           f = (1 &minus; 2r)/(1 + r)  when load &ge; 1 + r
+                          f = 1 &minus; 3r/load      when load &lt; 1 + r</div>
+    <p>The below-FLA rule is the relay&rsquo;s, not this tool&rsquo;s: it keeps a lightly loaded motor from
+       tripping on a ratio that carries no heat. A fully open phase is f&nbsp;=&nbsp;0, giving 50% when the
+       load is at least 1.5&nbsp;&times;FLA and load/3 below that &mdash; the most a single break can produce.
+       Beyond it you need a reversed phase.</p>
 
     <h3>What this tool does not do</h3>
     <ul>
@@ -2241,6 +2476,48 @@ $('#addSheet').addEventListener('click', () => {
 $('#copySheet').addEventListener('click', () => { const t = $('#sheetOut'); t.focus(); t.select(); try { document.execCommand('copy'); } catch (e) {} });
 $('#printSheet').addEventListener('click', () => window.print());
 $('#clearSheet').addEventListener('click', () => { ST.sheet = []; save(); renderSheet(); });
+/* ---- station file: export / import -------------------------------------
+   A station is just the CFG block. Saving it as plain JSON means it can be
+   read, diffed and kept in a job pack, rather than trapped in a browser. */
+function stationName() {
+  return (CFG.hp + 'hp-' + CFG.kv + 'kV-' + CFG.fla + 'A')
+    .replace(/[^A-Za-z0-9.\-]+/g, '');
+}
+$('#saveCfg').addEventListener('click', () => {
+  const doc = { format: '869-MTR station', v: 1, saved: new Date().toISOString(), station: CFG };
+  const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '869-MTR-' + stationName() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  $('#cfgName').textContent = a.download;
+});
+$('#loadCfg').addEventListener('click', () => $('#cfgFile').click());
+$('#cfgFile').addEventListener('change', ev => {
+  const f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    let doc;
+    try { doc = JSON.parse(rd.result); } catch (e) { doc = null; }
+    if (!doc || doc.format !== '869-MTR station' || !doc.station) {
+      alert('That is not an 869-MTR station file.\n\nExpected a .json saved by this tool. ' +
+            'Nothing has been changed.');
+      ev.target.value = ''; return;
+    }
+    /* Merge over the worked sample so a file written by an older version still
+       opens, with anything it does not carry left at the default. */
+    CFG = Object.assign({}, SAMPLE, doc.station);
+    ST.pt = null;
+    save(); renderCfg(); renderElement();
+    ST.vec = null; if ($('#v-vec').classList.contains('on')) renderVector();
+    $('#cfgName').textContent = f.name;
+    ev.target.value = '';
+  };
+  rd.readAsText(f);
+});
+
 $('#resetBtn').addEventListener('click', () => {
   CFG = Object.assign({}, SAMPLE);
   ST = { el: '49', set: {}, opt: {}, sheet: [], vec: null, pt: null };
@@ -2257,10 +2534,14 @@ $('#themeBtn').addEventListener('click', () => {
 /* ==================================================================
    INIT
    ================================================================== */
-load();
+/* Nothing saved means nothing has been entered: open on Setup, where the motor
+   data and ratios go, rather than on results computed from the sample. */
+const restored = load();
 renderCfg();
 renderRail();
 renderElement();
+if (!restored) setTab('v-setup');
+LIC.boot();          /* async; paints the bar when it resolves */
 </script>
 </body>
 </html>

@@ -19,8 +19,8 @@
       "file": "src/869-mtr.html",
       "tag": "869-MTR",
       "title": "GE Multilin 869 motor protection",
-      "reviewed": false,
-      "released": false
+      "reviewed": true,
+      "released": true
     },
     "889": {
       "file": "src/889-gen.html",
