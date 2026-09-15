@@ -1024,7 +1024,13 @@ reg({
         phasor: { v: [], i: [{ lab: 'Ig', cls: 'ch-l1', mag: I, ang: 0 }] },
         sheet: ['87GN', 'Sensitivity ' + rel, fmt(I, 3) + ' A @ 0°', '—', verdict] });
     });
-    const It = o.thru * CFG.ctts, Ig = It * CFG.ctts / CFG.ctgs;
+    /* External ground fault: the same primary amperes flow in the terminal CTs
+       (as residual) and in the ground CT. Terminal-secondary -> primary ->
+       ground-secondary, through the full RATIOS. The secondary ratings alone
+       cancel whenever both CTs are 5 A and mis-scale by the ratio of the
+       ratios whenever they are not. */
+    const It = o.thru * CFG.ctts, Ig = It * b.ctrT / b.ctrG;
+    const maxThru = Math.min(CFG.imax / CFG.ctts, CFG.imax * b.ctrG / (CFG.ctts * b.ctrT));
     pts.push({ id: 'stab', name: 'Through-fault stability',
       detail: 'Phase L1 and the ground input driven in opposition at ' + fmtX(o.thru) + ' ×CT — an external ground fault.',
       expect: 'RESTRAIN', expectSub: 'No operation anywhere on the ramp', verdict: 'no',
@@ -1037,6 +1043,7 @@ reg({
         { k: 'Ground CTR', v: CFG.ctgp + ':' + CFG.ctgs, u: '' }, { k: 'Slope', v: fmt(s.slp, 0), u: '%' }],
       points: pts,
       notes: [{ lvl: 'warn', lb: 'Polarity', txt: 'If the stability point operates, a CT is reversed. Chase the wiring before touching a setting.' },
+        { lvl: 'note', lb: 'Ratio mismatch', txt: 'Terminal CTs are ' + CFG.cttp + ':' + CFG.ctts + ' and the ground CT is ' + CFG.ctgp + ':' + CFG.ctgs + '. Both inputs are scaled to the same primary current: ' + fmt(It, 3) + ' A into the terminal input is ' + fmt(It * b.ctrT, 0) + ' A primary, which is ' + fmt(Ig, 3) + ' A out of the ground CT.' + (maxThru < o.thru ? ' The ground side reaches the ' + fmt(CFG.imax, 1) + ' A channel limit first: the largest through-current this CT pair can be tested at is about ' + fmtX(maxThru) + ' \u00d7CT. Above that, prove REF stability by primary injection or accept a reduced through level and say so on the record.' : ' Both sit inside the ' + fmt(CFG.imax, 1) + ' A channel limit.') },
         { lvl: 'note', lb: 'Applicability', txt: CFG.gnd === 'hr' || CFG.gnd === 'ung'
           ? 'This machine is set as ' + (CFG.gnd === 'hr' ? 'high-resistance grounded' : 'ungrounded') + ', which limits stator ground current to a few amps primary. REF has little to work with there — 59N and 27TN carry the stator ground duty. Confirm REF is actually in service before spending time on it.'
           : 'With this machine grounded through a low-impedance path there is enough ground current for REF to be the fast stator ground element.' }]

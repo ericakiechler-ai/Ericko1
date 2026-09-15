@@ -1,5 +1,5 @@
 # 845-VEC — Multilin 845 transformer protection
-# generated 2026-09-15 00:14 from 845.html
+# generated 2026-09-15 00:32 from 845.html
 # configuration: mva=20; mva2=26.7; mva3=33.3; mvaBase=onan; kv1=115; kv2=13.8; freq=60; rot=ABC; w1c=D; w2c=YN; clk=1; z=8.5; xr=12; oltcW=1; oltcHi=10; oltcLo=10; oltcN=16; oltcPos=0; gnd1=none; gnd1v=0; gnd2=ngrA; gnd2v=400; ct1p=150; ct1s=5; ct1c=wye; ct2p=1200; ct2s=5; ct2c=wye; ctgp=200; ctgs=5; refw=2; vtp=13800; vts=120; vtc=wye; vtw=2; cmc=6x; imax=12.5; vmax=300
 # All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
 # Values shown are for the tool's sample configuration — re-generate after entering real station data.
@@ -110,7 +110,7 @@ Element,ElementName,Group,TU_Module,DriveAs,Step,StepName,SeqRun,SeqState,SeqLab
 87G,Restricted ground fault,Differential,Differential,characteristic,3,Through-fault stability,,,,,I A-L1,20.0000,A,0.00,60.000,W2 phase L1,RESTRAIN,No operation at any point of the ramp,no,
 87G,Restricted ground fault,Differential,Differential,characteristic,3,Through-fault stability,,,,,I A-L2,0.0000,A,0.00,60.000,,RESTRAIN,No operation at any point of the ramp,no,
 87G,Restricted ground fault,Differential,Differential,characteristic,3,Through-fault stability,,,,,I A-L3,0.0000,A,0.00,60.000,,RESTRAIN,No operation at any point of the ramp,no,
-87G,Restricted ground fault,Differential,Differential,characteristic,3,Through-fault stability,,,,,I B-L1,20.0000,A,180.00,60.000,"ground / neutral CT input, reversed polarity",RESTRAIN,No operation at any point of the ramp,no,
+87G,Restricted ground fault,Differential,Differential,characteristic,3,Through-fault stability,,,,,I B-L1,120.0000,A,180.00,60.000,"ground / neutral CT input, reversed polarity",RESTRAIN,No operation at any point of the ramp,no,
 50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L1,69.282,V,0.00,60.000,,OPERATE,Operate within 0.05 s,op,
 50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L2,69.282,V,-120.00,60.000,,OPERATE,Operate within 0.05 s,op,
 50P,Phase instantaneous OC,Overcurrent,Overcurrent,pickup+time,1,Pickup — above threshold,,,,,V L3,69.282,V,120.00,60.000,,OPERATE,Operate within 0.05 s,op,

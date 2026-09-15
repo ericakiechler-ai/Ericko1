@@ -1,5 +1,5 @@
 # 845-VEC — Multilin 845 transformer protection
-# generated 2026-09-15 00:14 from 845.html
+# generated 2026-09-15 00:32 from 845.html
 # configuration: mva=20; mva2=26.7; mva3=33.3; mvaBase=onan; kv1=115; kv2=13.8; freq=60; rot=ABC; w1c=D; w2c=YN; clk=1; z=8.5; xr=12; oltcW=1; oltcHi=10; oltcLo=10; oltcN=16; oltcPos=0; gnd1=none; gnd1v=0; gnd2=ngrA; gnd2v=400; ct1p=150; ct1s=5; ct1c=wye; ct2p=1200; ct2s=5; ct2c=wye; ctgp=200; ctgs=5; refw=2; vtp=13800; vts=120; vtc=wye; vtw=2; cmc=6x; imax=12.5; vmax=300
 # All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
 # Values shown are for the tool's sample configuration — re-generate after entering real station data.
@@ -18,7 +18,7 @@ Element,ElementName,TU_Module,DriveAs,Step,StepName,WhatIsApplied,SeqRun,SeqStat
 87T-H,Harmonic inhibit,Harmonics,points,4,5th — overexcitation — below threshold,Harmonic content 27.0% of fundamental (setting 30%),,,,69.282@0.0,69.282@-120.0,69.282@120.0,,3.3470@0.0,,,,,,60.000,,yes,OPERATE,Differential 1.00 pu present throughout,,
 87G,Restricted ground fault,Differential,characteristic,1,Sensitivity — above pickup,"Ground CT input only, phase CTs at zero. Applied 0.110 ×CT.",,,,69.282@0.0,69.282@-120.0,69.282@120.0,,0.5500@0.0,,,,,,60.000,,yes,OPERATE,Operate time 0.00 s,,
 87G,Restricted ground fault,Differential,characteristic,2,Sensitivity — below pickup,"Ground CT input only, phase CTs at zero. Applied 0.090 ×CT.",,,,69.282@0.0,69.282@-120.0,69.282@120.0,,0.4500@0.0,,,,,,60.000,,yes,RESTRAIN,Operate time 0.00 s,,
-87G,Restricted ground fault,Differential,characteristic,3,Through-fault stability,Phase L1 and ground input driven in opposition at 4 ×CT — an external ground fault.,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,20.0000@0.0,0.0000@0.0,0.0000@0.0,20.0000@180.0,,,60.000,,yes,RESTRAIN,No operation at any point of the ramp,,
+87G,Restricted ground fault,Differential,characteristic,3,Through-fault stability,Phase L1 and ground input driven in opposition at 4 ×CT — an external ground fault.,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,20.0000@0.0,0.0000@0.0,0.0000@0.0,120.0000@180.0,,,60.000,,yes,RESTRAIN,No operation at any point of the ramp,,
 50P,Phase instantaneous OC,Overcurrent,pickup+time,1,Pickup — above threshold,105% of setting · operating quantity 42.000 A sec,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,42.0000@-75.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,60.000,,yes,OPERATE,Operate within 0.05 s,,
 50P,Phase instantaneous OC,Overcurrent,pickup+time,2,Pickup — below threshold,95% of setting · operating quantity 38.000 A sec,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,38.0000@-75.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,60.000,,yes,RESTRAIN,No operation,,
 50P,Phase instantaneous OC,Overcurrent,pickup+time,3,Timing at 2× pickup,Step from prefault zero straight to the test value,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,80.0000@-75.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,60.000,,yes,0.050 s,Measured from application of current to trip contact,,

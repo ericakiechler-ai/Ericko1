@@ -1,5 +1,5 @@
 # 889-GEN — Multilin 889 generator protection
-# generated 2026-09-15 00:14 from 889.html
+# generated 2026-09-15 00:33 from 889.html
 # configuration: mva=100; kv=13.8; pf=0.85; freq=60; rot=ABC; poles=2; xd=1.8; xdp=0.25; xdpp=0.18; x2=0.2; cttp=5000; ctts=5; ctnp=5000; ctns=5; ctgp=200; ctgs=5; vtp=13800; vts=120; vtc=wye; zsrc=I; zhold=5; ngtp=7970; ngts=240; gnd=hr; cmc=6x; imax=12.5; vmax=300
 # All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
 # Values shown are for the tool's sample configuration — re-generate after entering real station data.
@@ -14,7 +14,7 @@ Element,ElementName,TU_Module,DriveAs,Step,StepName,WhatIsApplied,SeqRun,SeqStat
 87G,Generator differential,Differential,characteristic,8,Irest 7 pu — below slope,Idiff required 1.100 pu · applied 0.990 pu (−10%),,,,69.282@0.0,69.282@-120.0,69.282@120.0,,29.2859@0.0,29.2859@-120.0,29.2859@120.0,25.1440@180.0,25.1440@60.0,25.1440@-60.0,60.000,,yes,RESTRAIN,IT 7.000 pu · IN 6.010 pu,,
 87GN,Restricted ground fault,Quick CMC,points,1,Sensitivity — above pickup,"Ground CT input only, phase CTs at zero. Applied 0.110 ×CT.",,,,69.282@0.0,69.282@-120.0,69.282@120.0,,0.5500@0.0,,,,,,60.000,,yes,OPERATE,Operate time 0.00 s,,
 87GN,Restricted ground fault,Quick CMC,points,2,Sensitivity — below pickup,"Ground CT input only, phase CTs at zero. Applied 0.090 ×CT.",,,,69.282@0.0,69.282@-120.0,69.282@120.0,,0.4500@0.0,,,,,,60.000,,yes,RESTRAIN,Operate time 0.00 s,,
-87GN,Restricted ground fault,Quick CMC,points,3,Through-fault stability,Phase L1 and the ground input driven in opposition at 4 ×CT — an external ground fault.,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,20.0000@0.0,0.0000@0.0,0.0000@0.0,20.0000@180.0,,,60.000,,yes,RESTRAIN,No operation anywhere on the ramp,,
+87GN,Restricted ground fault,Quick CMC,points,3,Through-fault stability,Phase L1 and the ground input driven in opposition at 4 ×CT — an external ground fault.,,,,69.282@0.0,69.282@-120.0,69.282@120.0,,20.0000@0.0,0.0000@0.0,0.0000@0.0,500.0000@180.0,,,60.000,,yes,RESTRAIN,No operation anywhere on the ramp,,
 59N,Stator ground — fundamental,Quick CMC,points,1,Pickup — above threshold,5.50 V at the neutral input · equivalent to a fault 2.3% up the winding,,,,69.282@0.0,69.282@-120.0,69.282@120.0,5.500@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,,,,60.000,,yes,OPERATE,Operate after 0.50 s,,
 59N,Stator ground — fundamental,Quick CMC,points,2,Pickup — below threshold,4.50 V at the neutral input · equivalent to a fault 1.9% up the winding,,,,69.282@0.0,69.282@-120.0,69.282@120.0,4.500@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,,,,60.000,,yes,RESTRAIN,No operation,,
 59N,Stator ground — fundamental,Quick CMC,points,3,Fault 100% from neutral,Drives 239.92 V at the relay,,,,69.282@0.0,69.282@-120.0,69.282@120.0,239.923@0.0,0.0000@0.0,0.0000@0.0,0.0000@0.0,,,,60.000,,yes,OPERATE,Detected by 59N,,

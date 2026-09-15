@@ -1242,7 +1242,16 @@ reg({
         sheet: ['87G', 'Sensitivity ' + rel, fmt(I, 3) + ' A @ 0°', '—', verdict]
       });
     });
-    const It = o.thru * b.ctSec(w), Ig = It * b.ctSec(w) / CFG.ctgs;
+    /* The stability point simulates an EXTERNAL ground fault: the same primary
+       amperes flow in the phase CTs (as residual) and in the ground CT. Convert
+       phase-secondary -> primary -> ground-secondary. Using the CT secondary
+       RATINGS here instead of the full ratios silently cancels whenever both CTs
+       are 5 A, and mis-scales badly whenever they are not. */
+    const It = o.thru * b.ctSec(w), Ig = It * b.ctr(w) / b.ctrg;
+    /* Largest through-current both channels can actually carry. The ground side
+       reaches the amplifier limit first whenever the ground CT ratio is lower
+       than the phase CT ratio, which is the common case. */
+    const maxThru = Math.min(CFG.imax / b.ctSec(w), CFG.imax * b.ctrg / (b.ctSec(w) * b.ctr(w)));
     pts.push({
       id: 'refstab', name: 'Through-fault stability',
       detail: 'Phase L1 and ground input driven in opposition at ' + fmtX(o.thru) + ' ×CT — an external ground fault.',
@@ -1257,7 +1266,7 @@ reg({
         { k: 'REF winding', v: 'W' + w, u: '' }, { k: 'Ground CTR', v: CFG.ctgp + ':' + CFG.ctgs, u: '' }],
       points: pts,
       notes: [{ lvl: 'warn', lb: 'Polarity', txt: 'REF is a polarity test as much as a level test. If the stability point operates, the ground CT or one phase CT is reversed — chase the wiring before touching the settings.' },
-        { lvl: 'note', lb: 'Ratio mismatch', txt: 'Phase CTs are ' + b.ctPri(w) + ':' + b.ctSec(w) + ' and the ground CT is ' + CFG.ctgp + ':' + CFG.ctgs + '. The stability injection is scaled for that difference so both inputs see the same primary amperes.' }]
+        { lvl: 'note', lb: 'Ratio mismatch', txt: 'Phase CTs are ' + b.ctPri(w) + ':' + b.ctSec(w) + ' and the ground CT is ' + CFG.ctgp + ':' + CFG.ctgs + '. Both inputs are scaled to the same primary current: ' + fmt(It, 3) + ' A into the phase input is ' + fmt(It * b.ctr(w), 0) + ' A primary, which is ' + fmt(Ig, 3) + ' A out of the ground CT.' + (maxThru < o.thru ? ' Both inputs have to fit the ' + fmt(CFG.imax, 1) + ' A channel limit, and the ground side reaches it first: the largest through-current this CT pair can be tested at is about ' + fmtX(maxThru) + ' \u00d7CT. Above that the stability point cannot be produced by this amplifier at all \u2014 prove REF stability with primary injection, or accept a reduced through level and say so on the record.' : ' Both sit inside the ' + fmt(CFG.imax, 1) + ' A channel limit.') }]
     };
   }
 });
