@@ -1,0 +1,422 @@
+<!doctype html>
+<!--
+  Relay Test-Value Calculators — suite index
+
+  Copyright (c) 2026 Eric Kiechler. All rights reserved.
+  Licensed per-user. See the licence terms at the foot of the page.
+
+  Not affiliated with, endorsed by, or a product of General Electric,
+  GE Vernova, Siemens AG, or OMICRON electronics. Product names are used to
+  identify the equipment these tools are designed to be used with.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relay Test-Value Calculators</title>
+<meta name="description" content="Six single-file calculators that turn protective-relay settings into Omicron CMC 356 injection values.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F6F7F8; --surface:#FFFFFF; --raise:#FFFFFF;
+  --ink:#171B1D; --ink-2:#4C565A; --ink-3:#7C878B;
+  --line:#DEE3E5; --line-strong:#C3CBCE;
+  --teal:#0F6F78; --plum:#8A3A6E; --copper:#8F4520; --indigo:#4A45A8; --graphite:#2A2E31;
+  --l1:#C0392B; --l2:#1E7A44; --l3:#2C5FA8;
+  --good:#1E7A44; --good-bg:#E8F3EC;
+  --f-disp:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  --r:5px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#131719; --surface:#1B2023; --raise:#22282B;
+    --ink:#E9EDEF; --ink-2:#AEB8BC; --ink-3:#7E898D;
+    --line:#2C3438; --line-strong:#3E484C;
+    --teal:#48B3BC; --plum:#DE8FC0; --copper:#E29A72; --indigo:#9089EC; --graphite:#D3DADD;
+    --l1:#E8776A; --l2:#5CBF88; --l3:#6D9CE0;
+    --good:#5CBF88; --good-bg:#17301F;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131719; --surface:#1B2023; --raise:#22282B;
+  --ink:#E9EDEF; --ink-2:#AEB8BC; --ink-3:#7E898D;
+  --line:#2C3438; --line-strong:#3E484C;
+  --teal:#48B3BC; --plum:#DE8FC0; --copper:#E29A72; --indigo:#9089EC; --graphite:#D3DADD;
+  --l1:#E8776A; --l2:#5CBF88; --l3:#6D9CE0;
+  --good:#5CBF88; --good-bg:#17301F;
+}
+
+*{box-sizing:border-box;}
+body{margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+.wrap{max-width:1180px; margin:0 auto; padding:0 26px;}
+
+/* ---- title block masthead ---------------------------------------- */
+.block{border-bottom:1px solid var(--line-strong); background:var(--surface);}
+.block .wrap{display:grid; grid-template-columns:1fr auto; gap:12px 32px;
+  align-items:end; padding-top:26px; padding-bottom:20px;}
+h1{margin:0; font-family:var(--f-disp); font-weight:700; font-size:clamp(34px,5.2vw,54px);
+  line-height:.98; letter-spacing:.005em; text-wrap:balance;}
+.sub{margin:9px 0 0; color:var(--ink-2); max-width:62ch; font-size:15.5px;}
+.stamp{display:grid; grid-template-columns:auto auto; gap:2px 14px;
+  font-family:var(--f-num); font-size:11px; color:var(--ink-3);
+  text-align:right; align-content:end;}
+.stamp b{font-weight:500; color:var(--ink-2); text-align:left;}
+
+/* ---- section scaffolding ----------------------------------------- */
+section{padding:46px 0;}
+section + section{border-top:1px solid var(--line);}
+.eyebrow{font-family:var(--f-disp); font-weight:600; font-size:12px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin:0 0 6px;}
+h2{margin:0 0 10px; font-family:var(--f-disp); font-weight:600;
+  font-size:clamp(24px,3vw,32px); line-height:1.08; text-wrap:balance;}
+.lede{margin:0 0 26px; color:var(--ink-2); max-width:66ch;}
+
+/* ---- the worked example: a channel readout ----------------------- */
+.rig{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1.15fr);
+  gap:0; border:1px solid var(--line-strong); border-radius:var(--r);
+  background:var(--surface); overflow:hidden;}
+.rig > div{padding:20px 22px;}
+.rig .mid{display:flex; align-items:center; justify-content:center;
+  border-left:1px solid var(--line); border-right:1px solid var(--line);
+  background:var(--ground); padding:20px 16px;}
+.arrow{font-family:var(--f-disp); font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); writing-mode:vertical-rl; transform:rotate(180deg);}
+.cap{font-family:var(--f-disp); font-size:11.5px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 12px;}
+dl.kv{margin:0; display:grid; grid-template-columns:auto 1fr; gap:5px 16px;
+  font-size:13.5px; align-items:baseline;}
+dl.kv dt{color:var(--ink-3);}
+dl.kv dd{margin:0; font-family:var(--f-num); font-size:12.5px;
+  font-variant-numeric:tabular-nums; color:var(--ink);}
+table.ch{width:100%; border-collapse:collapse; font-family:var(--f-num);
+  font-size:12.5px; font-variant-numeric:tabular-nums;}
+table.ch th{text-align:right; font-weight:500; color:var(--ink-3); font-size:10.5px;
+  letter-spacing:.1em; text-transform:uppercase; padding:0 0 6px; border-bottom:1px solid var(--line);}
+table.ch th:first-child{text-align:left;}
+table.ch td{padding:4px 0; text-align:right; border-bottom:1px solid var(--line);}
+table.ch td:first-child{text-align:left; font-weight:600;}
+table.ch tr:last-child td{border-bottom:0;}
+.p1{color:var(--l1);} .p2{color:var(--l2);} .p3{color:var(--l3);}
+.zero{color:var(--ink-3);}
+.expect{margin-top:14px; padding:9px 12px; border-radius:var(--r);
+  background:var(--good-bg); color:var(--good); font-family:var(--f-num);
+  font-size:12.5px; font-weight:600; display:flex; justify-content:space-between; gap:14px;}
+.rignote{margin:12px 0 0; font-size:13px; color:var(--ink-3); max-width:74ch;}
+
+/* ---- the six tools ------------------------------------------------ */
+.tools{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:16px;}
+.tool{--a:var(--graphite);
+  display:flex; flex-direction:column; gap:12px; padding:20px 20px 18px;
+  background:var(--surface); border:1px solid var(--line);
+  border-top:3px solid var(--a); border-radius:var(--r);
+  text-decoration:none; transition:border-color .13s, transform .13s;}
+.tool:hover{border-color:var(--line-strong); border-top-color:var(--a); transform:translateY(-1px);}
+.t845{--a:var(--teal);} .t850{--a:var(--plum);} .t869{--a:var(--copper);}
+.t889{--a:var(--indigo);} .tsie{--a:var(--graphite);}
+.tool .th{display:flex; align-items:baseline; justify-content:space-between; gap:12px;}
+.tool .tag{font-family:var(--f-disp); font-weight:700; font-size:23px;
+  letter-spacing:.02em; color:var(--a); line-height:1;}
+.tool .n{font-family:var(--f-num); font-size:11px; color:var(--ink-3); white-space:nowrap;}
+.tool .role{font-size:14px; color:var(--ink); font-weight:500; margin:-4px 0 0;}
+.tool .role span{color:var(--ink-3); font-weight:400;}
+.tool p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55;}
+.devs{display:flex; flex-wrap:wrap; gap:4px; margin-top:auto; padding-top:4px;}
+.devs code{font-family:var(--f-num); font-size:10.5px; padding:2px 5px;
+  border:1px solid var(--line); border-radius:3px; color:var(--ink-2); background:var(--ground);}
+.devs .more{color:var(--ink-3); border-style:dashed;}
+
+/* ---- ships-with list ---------------------------------------------- */
+.ships{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:0;
+  border:1px solid var(--line); border-radius:var(--r); background:var(--surface); overflow:hidden;}
+.ships > div{padding:18px 20px; border-right:1px solid var(--line);}
+.ships > div:last-child{border-right:0;}
+.ships h3{margin:0 0 5px; font-family:var(--f-disp); font-weight:600; font-size:17px;}
+.ships p{margin:0; font-size:13.5px; color:var(--ink-2); line-height:1.55;}
+.ships .qty{font-family:var(--f-num); font-size:11px; color:var(--ink-3); display:block; margin-top:7px;}
+
+/* ---- verification -------------------------------------------------- */
+.checks{display:grid; gap:0; border-top:1px solid var(--line); max-width:88ch;}
+.checks > div{display:grid; grid-template-columns:170px 1fr; gap:6px 24px;
+  padding:14px 0; border-bottom:1px solid var(--line);}
+.checks dt{font-family:var(--f-num); font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums;}
+.checks dd{margin:0; font-size:13.5px; color:var(--ink-2);}
+
+/* ---- terms --------------------------------------------------------- */
+.terms{max-width:70ch;}
+.terms p{margin:0 0 12px; font-size:13.5px; color:var(--ink-2);}
+.terms strong{color:var(--ink);}
+footer{border-top:1px solid var(--line-strong); background:var(--surface);
+  padding:22px 0 34px; font-size:12px; color:var(--ink-3);}
+footer .wrap{display:flex; flex-wrap:wrap; gap:8px 24px; align-items:baseline;}
+footer .nm{font-family:var(--f-disp); font-size:13px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+
+@media (max-width:820px){
+  .block .wrap{grid-template-columns:1fr;}
+  .stamp{text-align:left; justify-content:start;}
+  .rig{grid-template-columns:1fr;}
+  .rig .mid{border-left:0; border-right:0; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line); padding:10px;}
+  .arrow{writing-mode:horizontal-tb; transform:none;}
+  .ships > div{border-right:0; border-bottom:1px solid var(--line);}
+  .checks > div{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+
+<header class="block">
+  <div class="wrap">
+    <div>
+      <h1>Relay Test-Value Calculators</h1>
+      <p class="sub">Six single-file tools that turn protective-relay settings into Omicron
+        CMC 356 injection values &mdash; magnitude, angle and frequency, per output channel,
+        ready to type into Test Universe.</p>
+    </div>
+    <div class="stamp">
+      <b>Devices</b><span>6</span>
+      <b>Functions</b><span>137</span>
+      <b>Test steps</b><span>638</span>
+      <b>Channel rows</b><span>4356</span>
+      <b>Dependencies</b><span>none</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <p class="eyebrow">What one of them does</p>
+  <h2>Settings in, injection values out</h2>
+  <p class="lede">Every tool works the same way. Enter the settings as they are in the device;
+    read back what to put on each channel of the test set, and what the relay should do about
+    it. This is one step of one function on the 7SJ85, at its sample feeder.</p>
+
+  <div class="rig">
+    <div>
+      <p class="cap">Settings, as entered in DIGSI</p>
+      <dl class="kv">
+        <dt>Function</dt><dd>51 &mdash; inverse-time overcurrent</dd>
+        <dt>Characteristic</dt><dd>IEC Normal Inverse</dd>
+        <dt>Threshold</dt><dd>1.2000 A sec &middot; 480 A pri</dd>
+        <dt>Time multiplier</dt><dd>0.20</dd>
+        <dt>CT / VT</dt><dd>400:1 &middot; 20000:100</dd>
+        <dt>Line angle</dt><dd>72&deg;</dd>
+      </dl>
+    </div>
+    <div class="mid"><span class="arrow">Computed</span></div>
+    <div>
+      <p class="cap">Apply to the CMC 356 &mdash; timing at 3&times; threshold</p>
+      <table class="ch">
+        <thead><tr><th>Channel</th><th>Magnitude</th><th>Angle</th><th>Freq</th></tr></thead>
+        <tbody>
+          <tr><td class="p1">V L1</td><td>57.735 V</td><td>0.0&deg;</td><td>50 Hz</td></tr>
+          <tr><td class="p2">V L2</td><td>57.735 V</td><td>&minus;120.0&deg;</td><td>50 Hz</td></tr>
+          <tr><td class="p3">V L3</td><td>57.735 V</td><td>+120.0&deg;</td><td>50 Hz</td></tr>
+          <tr><td class="p1">I L1</td><td>3.6000 A</td><td>&minus;75.0&deg;</td><td>50 Hz</td></tr>
+          <tr><td class="p2 zero">I L2</td><td class="zero">0.0000 A</td><td class="zero">&mdash;</td><td class="zero">&mdash;</td></tr>
+          <tr><td class="p3 zero">I L3</td><td class="zero">0.0000 A</td><td class="zero">&mdash;</td><td class="zero">&mdash;</td></tr>
+        </tbody>
+      </table>
+      <div class="expect"><span>Expect trip</span><span>1.260 s</span></div>
+    </div>
+  </div>
+  <p class="rignote">Secondary quantities at the relay terminals, angles counter-clockwise
+    positive with V L1 at 0&deg; &mdash; the same convention as the test set's own phasor
+    display, so what the tool says is what you type.</p>
+</section>
+
+<section>
+  <p class="eyebrow">The suite</p>
+  <h2>Six devices, one way of working</h2>
+  <p class="lede">All six share a core, a set of conventions and a layout, so moving between
+    them costs nothing. Each one carries the functions that device actually has, and the
+    engineering that device actually needs.</p>
+
+  <div class="tools">
+    <a class="tool t845" href="./845.html" data-hosted="https://claude.ai/code/artifact/ac21bb42-fd4d-486b-985e-57a4ff48a379">
+      <div class="th"><span class="tag">845</span><span class="n">21 functions &middot; 91 steps</span></div>
+      <p class="role">Transformer protection <span>&middot; GE Multilin</span></p>
+      <p>Two-winding percentage differential with vector-group compensation. The W2 triple is
+        injected at the angle the clock notation demands, so through current nets to zero
+        instead of reading as a wiring fault.</p>
+      <div class="devs"><code>87T</code><code>87T-H</code><code>87G</code><code>51P</code><code>50_2</code><code>24</code><code>59N</code><code>25</code><code class="more">+13</code></div>
+    </a>
+
+    <a class="tool t850" href="./850.html" data-hosted="https://claude.ai/code/artifact/a90c5b27-c288-4625-84b5-690ae4e8a171">
+      <div class="th"><span class="tag">850</span><span class="n">27 functions &middot; 124 steps</span></div>
+      <p class="role">Feeder protection <span>&middot; GE Multilin</span></p>
+      <p>Faults placed at a position on the line rather than at a current, with k0 compensation
+        on the ground loops. Autoreclose and cold-load pickup run as ordered sequences driven
+        from the relay's own outputs.</p>
+      <div class="devs"><code>21</code><code>FLOC</code><code>79</code><code>CLPU</code><code>68</code><code>46BC</code><code>51SG</code><code>81R</code><code class="more">+19</code></div>
+    </a>
+
+    <a class="tool t869" href="./869.html" data-hosted="https://claude.ai/code/artifact/f07a2f15-f793-4de9-921d-d2058218a6bf">
+      <div class="th"><span class="tag">869</span><span class="n">20 functions &middot; 92 steps</span></div>
+      <p class="role">Motor protection <span>&middot; GE Multilin</span></p>
+      <p>A thermal model checked against the motor's own damage curve, on the equivalent
+        current rather than the phase current. Start, restart and reduced-voltage transition
+        run as sequences.</p>
+      <div class="devs"><code>49</code><code>49TC</code><code>48</code><code>51LR</code><code>66</code><code>19</code><code>87M</code><code>50SG</code><code class="more">+12</code></div>
+    </a>
+
+    <a class="tool t889" href="./889.html" data-hosted="https://claude.ai/code/artifact/86857214-bc3a-4c18-985e-b2891a2d718f">
+      <div class="th"><span class="tag">889</span><span class="n">27 functions &middot; 137 steps</span></div>
+      <p class="role">Generator protection <span>&middot; GE Multilin</span></p>
+      <p>Machine differential plus the impedance plane &mdash; loss of excitation, out of step
+        and distance backup &mdash; with stator ground covered as one scheme by the fundamental
+        and third-harmonic elements together.</p>
+      <div class="devs"><code>87G</code><code>87GN</code><code>40</code><code>78</code><code>27TN</code><code>50/27</code><code>51V</code><code>24</code><code class="more">+19</code></div>
+    </a>
+
+    <a class="tool tsie" href="./7SJ85.html" data-hosted="https://claude.ai/code/artifact/30c79e22-c545-4d94-af81-b6b7bf98faef">
+      <div class="th"><span class="tag">7SJ85</span><span class="n">26 functions &middot; 125 steps</span></div>
+      <p class="role">Overcurrent, SIPROTEC 5 <span>&middot; Siemens</span></p>
+      <p>Ground-fault compensation as RE/RL and XE/XL with k0 alongside for cross-checking, and
+        watt-metric directional earth fault for compensated networks &mdash; where the operate
+        sector closes well short of 90&deg;.</p>
+      <div class="devs"><code>67Ns</code><code>59N</code><code>21</code><code>FLOC</code><code>Inrush</code><code>51V</code><code>74TC</code><code>81R</code><code class="more">+18</code></div>
+    </a>
+
+    <a class="tool tsie" href="./7SD82.html" data-hosted="https://claude.ai/code/artifact/ca845841-7c69-4533-b3cb-b7b45ea7281b">
+      <div class="th"><span class="tag">7SD82</span><span class="n">16 functions &middot; 69 steps</span></div>
+      <p class="role">Line differential, SIPROTEC 5 <span>&middot; Siemens</span></p>
+      <p>Two ends, one test set. Staging &mdash; local end, loop-back or true end to end &mdash;
+        decides what each test proves, and steps that need current at the far end are marked
+        unreachable rather than listed as if they had been done.</p>
+      <div class="devs"><code>87L</code><code>87N</code><code>Ich</code><code>PI</code><code>85</code><code>Stub</code><code>50BF</code><code>25</code><code class="more">+8</code></div>
+    </a>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">What ships</p>
+  <h2>The calculator is the middle of the job, not the end of it</h2>
+  <p class="lede">Each device comes with the plan built from its own tool, so the values on the
+    test record cannot drift from the values that were calculated.</p>
+
+  <div class="ships">
+    <div>
+      <h3>The tools</h3>
+      <p>One HTML file each. No install, no network, no dependencies &mdash; they open on a
+        locked-down field laptop and work with the Wi-Fi off. Keep the seven files in one
+        folder and the links above open them.
+        <span class="qty">6 files &middot; 137 functions</span></p>
+    </div>
+    <div>
+      <h3>Test plans</h3>
+      <p>Generated from each tool, not typed beside it: a step form to work through and a
+        channel long form for pasting into a Test Universe module table.
+        <span class="qty">638 steps &middot; 4356 channel rows</span></p>
+    </div>
+    <div>
+      <h3>Excel workbooks</h3>
+      <p>The plan as a test record &mdash; the values laid out, two shaded columns to fill in,
+        and counters that total the results as they are entered.
+        <span class="qty">6 workbooks &middot; 4 sheets each</span></p>
+    </div>
+    <div>
+      <h3>Build guides</h3>
+      <p>How to assemble each plan in Test Universe: module map, amplifier arrangement, binary
+        map, and the thing about that relay most likely to be got wrong.
+        <span class="qty">6 guides</span></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Verification</p>
+  <h2>Every number was checked against something else</h2>
+  <p class="lede">A calculator that is confidently wrong is worse than no calculator. Each tool
+    was run headlessly and its output recomputed independently before it shipped. A sample of
+    what that caught and confirmed:</p>
+
+  <dl class="checks">
+    <div><dt>845 &middot; Dyn1</dt>
+      <dd>Through current nets to Idiff 0.0000 on all three phases. Building the W2 triple at
+        180&deg; instead of 150&deg; leaves 0.518 pu standing &mdash; which is 2&thinsp;sin&thinsp;15&deg;,
+        not a wiring fault.</dd></div>
+    <div><dt>850 &middot; k0</dt>
+      <dd>A ground loop driven at 73.79&deg; reads back 68&deg;, the pure line angle, confirming the
+        compensation is applied once and not twice. Five fault positions report exactly where
+        they were placed.</dd></div>
+    <div><dt>869 &middot; thermal</dt>
+      <dd>Fit mode reproduces its own fit point exactly &mdash; 10.000 s at 6&thinsp;&times;&thinsp;FLA.
+        The sample motor fails its hot start at 7.49 s against 8.00 s to accelerate, deliberately.</dd></div>
+    <div><dt>889 &middot; impedance</dt>
+      <dd>Round-trips exactly through symmetrical-component decomposition; through current nets
+        to zero differential.</dd></div>
+    <div><dt>7SJ85 &middot; 67Ns</dt>
+      <dd>The operate sector runs to &plusmn;75.5&deg; from the axis, not &plusmn;90&deg;: it closes where
+        the watt-metric component falls to threshold. All ten verdicts agree with an independent
+        recomputation.</dd></div>
+    <div><dt>7SD82 &middot; 87L</dt>
+      <dd>Thirty slope points across all three restraint definitions land on the intended
+        (Irest, Idiff), recomputed from the channel table. Through current gives Idiff 0.0000.</dd></div>
+  </dl>
+</section>
+
+<section>
+  <p class="eyebrow">Licence</p>
+  <h2>Terms</h2>
+  <div class="terms">
+    <p><strong>Licensed per user.</strong> A licence covers one named user, who may install the
+      files on the machines they personally use. Redistribution, resale, sublicensing and
+      publication are not permitted. Site and team licences covering named users at one
+      location are available separately.</p>
+    <p><strong>They are calculators, not relays.</strong> Every value is computed from settings
+      typed in by the user. The tools do not read the device, do not know its firmware revision
+      or as-built wiring, and cannot tell whether the settings entered match the ones in
+      service. What they produce is a proposal to be checked against the relay and the drawings
+      before any current or voltage reaches plant.</p>
+    <p><strong>No warranty.</strong> Provided as is, without warranty of any kind, express or
+      implied. To the maximum extent permitted by law the author is not liable for any claim,
+      damage or loss arising from the software or its use. Commissioning protection equipment
+      is hazardous work and remains the responsibility of the competent person carrying it out.</p>
+    <p><strong>Trademarks.</strong> Multilin is a trademark of GE Vernova. SIPROTEC and DIGSI
+      are trademarks of Siemens AG. CMC and Test Universe are trademarks of OMICRON electronics
+      GmbH. These names identify the equipment the tools are designed to be used with. This is
+      an independent work, not affiliated with, endorsed by or a product of any of those
+      companies, and contains no setting file, firmware or source material of theirs.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="nm">Relay Test-Value Calculators</span>
+    <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
+    <span>Licensed per user &mdash; not for redistribution.</span>
+  </div>
+</footer>
+
+<script>
+/* The six links point at sibling files, which is what they should do once the
+   files sit together in a folder or on a web server. When this page is opened
+   on its own from a hosted copy there are no siblings to point at, so the
+   links switch to the published copies instead. */
+(function () {
+  "use strict";
+  if (!/(^|\.)claude\.ai$/.test(location.hostname)) return;
+  var links = document.querySelectorAll('a.tool[data-hosted]');
+  for (var i = 0; i < links.length; i++) {
+    links[i].setAttribute('href', links[i].getAttribute('data-hosted'));
+    links[i].setAttribute('target', '_blank');
+    links[i].setAttribute('rel', 'noopener');
+  }
+})();
+</script>
+
+</body>
+</html>

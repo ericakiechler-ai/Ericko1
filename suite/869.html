@@ -1,0 +1,2266 @@
+<!doctype html>
+<!--
+  869-MTR — GE Multilin 869 motor protection
+  Part of Relay Test-Value Calculators.
+
+  Copyright (c) 2026 Eric Kiechler. All rights reserved.
+  Licensed per-user. See the licence terms at the foot of the page.
+
+  NOT A SUBSTITUTE FOR ENGINEERING JUDGEMENT. This tool computes proposed
+  secondary injection values from settings entered by its user. It does not
+  read the relay, it cannot know the relay's firmware or its as-built wiring,
+  and the values it produces are a starting point to be verified against the
+  device and the drawings before any current or voltage is applied to plant.
+  The user remains responsible for the test and for the safety of it.
+
+  Not affiliated with, endorsed by, or a product of General Electric, GE
+  Vernova, Siemens AG, or OMICRON electronics. Product names are used to
+  identify the equipment this tool is designed to be used with.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>869 Motor Test Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   TOKENS — light is the base; dark redefines tokens only.
+   Fourth of the family: 845 teal, 889 indigo, 850 plum, 869 copper.
+   ============================================================ */
+:root{
+  --ground:#F6F3F1; --surface:#FFFFFF; --surface-2:#EFEAE6; --surface-3:#E7E0DA;
+  --line:#DBD3CC; --line-strong:#B9AFA6;
+  --ink:#1C1613; --ink-2:#4E4640; --ink-3:#7A6F67;
+  --accent:#8F4520; --accent-ink:#FFFFFF; --accent-soft:#F7E6DB; --accent-line:#CDA087;
+  --pass:#1C7340; --pass-bg:#DCEFE2; --fail:#AC2A2A; --fail-bg:#F6DEDE;
+  --warn:#8E5A05; --warn-bg:#FAEBD2;
+  --l1:#C93232; --l2:#2A8642; --l3:#3560C4; --l0:#6A5FAE;
+  --r:5px;
+  --f-disp:"Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#141010; --surface:#1D1816; --surface-2:#26201D; --surface-3:#302824;
+    --line:#352C28; --line-strong:#4C403A;
+    --ink:#EFE7E1; --ink-2:#B2A69D; --ink-3:#877B72;
+    --accent:#E29A72; --accent-ink:#1E0C04; --accent-soft:#3C2317; --accent-line:#7A4A2E;
+    --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+    --warn:#E0A63C; --warn-bg:#33260D;
+    --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#A99BE8;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#141010; --surface:#1D1816; --surface-2:#26201D; --surface-3:#302824;
+  --line:#352C28; --line-strong:#4C403A;
+  --ink:#EFE7E1; --ink-2:#B2A69D; --ink-3:#877B72;
+  --accent:#E29A72; --accent-ink:#1E0C04; --accent-soft:#3C2317; --accent-line:#7A4A2E;
+  --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+  --warn:#E0A63C; --warn-bg:#33260D;
+  --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#A99BE8;
+  color-scheme:dark;
+}
+
+/* ============================================================ BASE */
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:13.5px; line-height:1.5; -webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{margin:0; text-wrap:balance; font-family:var(--f-disp); font-weight:600; letter-spacing:.01em;}
+p{margin:0;}
+button,input,select{font:inherit; color:inherit;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px;}
+
+/* ============================================================ SHELL */
+.shell{min-height:100vh; display:grid; grid-template-rows:auto auto 1fr;}
+.topbar{display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:10px 18px; background:var(--surface); border-bottom:1px solid var(--line);}
+.brand{display:flex; align-items:baseline; gap:10px; margin-right:auto;}
+.brand .mark{font-family:var(--f-disp); font-weight:700; font-size:22px; letter-spacing:.02em; color:var(--ink); line-height:1;}
+.brand .mark em{font-style:normal; color:var(--accent);}
+.brand .sub{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.12em;
+  font-size:11px; color:var(--ink-3); font-weight:600;}
+.chipstrip{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+.chip{display:inline-flex; align-items:center; gap:6px; padding:3px 9px;
+  border:1px solid var(--line); border-radius:100px; background:var(--surface-2);
+  font-size:11.5px; color:var(--ink-2); white-space:nowrap;}
+.chip b{font-family:var(--f-num); font-weight:500; color:var(--ink); font-size:11.5px;}
+.chip .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;}
+.tbtn{padding:5px 11px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:var(--r); cursor:pointer; font-size:12.5px; color:var(--ink-2);}
+.tbtn:hover{border-color:var(--accent); color:var(--accent);}
+.tabs{display:flex; gap:2px; padding:0 18px; background:var(--surface);
+  border-bottom:1px solid var(--line); overflow-x:auto;}
+.tab{padding:9px 14px 8px; border:0; background:none; cursor:pointer;
+  font-family:var(--f-disp); font-weight:600; font-size:14px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-3); border-bottom:2px solid transparent; white-space:nowrap;}
+.tab:hover{color:var(--ink);}
+.tab[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent);}
+.view{display:none; min-width:0;}
+.view.on{display:block;}
+
+/* ============================================================ WORKSPACE */
+.work{display:grid; grid-template-columns:216px minmax(300px,360px) 1fr; align-items:start; min-height:0;}
+.rail{border-right:1px solid var(--line); background:var(--surface);
+  padding:12px 0 24px; position:sticky; top:0; align-self:stretch;}
+.rail-h{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.13em;
+  font-size:10.5px; font-weight:600; color:var(--ink-3); padding:10px 16px 5px;}
+.rail-h:first-child{padding-top:0;}
+.rail-i{display:grid; grid-template-columns:50px 1fr; align-items:center; gap:8px;
+  width:100%; text-align:left; padding:5px 16px; border:0; background:none;
+  cursor:pointer; border-left:2px solid transparent; color:var(--ink-2);}
+.rail-i:hover{background:var(--surface-2); color:var(--ink);}
+.rail-i[aria-current="true"]{background:var(--accent-soft); border-left-color:var(--accent); color:var(--ink);}
+.rail-i .ansi{font-family:var(--f-num); font-weight:600; font-size:12.5px; color:var(--accent); letter-spacing:-.03em;}
+.rail-i .nm{font-size:11.5px; line-height:1.25;}
+.pane{padding:16px 18px 40px; min-width:0;}
+.pane.set{border-right:1px solid var(--line); background:var(--surface);}
+.pane.out{background:var(--ground);}
+.blk{margin-bottom:18px;}
+.blk-h{display:flex; align-items:baseline; gap:8px; margin-bottom:9px;
+  padding-bottom:5px; border-bottom:1px solid var(--line);}
+.blk-h h3{font-size:12px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3); font-weight:600;}
+.blk-h .hint{margin-left:auto; font-size:11px; color:var(--ink-3);}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:8px 10px;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px 10px;}
+.f{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.f > label{font-family:var(--f-disp); font-size:11px; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:600; color:var(--ink-3); line-height:1.3;}
+.f input, .f select{width:100%; padding:5px 7px; border:1px solid var(--line-strong);
+  background:var(--ground); border-radius:4px;
+  font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;}
+.f select{font-family:var(--f-body); font-size:12px;}
+.f input:focus, .f select:focus{border-color:var(--accent); outline:none; box-shadow:0 0 0 2px var(--accent-soft);}
+.f .u{font-family:var(--f-num); font-size:10.5px; color:var(--ink-3);}
+.f.wide{grid-column:1/-1;}
+.ehead{display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;}
+.ehead .badge{font-family:var(--f-num); font-weight:600; font-size:15px; color:var(--accent-ink);
+  background:var(--accent); padding:4px 10px; border-radius:4px; flex:none; letter-spacing:-.03em;}
+.ehead h2{font-size:21px; line-height:1.1; letter-spacing:.01em;}
+.ehead .desc{font-size:12px; color:var(--ink-2); margin-top:2px; max-width:64ch;}
+
+/* ============================================================ TABLES */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface);}
+table{border-collapse:collapse; width:100%; font-size:12.5px;}
+thead th{font-family:var(--f-disp); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em;
+  font-weight:600; color:var(--ink-3); text-align:left; padding:7px 10px;
+  border-bottom:1px solid var(--line-strong); white-space:nowrap; background:var(--surface-2); position:sticky; top:0;}
+tbody td{padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover td{background:var(--surface-2);}
+td.n, th.n{text-align:right; font-family:var(--f-num); font-variant-numeric:tabular-nums; white-space:nowrap;}
+td.key{font-weight:500;}
+td .sm{display:block; font-size:11px; color:var(--ink-3); font-family:var(--f-body); margin-top:1px;}
+tbody tr.grp td{background:var(--surface-3); font-family:var(--f-disp); text-transform:uppercase;
+  letter-spacing:.1em; font-size:10.5px; font-weight:600; color:var(--ink-2); padding:5px 10px;}
+tbody tr.grp:hover td{background:var(--surface-3);}
+.pill{display:inline-block; padding:1px 7px; border-radius:100px; font-size:11px;
+  font-family:var(--f-disp); font-weight:600; letter-spacing:.06em; white-space:nowrap;}
+.pill.nu{font-family:var(--f-num); font-size:10.5px; letter-spacing:0; background:var(--surface-3); color:var(--ink-2);}
+.pill.op{background:var(--pass-bg); color:var(--pass);}
+.pill.no{background:var(--fail-bg); color:var(--fail);}
+.pill.wn{background:var(--warn-bg); color:var(--warn);}
+.chan{border:1px solid var(--accent-line); border-radius:var(--r); overflow:hidden; background:var(--surface);}
+.chan-h{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:8px 12px; background:var(--accent-soft); border-bottom:1px solid var(--accent-line);}
+.chan-h h3{font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--accent);}
+.chan-h .cfg{font-size:11px; color:var(--ink-2); margin-left:auto; font-family:var(--f-num);}
+.chan .tw{border:0; border-radius:0;}
+.ch-l1{color:var(--l1);} .ch-l2{color:var(--l2);} .ch-l3{color:var(--l3);} .ch-n{color:var(--ink-3);}
+td.chname{font-family:var(--f-num); font-weight:600; font-size:12px; white-space:nowrap;}
+.notes{display:flex; flex-direction:column; gap:6px;}
+.note{display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:start;
+  padding:7px 10px; border-radius:4px; font-size:12px; line-height:1.45;
+  background:var(--surface-2); border-left:3px solid var(--line-strong); color:var(--ink-2);}
+.note.warn{background:var(--warn-bg); border-left-color:var(--warn); color:var(--ink);}
+.note.bad{background:var(--fail-bg); border-left-color:var(--fail); color:var(--ink);}
+.note.good{background:var(--pass-bg); border-left-color:var(--pass); color:var(--ink);}
+.note .lb{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.09em;
+  font-size:10px; font-weight:700; padding-top:2px; white-space:nowrap;}
+.readout{display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;}
+.readout div{background:var(--surface); padding:7px 10px;}
+.readout dt{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;}
+.readout dd{margin:1px 0 0; font-family:var(--f-num); font-size:14px; font-weight:500; letter-spacing:-.01em;}
+.readout dd small{font-size:10.5px; color:var(--ink-3); font-weight:400; margin-left:2px;}
+
+/* ============================================================ PLOTS */
+.plots{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; align-items:start;}
+.phbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:8px;}
+.phbox.full{grid-column:1/-1;}
+.phbox .cap{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--ink-3); font-weight:600; padding:0 2px 5px;}
+svg.phasor, svg.tl, svg.tcc{display:block; width:100%; height:auto;}
+.ph-grid{stroke:var(--line); fill:none; stroke-width:1;}
+.ph-axis{stroke:var(--line-strong); fill:none; stroke-width:1;}
+.ph-tick{fill:var(--ink-3); font-family:var(--f-num); font-size:9px;}
+.v-l1,.i-l1{stroke:var(--l1);} .v-l2,.i-l2{stroke:var(--l2);}
+.v-l3,.i-l3{stroke:var(--l3);} .v-l0,.i-l0{stroke:var(--l0);}
+.f-l1{fill:var(--l1);} .f-l2{fill:var(--l2);} .f-l3{fill:var(--l3);} .f-l0{fill:var(--l0);}
+.vec-v{stroke-width:2.2; fill:none; stroke-linecap:round;}
+.vec-i{stroke-width:2.2; fill:none; stroke-linecap:round; stroke-dasharray:5 3.5;}
+
+/* time–current curve */
+.tcc-minor{stroke:var(--line); fill:none; stroke-width:.7;}
+.tcc-major{stroke:var(--line-strong); fill:none; stroke-width:1;}
+.tcc-frame{stroke:var(--line-strong); fill:none; stroke-width:1.2;}
+.tcc-lab{fill:var(--ink-3); font-family:var(--f-num); font-size:9px;}
+.tcc-ax{fill:var(--ink-2); font-family:var(--f-disp); font-size:10px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.1em;}
+.tcc-cold{stroke:var(--accent); fill:none; stroke-width:2.2; stroke-linejoin:round;}
+.tcc-hot{stroke:var(--accent); fill:none; stroke-width:1.5; stroke-dasharray:5 3; stroke-linejoin:round;}
+.tcc-damage{stroke:var(--fail); fill:none; stroke-width:1.6; stroke-dasharray:2 3;}
+.tcc-dmg-dot{fill:var(--fail);}
+.tcc-acc{stroke:var(--l3); fill:none; stroke-width:1.6; stroke-dasharray:6 3;}
+.tcc-pt{fill:var(--ink); stroke:var(--surface); stroke-width:1.2;}
+.tcc-pt-sel{stroke:var(--ink); stroke-width:2; fill:none;}
+.tcc-key{font-family:var(--f-num); font-size:9px;}
+
+/* sequence timeline */
+.tl-seg{stroke:var(--line-strong); stroke-width:1;}
+.tl-stop{fill:var(--surface-3);} .tl-run{fill:var(--pass-bg);}
+.tl-start{fill:var(--accent-soft);} .tl-fault{fill:var(--fail-bg);} .tl-lock{fill:var(--fail); fill-opacity:.3;}
+.tl-sel{stroke:var(--ink); stroke-width:2; fill:none;}
+.tl-lab{fill:var(--ink-2); font-family:var(--f-disp); font-size:10px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em;}
+.tl-dur{fill:var(--ink-3); font-family:var(--f-num); font-size:9.5px;}
+.tl-ev{stroke:var(--accent); stroke-width:1.4; stroke-dasharray:2 2;}
+.tl-evlab{fill:var(--accent); font-family:var(--f-num); font-size:9px; font-weight:600;}
+.tl-axis{stroke:var(--line-strong); stroke-width:1;}
+
+.legend{display:flex; flex-direction:column; gap:5px; min-width:126px;}
+.legend.wide{display:grid; grid-template-columns:repeat(auto-fit,minmax(186px,1fr)); gap:4px 16px;}
+.legend.wide .scale{grid-column:1/-1;}
+.legend .lgi{display:grid; grid-template-columns:16px 1fr; gap:7px; align-items:center; font-size:11px;}
+.legend .sw{height:0; border-top-width:2.4px; border-top-style:solid;}
+.legend .val{font-family:var(--f-num); font-size:11px; color:var(--ink-2);}
+.legend .scale{font-size:10.5px; color:var(--ink-3); font-family:var(--f-num);
+  padding-bottom:2px; border-bottom:1px solid var(--line); margin-bottom:2px;}
+
+/* ============================================================ VECTOR TAB */
+.vgrid{display:grid; grid-template-columns:minmax(280px,336px) minmax(280px,1fr) minmax(258px,336px); align-items:start;}
+.vin-row{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; align-items:center; margin-bottom:6px;}
+.vin-row .lbl{font-family:var(--f-num); font-weight:600; font-size:12px; text-align:right;}
+.vin-row input{width:100%; padding:4px 6px; border:1px solid var(--line-strong); background:var(--ground);
+  border-radius:4px; font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;}
+.vin-row input:focus{border-color:var(--accent); outline:none;}
+.colhead{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; margin-bottom:4px;}
+.colhead span{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;}
+.presets{display:flex; flex-wrap:wrap; gap:5px;}
+.pbtn{padding:3px 9px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:100px; cursor:pointer; font-size:11.5px; color:var(--ink-2);}
+.pbtn:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+
+/* ============================================================ DOC */
+.doc{max-width:78ch; margin:0 auto; padding:26px 22px 60px;}
+.doc h2{font-size:24px; margin-bottom:4px;}
+.doc h3{font-size:15px; text-transform:uppercase; letter-spacing:.11em; color:var(--accent); margin:22px 0 7px;}
+.doc p{margin:0 0 9px; color:var(--ink-2); max-width:66ch;}
+.doc ul{margin:0 0 10px; padding-left:19px; color:var(--ink-2);}
+.doc li{margin-bottom:4px;}
+.doc code{font-family:var(--f-num); font-size:12px; background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--ink);}
+.doc .eq{font-family:var(--f-num); font-size:12.5px; background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:4px; padding:8px 11px; margin:0 0 10px;
+  overflow-x:auto; white-space:pre; color:var(--ink);}
+.sheet-tools{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+#sheetOut{width:100%; min-height:300px; padding:10px; border:1px solid var(--line-strong);
+  background:var(--surface); border-radius:var(--r);
+  font-family:var(--f-num); font-size:11.5px; line-height:1.5; white-space:pre; overflow-x:auto;}
+
+@media (max-width:1180px){
+  .work{grid-template-columns:184px 1fr;}
+  .pane.out{grid-column:1/-1; border-top:1px solid var(--line);}
+  .vgrid{grid-template-columns:minmax(260px,320px) 1fr;}
+}
+@media (max-width:860px){
+  .work{grid-template-columns:1fr;}
+  .rail{position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .pane.set{border-right:0; border-bottom:1px solid var(--line);}
+  .pane.out{grid-column:auto;} .vgrid{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+@media print{
+  .topbar,.tabs,.rail,.tbtn,.pbtn{display:none !important;}
+  .work{grid-template-columns:1fr;} .pane{padding:0 0 14px;} body{background:#fff;}
+  .tw,.chan,.phbox{break-inside:avoid;}
+}
+
+/* ---- product footer ------------------------------------------------ */
+.pfoot{max-width:1500px; margin:28px auto 0; padding:16px 18px 26px;
+  border-top:1px solid var(--line); color:var(--ink-3);
+  font-family:var(--f-body); font-size:11px; line-height:1.6;}
+.pfoot .prow{display:flex; flex-wrap:wrap; gap:10px 26px; align-items:baseline;}
+.pfoot .pname{font-family:var(--f-disp); font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+.pfoot .psep{color:var(--line-strong);}
+.pfoot details{margin-top:10px;}
+.pfoot summary{cursor:pointer; color:var(--ink-2); font-size:11px;
+  padding:3px 0; user-select:none;}
+.pfoot summary:hover{color:var(--ink);}
+.pfoot .pbody{margin-top:8px; padding:12px 14px; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); max-width:74ch;}
+.pfoot .pbody p{margin:0 0 9px;}
+.pfoot .pbody p:last-child{margin-bottom:0;}
+.pfoot .pbody strong{color:var(--ink-2);}
+@media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">869<em>&#8901;</em>MTR</span>
+      <span class="sub">Multilin 869 &nbsp;/&nbsp; Omicron CMC 356</span>
+    </div>
+    <div class="chipstrip" id="topChips"></div>
+    <button class="tbtn" id="themeBtn" type="button">Theme</button>
+    <button class="tbtn" id="resetBtn" type="button">Reset sample</button>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-view="v-setup" aria-selected="false">Motor setup</button>
+    <button class="tab" role="tab" data-view="v-elem" aria-selected="true">Elements</button>
+    <button class="tab" role="tab" data-view="v-vec" aria-selected="false">Vector calculator</button>
+    <button class="tab" role="tab" data-view="v-sheet" aria-selected="false">Test sheet</button>
+    <button class="tab" role="tab" data-view="v-meth" aria-selected="false">Method</button>
+  </nav>
+
+  <!-- ================================================= SETUP ================= -->
+  <section class="view" id="v-setup" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">MTR</span>
+        <div>
+          <h2>Motor data, thermal model and test set</h2>
+          <p class="desc">Off the motor nameplate, the thermal-limit sheet from the manufacturer and the
+             relay&rsquo;s <em>Motor Setup</em> pages. The locked-rotor data is not decoration here &mdash; the
+             tool checks the overload curve against it and will tell you when the protection does not fit the
+             machine. Values shown on load are a worked sample, not your motor.</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(292px,1fr)); gap:22px;">
+
+        <div class="blk">
+          <div class="blk-h"><h3>Motor nameplate</h3><span class="hint">and data sheet</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_kv">Rated voltage</label><input id="cfg_kv" type="number" step="any" inputmode="decimal" data-cfg="kv"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_fla">Full load current</label><input id="cfg_fla" type="number" step="any" inputmode="decimal" data-cfg="fla"><span class="u">A primary &mdash; FLA</span></div>
+            <div class="f"><label for="cfg_sf">Service factor</label><input id="cfg_sf" type="number" step="any" inputmode="decimal" data-cfg="sf"><span class="u">&times; FLA</span></div>
+            <div class="f"><label for="cfg_hp">Rated output</label><input id="cfg_hp" type="number" step="any" inputmode="decimal" data-cfg="hp"><span class="u">hp</span></div>
+            <div class="f"><label for="cfg_pf">Rated power factor</label><input id="cfg_pf" type="number" step="any" inputmode="decimal" data-cfg="pf"><span class="u">lagging</span></div>
+            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="any" inputmode="decimal" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_rot">Phase rotation</label>
+              <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select><span class="u">as configured in relay</span></div>
+            <div class="f"><label for="cfg_type">Motor type</label>
+              <select id="cfg_type" data-cfg="type"><option value="ind">Induction</option><option value="syn">Synchronous</option></select><span class="u"></span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Starting data</h3><span class="hint">thermal limit sheet</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_lra">Locked rotor current</label><input id="cfg_lra" type="number" step="any" inputmode="decimal" data-cfg="lra"><span class="u">&times; FLA</span></div>
+            <div class="f"><label for="cfg_lrtc">Safe stall time &mdash; cold</label><input id="cfg_lrtc" type="number" step="any" inputmode="decimal" data-cfg="lrtc"><span class="u">s at locked rotor</span></div>
+            <div class="f"><label for="cfg_lrth">Safe stall time &mdash; hot</label><input id="cfg_lrth" type="number" step="any" inputmode="decimal" data-cfg="lrth"><span class="u">s at locked rotor</span></div>
+            <div class="f"><label for="cfg_acc">Acceleration time</label><input id="cfg_acc" type="number" step="any" inputmode="decimal" data-cfg="acc"><span class="u">s at rated voltage</span></div>
+            <div class="f"><label for="cfg_start">Starts per hour</label><input id="cfg_start" type="number" step="any" inputmode="decimal" data-cfg="start"><span class="u">nameplate limit</span></div>
+            <div class="f"><label for="cfg_tbs">Time between starts</label><input id="cfg_tbs" type="number" step="any" inputmode="decimal" data-cfg="tbs"><span class="u">minutes</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="blk" style="margin-top:4px;">
+          <div class="blk-h"><h3>Thermal model</h3><span class="hint">relay settings — the heart of a motor relay</span></div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:8px 12px;">
+            <div class="f" style="grid-column:1/-1;"><label for="cfg_cmode">Overload curve model</label>
+              <select id="cfg_cmode" data-cfg="cmode">
+                <option value="std">Standard form &mdash; t = CM &middot; A / (I&#8319; &minus; 1)</option>
+                <option value="fit">Fit A from a point read off the relay curve</option>
+                <option value="iec">IEC 60255-8 thermal replica</option>
+              </select>
+              <span class="u">Curve constants differ by product. Fitting from the relay&rsquo;s own curve removes the guess.</span></div>
+            <div class="f"><label for="cfg_cm">Curve multiplier</label><input id="cfg_cm" type="number" step="any" inputmode="decimal" data-cfg="cm"><span class="u">CM</span></div>
+            <div class="f"><label for="cfg_ca">Constant A</label><input id="cfg_ca" type="number" step="any" inputmode="decimal" data-cfg="ca"><span class="u">seconds &mdash; fit to your relay</span></div>
+            <div class="f"><label for="cfg_cn">Exponent n</label><input id="cfg_cn" type="number" step="any" inputmode="decimal" data-cfg="cn"><span class="u">usually 2</span></div>
+            <div class="f"><label for="cfg_cref">Curve asymptote</label>
+              <select id="cfg_cref" data-cfg="cref"><option value="fla">At FLA (1.0 ×FLA)</option><option value="sf">At service-factor amps</option></select>
+              <span class="u">where the curve goes vertical</span></div>
+            <div class="f"><label for="cfg_fitI">Fit point &mdash; current</label><input id="cfg_fitI" type="number" step="any" inputmode="decimal" data-cfg="fitI"><span class="u">&times; FLA, off the relay curve</span></div>
+            <div class="f"><label for="cfg_fitT">Fit point &mdash; time</label><input id="cfg_fitT" type="number" step="any" inputmode="decimal" data-cfg="fitT"><span class="u">s at that current</span></div>
+            <div class="f"><label for="cfg_k">Negative-sequence K</label><input id="cfg_k" type="number" step="any" inputmode="decimal" data-cfg="k"><span class="u">rotor heating factor</span></div>
+            <div class="f"><label for="cfg_hcr">Hot / cold ratio</label><input id="cfg_hcr" type="number" step="any" inputmode="decimal" data-cfg="hcr"><span class="u">hot curve &divide; cold curve</span></div>
+            <div class="f"><label for="cfg_taur">Cooling &tau; &mdash; running</label><input id="cfg_taur" type="number" step="any" inputmode="decimal" data-cfg="taur"><span class="u">minutes</span></div>
+            <div class="f"><label for="cfg_taus">Cooling &tau; &mdash; stopped</label><input id="cfg_taus" type="number" step="any" inputmode="decimal" data-cfg="taus"><span class="u">minutes</span></div>
+            <div class="f"><label for="cfg_tau_i">IEC &tau;</label><input id="cfg_tau_i" type="number" step="any" inputmode="decimal" data-cfg="tau_i"><span class="u">minutes &mdash; replica model only</span></div>
+            <div class="f"><label for="cfg_kf">IEC k factor</label><input id="cfg_kf" type="number" step="any" inputmode="decimal" data-cfg="kf"><span class="u">&times; FLA &mdash; replica model only</span></div>
+          </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(292px,1fr)); gap:22px;">
+        <div class="blk">
+          <div class="blk-h"><h3>Instrument transformers</h3><span class="hint">CT / VT schedule</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_ctp">Phase CT primary</label><input id="cfg_ctp" type="number" step="any" inputmode="decimal" data-cfg="ctp"><span class="u">A</span></div>
+            <div class="f"><label for="cfg_cts">Phase CT sec.</label>
+              <select id="cfg_cts" data-cfg="cts"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ctgp">Ground CT primary</label><input id="cfg_ctgp" type="number" step="any" inputmode="decimal" data-cfg="ctgp"><span class="u">A &mdash; core balance</span></div>
+            <div class="f"><label for="cfg_ctgs">Ground CT sec.</label>
+              <select id="cfg_ctgs" data-cfg="ctgs"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_vtp">VT primary</label><input id="cfg_vtp" type="number" step="any" inputmode="decimal" data-cfg="vtp"><span class="u">V, L&ndash;L</span></div>
+            <div class="f"><label for="cfg_vts">VT secondary</label><input id="cfg_vts" type="number" step="any" inputmode="decimal" data-cfg="vts"><span class="u">V, L&ndash;L</span></div>
+            <div class="f"><label for="cfg_vtc">VT connection</label>
+              <select id="cfg_vtc" data-cfg="vtc"><option value="wye">Wye</option><option value="delta">Delta</option></select><span class="u">as wired</span></div>
+            <div class="f"><label for="cfg_diff">Differential CT</label>
+              <select id="cfg_diff" data-cfg="diff"><option value="cb">Core balance / flux balance</option><option value="dual">Dual CT, six inputs</option><option value="none">Not fitted</option></select><span class="u">87M arrangement</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>CMC 356 output configuration</h3><span class="hint">amplifier setup</span></div>
+          <div class="grid2">
+            <div class="f wide"><label for="cfg_cmc">Current amplifier mode</label>
+              <select id="cfg_cmc" data-cfg="cmc">
+                <option value="3x">3 &times; 32 A &mdash; one triple, high current</option>
+                <option value="6x">6 &times; 12.5 A &mdash; two triples (dual-CT 87M)</option>
+                <option value="1x">1 &times; 64 A &mdash; triples paralleled, single phase</option>
+              </select>
+              <span class="u">Locked-rotor current is several times FLA, so the high-current arrangement is usually the one you need.</span></div>
+            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="any" inputmode="decimal" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
+            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="any" inputmode="decimal" data-cfg="vmax"><span class="u">V</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Derived base quantities</h3><span class="hint">used by every element below</span></div>
+        <dl class="readout" id="derived"></dl>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Thermal model against the motor</h3><span class="hint">does the protection fit the machine?</span></div>
+        <dl class="readout" id="derivedT"></dl>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Configuration checks</h3></div>
+        <div class="notes" id="cfgNotes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= ELEMENTS ============== -->
+  <section class="view on" id="v-elem" role="tabpanel">
+    <div class="work">
+      <aside class="rail" id="rail"></aside>
+      <div class="pane set">
+        <div class="blk">
+          <div class="blk-h"><h3>Relay settings</h3><span class="hint" id="setHint"></span></div>
+          <div class="grid2" id="setForm"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Test options</h3></div>
+          <div class="grid2" id="optForm"></div>
+        </div>
+        <button class="tbtn" id="addSheet" type="button" style="width:100%; padding:8px;">Add these test points to sheet</button>
+      </div>
+      <div class="pane out" id="outPane"></div>
+    </div>
+  </section>
+
+  <!-- ================================================= VECTOR ================ -->
+  <section class="view" id="v-vec" role="tabpanel">
+    <div class="vgrid">
+      <div class="pane set">
+        <div class="ehead" style="margin-bottom:12px;">
+          <span class="badge">V/I</span>
+          <div><h2>Applied vectors</h2>
+          <p class="desc">Secondary quantities as they leave the test set.</p></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Motor condition presets</h3></div>
+          <div class="presets" id="presets"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Voltage</h3><span class="hint">V sec, L&ndash;N</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="vIn"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Current</h3><span class="hint">A sec</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="i1In"></div>
+        </div>
+      </div>
+
+      <div class="pane out">
+        <div class="blk">
+          <div class="blk-h"><h3>Phasors and equivalent heating current</h3><span class="hint">CCW positive, V L1 reference</span></div>
+          <div class="plots">
+            <div class="phbox"><div class="cap">Phasors</div><div id="vecPhasor"></div></div>
+            <div class="phbox"><div class="cap">Where this lands on the thermal curve</div><div id="vecTcc"></div></div>
+          </div>
+          <div class="legend wide" id="vecLegend" style="margin-top:10px;"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Thermal picture</h3><span class="hint">what the model sees</span></div>
+          <div class="tw"><table id="vecThTbl"></table></div>
+        </div>
+      </div>
+
+      <div class="pane" style="border-left:1px solid var(--line); background:var(--surface);">
+        <div class="blk">
+          <div class="blk-h"><h3>Symmetrical components</h3></div>
+          <div class="tw"><table id="vecSeqTbl"></table></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Machine quantities</h3></div>
+          <div class="tw"><table id="vecPwrTbl"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= SHEET ================= -->
+  <section class="view" id="v-sheet" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">REC</span>
+        <div><h2>Collected test points</h2>
+        <p class="desc">Everything sent over from the Elements tab, tab-separated. Select all and copy,
+           then paste into a test record or a Test Universe table.</p></div>
+      </div>
+      <div class="sheet-tools">
+        <button class="tbtn" id="copySheet" type="button">Select all for copy</button>
+        <button class="tbtn" id="printSheet" type="button">Print</button>
+        <button class="tbtn" id="clearSheet" type="button">Clear</button>
+        <span class="chip"><span class="dot"></span>Rows <b id="sheetCount">0</b></span>
+      </div>
+      <textarea id="sheetOut" spellcheck="false" readonly></textarea>
+    </div>
+  </section>
+
+  <!-- ================================================= METHOD =============== -->
+  <section class="view" id="v-meth" role="tabpanel">
+    <div class="doc" id="methodDoc"></div>
+  </section>
+
+</div>
+
+<footer class="pfoot">
+  <div class="prow">
+    <span class="pname">869-MTR</span>
+    <span>GE Multilin 869 motor protection</span>
+    <span class="psep">|</span>
+    <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
+    <span class="psep">|</span>
+    <span>Licensed per user &mdash; not for redistribution.</span>
+  </div>
+  <details>
+    <summary>Licence, disclaimer and trademark notice</summary>
+    <div class="pbody">
+      <p><strong>Licence.</strong> This file is licensed to one named user, who may install
+      it on the machines they personally use and may not redistribute, resell, sublicense or
+      publish it. A site or team licence covering named users at one location is available
+      separately. Nothing here transfers ownership of the software.</p>
+      <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
+      settings typed in by its user. The tool does not read the device, does not know its
+      firmware revision or its as-built wiring, and cannot tell whether the settings entered
+      match the ones in service. Treat what it produces as a proposal to be checked against
+      the relay and the drawings.</p>
+      <p><strong>Verify before you inject.</strong> Confirm the CT and VT ratios, the curve
+      constants and at least the first timing point against the device's own prediction before
+      accepting the rest of a table. Curve constants move between firmware revisions; if the
+      first point disagrees, every other time in that table is wrong by the same factor.</p>
+      <p><strong>No warranty.</strong> The software is provided as is, without warranty of any
+      kind, express or implied, including but not limited to the warranties of merchantability
+      and fitness for a particular purpose. To the maximum extent permitted by law the author is
+      not liable for any claim, damage, loss or other liability arising from the software or its
+      use &mdash; including damage to plant, loss of production, or injury. Commissioning
+      protection equipment is hazardous work and remains the responsibility of the competent
+      person carrying it out.</p>
+      <p><strong>Trademarks.</strong> Multilin is a trademark of GE Vernova. SIPROTEC and DIGSI
+      are trademarks of Siemens AG. CMC and Test Universe are trademarks of OMICRON electronics
+      GmbH. These names are used only to identify the equipment this tool is designed to be used
+      with. This tool is an independent work: it is not affiliated with, endorsed by, sponsored
+      by or a product of any of those companies, and no setting file, firmware or source
+      material of theirs is included in it.</p>
+      <p><strong>Fonts.</strong> Barlow Condensed and IBM Plex are used under the SIL Open Font
+      Licence 1.1 and are loaded from Google Fonts where a connection is available. With no
+      connection the page falls back to system fonts and every calculation is unaffected.</p>
+    </div>
+  </details>
+</footer>
+
+<script>
+"use strict";
+/* ==================================================================
+   869-MTR  -  motor protection test-value calculator
+   GE Multilin 869 Motor Protection  x  Omicron CMC 356
+   Built on the 845-VEC core.  What is specific to a motor relay is
+   the thermal model: an equivalent heating current, a curve that has
+   to sit under the machine's own locked-rotor damage point, and a
+   thermal capacity that carries over between tests.
+   All internal work is in SECONDARY quantities unless named _pri.
+   ================================================================== */
+
+/* ---------------- complex arithmetic, angles in degrees ------------- */
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const cx  = (re, im) => ({ re, im });
+const pol = (m, a) => ({ re: m * Math.cos(a * D2R), im: m * Math.sin(a * D2R) });
+const add = (x, y) => cx(x.re + y.re, x.im + y.im);
+const sub = (x, y) => cx(x.re - y.re, x.im - y.im);
+const mul = (x, y) => cx(x.re * y.re - x.im * y.im, x.re * y.im + x.im * y.re);
+const div = (x, y) => { const d = y.re * y.re + y.im * y.im;
+  return d === 0 ? cx(0, 0) : cx((x.re * y.re + x.im * y.im) / d, (x.im * y.re - x.re * y.im) / d); };
+const conj  = x => cx(x.re, -x.im);
+const scale = (x, k) => cx(x.re * k, x.im * k);
+const mag   = x => Math.hypot(x.re, x.im);
+const ang   = x => (mag(x) < 1e-12 ? 0 : Math.atan2(x.im, x.re) * R2D);
+const wrap  = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
+const A1 = pol(1, 120), A2 = pol(1, 240);
+function seq(ia, ib, ic) {
+  return { z: scale(add(add(ia, ib), ic), 1 / 3),
+    p: scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3),
+    n: scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3) };
+}
+const fmt  = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d));
+const fmtA = v => (!isFinite(v) ? '—' : (wrap(v) >= 0 ? '+' : '−') + Math.abs(wrap(v)).toFixed(1) + '°');
+const fmtT = t => (t == null || !isFinite(t)) ? '—'
+  : t >= 3600 ? fmt(t / 3600, 2) + ' h' : t >= 120 ? fmt(t / 60, 2) + ' min' : fmt(t, t < 10 ? 2 : 1) + ' s';
+
+/* ---------------- inverse-time curve library (50/51 elements) ------- */
+const CURVES = {
+  'IEEE Mod Inv':   { f: 'ieee', A: 0.0515, B: 0.1140, p: 0.02 },
+  'IEEE Very Inv':  { f: 'ieee', A: 19.61,  B: 0.491,  p: 2.0  },
+  'IEEE Ext Inv':   { f: 'ieee', A: 28.2,   B: 0.1217, p: 2.0  },
+  'IEC Curve A (SI)':  { f: 'iec', K: 0.14, E: 0.02 },
+  'IEC Curve B (VI)':  { f: 'iec', K: 13.5, E: 1.0  },
+  'IEC Curve C (EI)':  { f: 'iec', K: 80.0, E: 2.0  },
+  'IEC Short Inverse': { f: 'iec', K: 0.05, E: 0.04 },
+  'IAC Inverse':       { f: 'iac', A: 0.2078, B: 0.8630, C: 0.8000, D: -0.4180, E: 0.1947 },
+  'IAC Very Inverse':  { f: 'iac', A: 0.0900, B: 0.7955, C: 0.1000, D: -1.2885, E: 7.9586 },
+  'IAC Ext Inverse':   { f: 'iac', A: 0.0040, B: 0.6379, C: 0.6200, D:  1.7872, E: -0.2461 },
+  'Definite Time':  { f: 'def' }
+};
+function curveTime(name, M, tdm) {
+  const c = CURVES[name];
+  if (!c) return null;
+  if (c.f === 'def') return tdm;
+  if (M <= 1.0001) return null;
+  if (c.f === 'ieee') return tdm * (c.A / (Math.pow(M, c.p) - 1) + c.B);
+  if (c.f === 'iec')  return tdm * (c.K / (Math.pow(M, c.E) - 1));
+  if (c.f === 'iac') { const d = M - c.C; if (d <= 0) return null;
+    return tdm * (c.A + c.B / d + c.D / (d * d) + c.E / (d * d * d)); }
+  return null;
+}
+
+/* ==================================================================
+   CONFIGURATION — worked sample: 1500 hp, 4.16 kV induction motor
+   ================================================================== */
+const SAMPLE = {
+  kv: 4.16, fla: 180, sf: 1.15, hp: 1500, pf: 0.89, freq: 60, rot: 'ABC', type: 'ind',
+  lra: 6.0, lrtc: 20, lrth: 15, acc: 8.0, start: 3, tbs: 20,
+  cmode: 'std', cm: 4.0, ca: 87.4, cn: 2.0, cref: 'fla', fitI: 6.0, fitT: 10.0,
+  k: 6, hcr: 0.75, taur: 15, taus: 30, tau_i: 20, kf: 1.05,
+  ctp: 200, cts: 5, ctgp: 50, ctgs: 5,
+  vtp: 4160, vts: 120, vtc: 'wye', diff: 'cb',
+  cmc: '3x', imax: 32, vmax: 300
+};
+let CFG = Object.assign({}, SAMPLE);
+
+function base() {
+  const c = CFG;
+  const ctr = c.ctp / c.cts, ctrg = c.ctgp / c.ctgs, vtr = c.vtp / c.vts;
+  const vLLs = c.vts, vLNs = c.vtc === 'wye' ? c.vts / Math.sqrt(3) : c.vts;
+  const flaSec = c.fla / ctr;
+  return {
+    ctr, ctrg, vtr, vLLs, vLNs, flaSec,
+    lraPri: c.lra * c.fla, lraSec: c.lra * flaSec,
+    sfaPri: c.sf * c.fla,  sfaSec: c.sf * flaSec,
+    ctPri: e => (e === 'G' ? c.ctgp : c.ctp),
+    ctSec: e => (e === 'G' ? c.ctgs : c.cts),
+    ctrOf: e => (e === 'G' ? ctrg : ctr),
+    /* rated kVA / kW from the nameplate, for the power elements */
+    kW: c.hp * 0.7457, kVA: c.hp * 0.7457 / Math.max(0.1, c.pf)
+  };
+}
+
+/* ------------------------------------------------------------------
+   THERMAL MODEL
+   Ieq = sqrt( I1² + K·I2² ) in per unit of FLA — the negative-sequence
+   term is what makes a motor relay different from every other one:
+   unbalance heats the rotor far harder than the same current balanced.
+   ------------------------------------------------------------------ */
+const ieqPu = (i1pu, i2pu) => Math.sqrt(i1pu * i1pu + CFG.k * i2pu * i2pu);
+
+/* the constant A, either as entered or fitted from a point off the relay's own curve */
+function curveA() {
+  if (CFG.cmode !== 'fit') return CFG.ca;
+  const r = CFG.cref === 'sf' ? CFG.sf : 1;
+  const m = CFG.fitI / r;
+  const d = Math.pow(m, CFG.cn) - 1;
+  return d > 0 && CFG.cm > 0 ? CFG.fitT * d / CFG.cm : CFG.ca;
+}
+/* operate time for an equivalent current expressed in × FLA.  hot = true
+   applies the hot/cold ratio.  null means the curve never operates. */
+function thermalTime(iFla, hot) {
+  if (!(iFla > 0)) return null;
+  let t;
+  if (CFG.cmode === 'iec') {
+    const I = iFla, Ith = CFG.kf * CFG.sf, tau = CFG.tau_i * 60;
+    const nu = I * I, de = I * I - Ith * Ith;
+    t = de > 0 ? tau * Math.log(nu / de) : null;
+  } else {
+    const r = CFG.cref === 'sf' ? CFG.sf : 1;
+    const m = iFla / r, d = Math.pow(m, CFG.cn) - 1;
+    t = d > 0 ? CFG.cm * curveA() / d : null;
+  }
+  if (t == null) return null;
+  return hot ? t * CFG.hcr : t;
+}
+/* thermal capacity accumulates at 100% divided by the operate time */
+const tcuRate = (iFla, hot) => { const t = thermalTime(iFla, hot); return t ? 100 / t : 0; };
+/* stopped or running exponential decay */
+const tcuDecay = (tcu0, minutes, running) =>
+  tcu0 * Math.exp(-minutes / Math.max(0.01, running ? CFG.taur : CFG.taus));
+
+/* ==================================================================
+   CHANNEL MAPPING  ->  Omicron CMC 356 outputs
+   ================================================================== */
+const PH = ['L1', 'L2', 'L3'], PHC = ['ch-l1', 'ch-l2', 'ch-l3'];
+function chans(v, i1, i2, f, v4) {
+  const F = f == null ? CFG.freq : f, out = [], mode = CFG.cmc;
+  if (v)  v.forEach((p, k) => p && out.push({ ch: 'V ' + PH[k], cls: PHC[k], mag: p.m, unit: 'V', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (v4) out.push({ ch: 'V 4', cls: 'ch-n', mag: v4.m, unit: 'V', ang: v4.a, freq: v4.f == null ? F : v4.f, note: v4.n || '' });
+  const p1 = mode === '6x' ? 'I A-' : 'I ';
+  if (i1) i1.forEach((p, k) => p && out.push({ ch: p1 + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (i2 && mode === '6x') i2.forEach((p, k) => p && out.push({ ch: 'I B-' + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  return out;
+}
+const P  = (m, a, n) => ({ m, a, n });
+const P3 = (m, a, rot) => { const s = (rot || CFG.rot) === 'ACB' ? +120 : -120;
+  return [P(m, a), P(m, a + s), P(m, a - s)]; };
+const nullTriple = () => [P(0, 0), P(0, 0), P(0, 0)];
+
+function checkChannels(list) {
+  const n = [];
+  const iMax = Math.max(0, ...list.filter(c => c.unit === 'A').map(c => c.mag));
+  const vMax = Math.max(0, ...list.filter(c => c.unit === 'V').map(c => c.mag));
+  if (iMax > CFG.imax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak demand ' + fmt(iMax, 2) + ' A exceeds the ' + fmt(CFG.imax, 1) + ' A per-channel limit. Locked-rotor testing on a motor relay usually needs the 3 × 32 A arrangement — a motor relay has one CT set, so nothing is lost by using it.' });
+  else if (iMax > 0.85 * CFG.imax)
+    n.push({ lvl: 'warn', lb: 'Near limit', txt: 'Peak demand ' + fmt(iMax, 2) + ' A is within 15% of the channel limit. Confirm the amplifier holds it into the relay burden for the whole run — thermal tests are long.' });
+  if (vMax > CFG.vmax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak voltage ' + fmt(vMax, 1) + ' V exceeds the ' + fmt(CFG.vmax, 0) + ' V channel limit.' });
+  return n;
+}
+
+/* ==================================================================
+   TIME–CURRENT CURVE  (log–log)
+   geo: { curves:[{pts:[[iFla,t],..], cls}], marks:[{i,t,cls,lab}],
+          points:[{i,t,sel,lab}] }
+   ================================================================== */
+function tccSVG(geo, W) {
+  const Wd = W || 660, H = 400, mL = 48, mR = 14, mT = 14, mB = 34;
+  const x0 = mL, x1 = Wd - mR, y0 = mT, y1 = H - mB;
+  let xMax = 10, tLo = 1e9, tHi = 1e-9;
+  const scan = (i, t) => { if (i > 0) xMax = Math.max(xMax, i * 1.15);
+    if (t > 0 && isFinite(t)) { tLo = Math.min(tLo, t); tHi = Math.max(tHi, t); } };
+  (geo.curves || []).forEach(c => c.pts.forEach(p => scan(p[0], p[1])));
+  (geo.marks || []).forEach(m => scan(m.i, m.t));
+  (geo.points || []).forEach(p => scan(p.i, p.t));
+  if (tLo > tHi) { tLo = 1; tHi = 100; }
+  const yLo = Math.max(0.01, Math.pow(10, Math.floor(Math.log10(tLo * 0.7))));
+  const yHi = Math.min(1e6, Math.pow(10, Math.ceil(Math.log10(tHi * 1.4))));
+  const lx = v => Math.log10(Math.max(1, v)) / Math.log10(xMax);
+  const ly = v => (Math.log10(yHi) - Math.log10(Math.min(yHi, Math.max(yLo, v)))) / (Math.log10(yHi) - Math.log10(yLo));
+  const px = v => x0 + (x1 - x0) * lx(v), py = v => y0 + (y1 - y0) * ly(v);
+  let s = '';
+  /* vertical decade + interval lines in × FLA */
+  const xTicks = [];
+  for (let d = 0; d <= 2; d++) for (let m = 1; m <= 9; m++) { const v = m * Math.pow(10, d); if (v >= 1 && v <= xMax) xTicks.push(v); }
+  xTicks.forEach(v => {
+    const major = [1, 2, 5, 10, 20, 50, 100].indexOf(v) >= 0;
+    s += '<line class="' + (major ? 'tcc-major' : 'tcc-minor') + '" x1="' + px(v).toFixed(1) + '" y1="' + y0 + '" x2="' + px(v).toFixed(1) + '" y2="' + y1 + '"/>';
+    if (major) s += '<text class="tcc-lab" x="' + px(v).toFixed(1) + '" y="' + (y1 + 12) + '" text-anchor="middle">' + v + '</text>';
+  });
+  /* horizontal decades in seconds */
+  for (let e = Math.log10(yLo); e <= Math.log10(yHi) + 1e-9; e++) {
+    for (let m = 1; m <= 9; m++) {
+      const v = m * Math.pow(10, e);
+      if (v < yLo || v > yHi) continue;
+      const major = m === 1;
+      s += '<line class="' + (major ? 'tcc-major' : 'tcc-minor') + '" x1="' + x0 + '" y1="' + py(v).toFixed(1) + '" x2="' + x1 + '" y2="' + py(v).toFixed(1) + '"/>';
+      if (major) s += '<text class="tcc-lab" x="' + (x0 - 5) + '" y="' + (py(v) + 3).toFixed(1) + '" text-anchor="end">' +
+        (v >= 1 ? String(v) : String(v).replace(/0+$/, '')) + '</text>';
+    }
+  }
+  s += '<rect class="tcc-frame" x="' + x0 + '" y="' + y0 + '" width="' + (x1 - x0) + '" height="' + (y1 - y0) + '" fill="none"/>';
+  s += '<text class="tcc-ax" x="' + ((x0 + x1) / 2) + '" y="' + (H - 4) + '" text-anchor="middle">current — × FLA</text>';
+  s += '<text class="tcc-ax" transform="translate(11,' + ((y0 + y1) / 2) + ') rotate(-90)" text-anchor="middle">time — seconds</text>';
+  (geo.curves || []).forEach(c => {
+    const d = c.pts.filter(p => p[1] > 0 && isFinite(p[1]))
+      .map((p, k) => (k ? 'L' : 'M') + px(p[0]).toFixed(1) + ' ' + py(p[1]).toFixed(1)).join(' ');
+    if (d) s += '<path class="' + (c.cls || 'tcc-cold') + '" d="' + d + '"/>';
+  });
+  (geo.marks || []).forEach((m, mi) => {
+    const X = px(m.i), Y = py(m.t), dy = [-10, 4, 18][mi % 3];
+    if (m.cls === 'tcc-acc') {
+      s += '<line class="tcc-acc" x1="' + X.toFixed(1) + '" y1="' + y0 + '" x2="' + X.toFixed(1) + '" y2="' + y1 + '"/>';
+      s += '<line class="tcc-acc" x1="' + x0 + '" y1="' + Y.toFixed(1) + '" x2="' + X.toFixed(1) + '" y2="' + Y.toFixed(1) + '"/>';
+    }
+    s += '<circle class="tcc-dmg-dot" cx="' + X.toFixed(1) + '" cy="' + Y.toFixed(1) + '" r="4"/>';
+    if (m.lab) {
+      s += '<line class="tcc-minor" x1="' + (X - 6).toFixed(1) + '" y1="' + Y.toFixed(1) + '" x2="' + (X - 9).toFixed(1) + '" y2="' + (Y + dy - 3).toFixed(1) + '"/>';
+      s += '<text class="tcc-key" fill="currentColor" x="' + (X - 11).toFixed(1) + '" y="' + (Y + dy).toFixed(1) + '" text-anchor="end">' + m.lab + '</text>';
+    }
+  });
+  (geo.points || []).forEach(p => {
+    const X = px(p.i), Y = py(p.t);
+    if (p.sel) s += '<circle class="tcc-pt-sel" cx="' + X.toFixed(1) + '" cy="' + Y.toFixed(1) + '" r="7.5"/>';
+    s += '<circle class="tcc-pt" cx="' + X.toFixed(1) + '" cy="' + Y.toFixed(1) + '" r="3.6"/>';
+    if (p.lab) s += '<text class="tcc-key" fill="currentColor" x="' + (X + 10).toFixed(1) + '" y="' + (Y - 8).toFixed(1) + '">' + p.lab + '</text>';
+  });
+  return '<svg class="tcc" viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="Time-current curve">' + s + '</svg>';
+}
+/* sample the overload curve across the plotted range */
+function curvePts(hot, xMax) {
+  const out = [], lo = (CFG.cref === 'sf' ? CFG.sf : 1) * 1.02;
+  const n = 90, hi = xMax || 12;
+  for (let k = 0; k <= n; k++) {
+    const i = lo * Math.pow(hi / lo, k / n), t = thermalTime(i, hot);
+    if (t && isFinite(t) && t < 1e6) out.push([i, t]);
+  }
+  return out;
+}
+
+/* ==================================================================
+   SEQUENCE TIMELINE
+   ================================================================== */
+function timelineSVG(states, W) {
+  const Wd = W || 660, H = 124, m = 10, bandY = 56, bandH = 30;
+  const raw = states.map(s => Math.max(0, s.dur || 0));
+  const tot = raw.reduce((a, b) => a + b, 0) || 1;
+  const floorW = tot * 0.07;
+  const w = raw.map(d => Math.max(d, floorW));
+  const wt = w.reduce((a, b) => a + b, 0) || 1;
+  const usable = Wd - 2 * m;
+  let x = m, s = '', evN = 0;
+  s += '<line class="tl-axis" x1="' + m + '" y1="' + (bandY + bandH + 1) + '" x2="' + (Wd - m) + '" y2="' + (bandY + bandH + 1) + '"/>';
+  states.forEach((st, k) => {
+    const wpx = usable * w[k] / wt;
+    s += '<rect class="tl-' + (st.kind || 'run') + '" x="' + x.toFixed(1) + '" y="' + bandY + '" width="' + wpx.toFixed(1) + '" height="' + bandH + '" stroke="none"/>';
+    s += '<rect class="tl-seg" x="' + x.toFixed(1) + '" y="' + bandY + '" width="' + wpx.toFixed(1) + '" height="' + bandH + '" fill="none"/>';
+    if (st.sel) s += '<rect class="tl-sel" x="' + (x + 1).toFixed(1) + '" y="' + (bandY - 1) + '" width="' + Math.max(2, wpx - 2).toFixed(1) + '" height="' + (bandH + 2) + '"/>';
+    const cxx = x + wpx / 2;
+    if (wpx > 26) {
+      s += '<text class="tl-lab" x="' + cxx.toFixed(1) + '" y="' + (bandY - 7) + '" text-anchor="middle">' + st.lab + '</text>';
+      s += '<text class="tl-dur" x="' + cxx.toFixed(1) + '" y="' + (bandY + bandH + 14) + '" text-anchor="middle">' +
+           (st.dur >= 60 ? fmt(st.dur / 60, 1) + ' min' : st.dur >= 1 ? fmt(st.dur, 1) + ' s' : fmt(st.dur * 1000, 0) + ' ms') + '</text>';
+    }
+    if (st.ev) {
+      /* two rows, both clear of the state label that sits at bandY - 7 */
+      const row = (evN++ % 2) ? 13 : 0;
+      s += '<line class="tl-ev" x1="' + x.toFixed(1) + '" y1="' + (bandY - 34 + row) + '" x2="' + x.toFixed(1) + '" y2="' + (bandY + bandH + 4) + '"/>';
+      s += '<text class="tl-evlab" x="' + (x + 3).toFixed(1) + '" y="' + (bandY - 37 + row) + '">' + st.ev + '</text>';
+    }
+    x += wpx;
+  });
+  s += '<text class="tl-dur" x="' + m + '" y="' + (H - 4) + '">total ' + fmtT(tot) + ' · segment widths are not to scale below ' + fmtT(floorW) + '</text>';
+  return '<svg class="tl" viewBox="0 0 ' + Wd + ' ' + H + '" role="img" aria-label="Sequence timeline">' + s + '</svg>';
+}
+
+/* ==================================================================
+   PHASOR RENDERER
+   ================================================================== */
+function phasorSVG(data, size) {
+  const S = size || 300, C = S / 2, R = S * 0.365;
+  const vs = (data.v || []).filter(x => x && isFinite(x.mag));
+  const is = (data.i || []).filter(x => x && isFinite(x.mag));
+  const vMax = Math.max(1e-9, ...vs.map(x => Math.abs(x.mag)));
+  const iMax = Math.max(1e-9, ...is.map(x => Math.abs(x.mag)));
+  let g = '';
+  [0.25, 0.5, 0.75, 1].forEach(f =>
+    g += '<circle class="ph-grid" cx="' + C + '" cy="' + C + '" r="' + (R * f).toFixed(1) + '" fill="none"/>');
+  for (let a = 0; a < 360; a += 30) {
+    const x = C + R * Math.cos(a * D2R), y = C - R * Math.sin(a * D2R);
+    g += '<line class="' + (a % 90 === 0 ? 'ph-axis' : 'ph-grid') + '" x1="' + C + '" y1="' + C + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>';
+  }
+  [[0, '0°'], [90, '90°'], [180, '180°'], [270, '270°']].forEach(([a, t]) => {
+    const r = R + 13, x = C + r * Math.cos(a * D2R), y = C - r * Math.sin(a * D2R);
+    g += '<text class="ph-tick" x="' + x.toFixed(1) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="middle">' + t + '</text>';
+  });
+  const draw = (arr, max, kind) => arr.forEach(p => {
+    const L = R * Math.min(1, Math.abs(p.mag) / max);
+    if (L < 1.5) return;
+    const a = p.ang * D2R, x = C + L * Math.cos(a), y = C - L * Math.sin(a);
+    const hw = 4.2, hl = 9;
+    const bx = C + (L - hl) * Math.cos(a), by = C - (L - hl) * Math.sin(a);
+    const dx = -Math.sin(a) * hw, dy = -Math.cos(a) * hw;
+    const cls = p.cls.replace('ch-', kind === 'v' ? 'v-' : 'i-') + (p.alt ? ' alt' : '');
+    const fcl = p.cls.replace('ch-', 'f-');
+    g += '<line class="' + (kind === 'v' ? 'vec-v ' : 'vec-i ') + cls + '" x1="' + C + '" y1="' + C + '" x2="' + bx.toFixed(1) + '" y2="' + by.toFixed(1) + '"/>';
+    g += '<polygon class="' + fcl + '" points="' + x.toFixed(1) + ',' + y.toFixed(1) + ' ' +
+      (bx + dx).toFixed(1) + ',' + (by + dy).toFixed(1) + ' ' + (bx - dx).toFixed(1) + ',' + (by - dy).toFixed(1) + '"/>';
+  });
+  draw(vs, vMax, 'v'); draw(is, iMax, 'i');
+  return '<svg class="phasor" viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Phasor diagram">' + g + '</svg>';
+}
+function phasorLegend(data) {
+  const rows = [];
+  const vm = Math.max(0, ...(data.v || []).map(x => x.mag)), im = Math.max(0, ...(data.i || []).map(x => x.mag));
+  if (vm > 0 || im > 0) rows.push('<div class="scale">full scale ' +
+    (vm > 0 ? fmt(vm, 1) + ' V' : '') + (vm > 0 && im > 0 ? ' · ' : '') + (im > 0 ? fmt(im, 2) + ' A' : '') + '</div>');
+  (data.v || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ')"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 2) + ' V ' + fmtA(p.ang) + '</span></span></div>'));
+  (data.i || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ');border-top-style:' + (p.alt ? 'dotted' : 'dashed') + '"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 3) + ' A ' + fmtA(p.ang) + '</span></span></div>'));
+  if (!rows.length) rows.push('<div class="lgi"><span></span><span class="val">no quantities</span></div>');
+  return rows.join('');
+}
+
+/* ==================================================================
+   ELEMENT LIBRARY
+   ================================================================== */
+const num = (k, l, d, u, st) => ({ k, l, d, u, t: 'num', step: st == null ? 0.01 : st });
+const sel = (k, l, d, o, u) => ({ k, l, d, u, t: 'sel', opts: o });
+const txt = (k, l, d, u) => ({ k, l, d, u, t: 'txt' });
+/* Show a user-supplied multiple exactly as it was entered. Rounding it to a
+   fixed place made a label disagree with the current beneath it — "2.8x
+   pickup" against an injection of 2.75x, which reads as a test-set error on
+   the record rather than as a rounded caption. */
+const fmtX = v => !isFinite(v) ? '\u2014'
+  : String(Math.round(v * 1000) / 1000);
+
+const multiplesOf = s => String(s || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
+const ELEMENTS = [];
+const reg = e => { ELEMENTS.push(e); return e; };
+
+function ocPickup(s, b) {
+  const e = s.e || 'P';
+  if (s.pu === 'A_sec') return { sec: s.pkp, pri: s.pkp * b.ctrOf(e), e };
+  if (s.pu === 'A_pri') return { sec: s.pkp / b.ctrOf(e), pri: s.pkp, e };
+  if (s.pu === 'xFLA')  return { sec: s.pkp * b.flaSec, pri: s.pkp * CFG.fla, e };
+  return { sec: s.pkp * b.ctSec(e), pri: s.pkp * b.ctPri(e), e };            /* ×CT */
+}
+function vPickup(s, b) {
+  if (s.vu === 'V_sec') return { sec: s.vpkp, pri: s.vpkp * b.vtr };
+  return { sec: s.vpkp * b.vLNs, pri: s.vpkp * b.vLNs * b.vtr };             /* ×VT L-N */
+}
+/* a balanced three-phase injection at a given multiple of FLA */
+function motorPoint(id, name, detail, iFla, expect, expectSub, verdict, Vlev, single) {
+  const b = base(), I = iFla * b.flaSec, la = -Math.acos(Math.min(1, CFG.pf)) * R2D;
+  const v = P3(Vlev == null ? b.vLNs : Vlev, 0);
+  const i = single ? [P(I, la), P(0, 0), P(0, 0)] : P3(I, la);
+  return { id, name, detail, expect, expectSub, verdict, iFla,
+    channels: chans(v, i, null),
+    phasor: { v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+              i: i.filter(p => p.m > 0).map((p, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })) },
+    sheet: ['', name, fmt(I, 3) + ' A sec (' + fmt(iFla, 2) + ' ×FLA)', expectSub || '', expect] };
+}
+/* one state of a timed sequence */
+function stPoint(id, name, detail, Vlev, iFla, expect, expectSub, verdict) {
+  const b = base(), I = iFla * b.flaSec, la = -Math.acos(Math.min(1, CFG.pf)) * R2D;
+  const v = Vlev > 0 ? P3(Vlev, 0) : P3(0, 0);
+  const i = I > 0 ? P3(I, la) : nullTriple();
+  return { id, name, detail, expect, expectSub, verdict, iFla,
+    channels: chans(v, i, null),
+    phasor: { v: v.filter(p => p.m > 0).map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+              i: i.filter(p => p.m > 0).map((p, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })) },
+    sheet: ['', name, fmt(I, 3) + ' A sec (' + fmt(iFla, 2) + ' ×FLA)', fmt(Vlev, 1) + ' V', expect] };
+}
+/* the standard plot furniture: overload curves plus the motor's own limits */
+function thermalGeo(pts) {
+  const b = base(), xm = Math.max(12, CFG.lra * 1.25);
+  return {
+    curves: [{ pts: curvePts(false, xm), cls: 'tcc-cold' }, { pts: curvePts(true, xm), cls: 'tcc-hot' }],
+    marks: [
+      { i: CFG.lra, t: CFG.lrtc, cls: 'tcc-damage', lab: 'stall cold' },
+      { i: CFG.lra, t: CFG.lrth, cls: 'tcc-damage', lab: 'stall hot' },
+      { i: CFG.lra, t: CFG.acc, cls: 'tcc-acc', lab: 'accel' }
+    ],
+    points: pts || []
+  };
+}
+
+/* ================= 49  THERMAL OVERLOAD =========================== */
+reg({
+  ansi: '49', name: 'Thermal overload model', group: 'Thermal',
+  desc: 'The centre of a motor relay. Operate time comes from the equivalent heating current, which folds negative-sequence unbalance in at K times its weight — so an unbalanced test current trips far faster than the same magnitude balanced.',
+  fields: [num('pkp', 'Overload pickup', 1.15, '× FLA', 0.01),
+    sel('state', 'Thermal state at start', 'cold', [['cold', 'Cold — 0% capacity used'], ['hot', 'Hot — at the hot/cold ratio']], '')],
+  opts: [txt('muls', 'Test multiples', '1.5, 2, 3, 4, 6', '× FLA'),
+    num('marg', 'Pickup margin', 5, '%', 1),
+    sel('unb', 'Unbalance', 'none', [['none', 'Balanced — I2 = 0'], ['half', 'One phase at 50% — check the K factor']], '')],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, hot = s.state === 'hot', pts = [];
+    /* the pickup bracket is balanced regardless of the unbalance option */
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const iF = s.pkp * f, t = thermalTime(iF, hot);
+      const p = motorPoint('pk' + f, 'Pickup — ' + rel + ' threshold',
+        fmt(f * 100, 0) + '% of the ' + fmt(s.pkp, 2) + ' ×FLA overload pickup',
+        iF, verdict, vt === 'op' ? 'Very long — ' + fmtT(t) + ' from the curve' : 'No accumulation', vt);
+      p.tcc = { i: iF, t: t || 1e5 };
+      p.sheet[0] = '49'; pts.push(p);
+    });
+    multiplesOf(o.muls).forEach(M => {
+      let iF = M, note = 'balanced', i2 = 0;
+      if (o.unb === 'half') {
+        /* one phase at half gives I1 = (2+f)/3 and I2 = (1−f)/3 with f = 0.5 */
+        const f = 0.5; const i1 = M * (2 + f) / 3; i2 = M * (1 - f) / 3;
+        iF = ieqPu(i1, i2);
+        note = 'L3 at 50% — I1 ' + fmt(i1, 3) + ', I2 ' + fmt(i2, 3) + ', Ieq ' + fmt(iF, 3) + ' ×FLA';
+      }
+      const t = thermalTime(iF, hot);
+      const p = o.unb === 'half'
+        ? (() => {
+            const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = M * b.flaSec;
+            const v = P3(b.vLNs, 0), i = [P(I, la), P(I, la - 120), P(I * 0.5, la + 120, 'reduced to half')];
+            return { id: 't' + M, name: 'Timing at ' + fmtX(M) + ' ×FLA', detail: note,
+              expect: fmtT(t), expectSub: 'Equivalent heating current ' + fmt(iF, 3) + ' ×FLA, not ' + fmt(M, 2),
+              verdict: 'nu', iFla: iF,
+              channels: chans(v, i, null),
+              phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                        i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+              sheet: ['49', 'Timing ' + fmtX(M) + ' ×FLA unbalanced', fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * 0.5, 3) + ' A', fmtT(t), 'TIME'] };
+          })()
+        : motorPoint('t' + M, 'Timing at ' + fmtX(M) + ' ×FLA', note + ' · ' + (hot ? 'hot' : 'cold') + ' curve',
+            iF, fmtT(t), 'From the ' + (hot ? 'hot' : 'cold') + ' overload curve', 'nu');
+      p.tcc = { i: iF, t: t || 1e5 };
+      if (p.sheet) p.sheet[0] = '49';
+      pts.push(p);
+    });
+    const tLra = thermalTime(CFG.lra, hot);
+    const notes = [
+      { lvl: 'note', lb: 'Equivalent current', txt: 'Ieq = √(I1² + K·I2²) with K = ' + fmt(CFG.k, 1) + '. A balanced injection has no I2 and Ieq is just the applied current; anything unbalanced trips sooner than its magnitude suggests, which is the whole point of the term.' },
+      { lvl: 'warn', lb: 'Thermal memory', txt: 'The model accumulates. Every point in this table leaves capacity behind, so the second reads short unless the thermal capacity is reset in the relay or given ' + fmt(5 * CFG.taur, 0) + ' minutes to decay at the running time constant. Reset between points if the relay allows it and say so on the record.' }
+    ];
+    if (CFG.cmode === 'std') notes.push({ lvl: 'warn', lb: 'Curve constant', txt: 'The curve is the general form t = CM·A/(I&#8319;−1) with A = ' + fmt(curveA(), 1) + ' s as entered. Published motor overload families differ by product, so read one point off the relay\'s own curve display and use the fit mode on the Setup tab rather than trusting this default.' });
+    if (CFG.cmode === 'fit') notes.push({ lvl: 'good', lb: 'Curve fitted', txt: 'A = ' + fmt(curveA(), 1) + ' s, solved from the point you read off the relay: ' + fmt(CFG.fitI, 2) + ' ×FLA at ' + fmtT(CFG.fitT) + '. Check a second point at a different multiple to confirm the exponent as well as the constant.' });
+    if (tLra && tLra > (hot ? CFG.lrth : CFG.lrtc))
+      notes.push({ lvl: 'bad', lb: 'Curve above damage', txt: 'At locked rotor the ' + (hot ? 'hot' : 'cold') + ' curve gives ' + fmtT(tLra) + ' but the motor\'s safe stall time is ' + fmtT(hot ? CFG.lrth : CFG.lrtc) + '. The protection sits above the damage point — the motor is not protected against a stall and that is a setting finding, not a test failure.' });
+    return {
+      readout: [{ k: 'FLA', v: fmt(b.flaSec, 3), u: 'A sec' }, { k: 'Overload pickup', v: fmt(s.pkp * b.flaSec, 3), u: 'A sec' },
+        { k: 'Curve A', v: fmt(curveA(), 1), u: 's' }, { k: 'Multiplier', v: fmt(CFG.cm, 2), u: 'CM' },
+        { k: 't at 6 ×FLA', v: fmtT(thermalTime(6, hot)), u: '' },
+        { k: 'K factor', v: fmt(CFG.k, 1), u: 'negative seq' }],
+      points: pts, tcc: thermalGeo(pts.map(p => ({ i: p.tcc.i, t: p.tcc.t, sel: false }))), notes
+    };
+  }
+});
+
+/* ================= 49TC  THERMAL CAPACITY ========================= */
+reg({
+  ansi: '49TC', name: 'Thermal capacity and lockout', group: 'Thermal',
+  desc: 'The state variable behind the curve. Capacity accumulates at 100% divided by the operate time and decays exponentially when the current falls away — which is why a hot restart behaves differently from a cold one and why the order of your tests matters.',
+  fields: [num('lock', 'Restart lockout level', 100, '% capacity used', 1),
+    num('alarm', 'Alarm level', 75, '% capacity used', 1)],
+  opts: [txt('muls', 'Accumulation levels', '2, 4, 6', '× FLA'),
+    txt('decay', 'Decay checkpoints', '5, 15, 30, 60', 'minutes stopped')],
+  compute(s, o) {
+    const b = base(), pts = [];
+    multiplesOf(o.muls).forEach(M => {
+      const t = thermalTime(M, false), rate = tcuRate(M, false);
+      const tAlarm = t ? t * s.alarm / 100 : null, tLock = t ? t * s.lock / 100 : null;
+      const p = motorPoint('a' + M, 'Accumulate at ' + fmtX(M) + ' ×FLA',
+        'Capacity rises at ' + fmt(rate, 3) + ' % per second from a cold start',
+        M, fmtT(tAlarm) + ' to alarm', 'Trip at ' + fmtT(tLock) + ' · hold the current, do not interrupt it', 'nu');
+      p.tcc = { i: M, t: t || 1e5 };
+      p.sheet[0] = '49TC'; p.sheet[3] = 'alarm ' + fmtT(tAlarm) + ', trip ' + fmtT(tLock);
+      pts.push(p);
+    });
+    multiplesOf(o.decay).forEach(min => {
+      const rem = tcuDecay(100, min, false);
+      const p = stPoint('d' + min, 'Decay — ' + fmt(min, 0) + ' min stopped',
+        'From 100% used, current removed, motor stopped. τ stopped is ' + fmt(CFG.taus, 0) + ' min.',
+        0, 0, fmt(rem, 1) + '% remaining', rem < s.lock ? 'Restart permitted below ' + fmt(s.lock, 0) + '%' : 'Still locked out', rem < s.lock ? 'op' : 'no');
+      p.sheet[0] = '49TC'; p.sheet[3] = fmt(rem, 1) + '% used';
+      pts.push(p);
+    });
+    const tToRestart = CFG.taus * Math.log(100 / Math.max(1, s.lock * 0.99));
+    return {
+      readout: [{ k: 'Lockout', v: fmt(s.lock, 0), u: '% used' }, { k: 'Alarm', v: fmt(s.alarm, 0), u: '% used' },
+        { k: 'τ running', v: fmt(CFG.taur, 0), u: 'min' }, { k: 'τ stopped', v: fmt(CFG.taus, 0), u: 'min' },
+        { k: 'Rate at 6 ×FLA', v: fmt(tcuRate(6, false), 2), u: '%/s' },
+        { k: 'Full decay', v: fmt(5 * CFG.taus, 0), u: 'min' }],
+      points: pts, tcc: thermalGeo(pts.filter(p => p.tcc).map(p => ({ i: p.tcc.i, t: p.tcc.t }))),
+      notes: [
+        { lvl: 'note', lb: 'Model', txt: 'Capacity accumulates at 100% ÷ operate time and decays as TCU·e^(−t/τ). Stopped decay uses τ = ' + fmt(CFG.taus, 0) + ' min, so from 100% it takes about ' + fmt(tToRestart, 0) + ' min to fall back under the lockout level and around ' + fmt(5 * CFG.taus, 0) + ' min to reach zero.' },
+        { lvl: 'warn', lb: 'Plan the order', txt: 'This is the element that ruins an unplanned test day. Run every thermal point in one deliberate order, reset the capacity between them where the relay allows it, and record the starting capacity for each — a point run on a warm model is not the point you think you measured.' },
+        { lvl: 'note', lb: 'Reading it back', txt: 'The relay displays thermal capacity used as a live value. Reading it at fixed intervals during an accumulation run is a faster and far more informative test than waiting for a single trip.' }
+      ]
+    };
+  }
+});
+
+/* ================= 48  ACCELERATION TIME ========================== */
+reg({
+  ansi: '48', name: 'Acceleration time / incomplete sequence', group: 'Starting',
+  desc: 'Supervises the start itself: if current has not dropped back from locked rotor within the permitted time, the start is declared incomplete. The test is a sequence, and the interesting result is what happens when the timer and the thermal curve disagree.',
+  fields: [num('tacc', 'Maximum acceleration time', 10.0, 's', 0.5),
+    num('idet', 'Start detection', 2.0, '× FLA — start is declared above this', 0.1),
+    num('trans', 'Transition level', 1.4, '× FLA — start considered complete below this', 0.05)],
+  opts: [num('iacc', 'Start current', 0, '× FLA — 0 uses the nameplate LRA', 0.1),
+    num('tload', 'Prefault hold', 3.0, 's stopped', 0.5)],
+  compute(s, o) {
+    const b = base(), iA = o.iacc > 0 ? o.iacc : CFG.lra, seqA = [], pts = [];
+    const push = (arr, lab, kind, dur, ev, name, detail, Vlev, iFla, expect, sub, verdict) => {
+      arr.push({ lab, kind, dur, ev });
+      const p = stPoint('s' + arr.length, name, detail, Vlev, iFla, expect, sub, verdict);
+      p.tl = arr; p.tlIdx = arr.length - 1;
+      p.sheet[0] = '48'; p.sheet[3] = fmtT(dur);
+      pts.push(p);
+    };
+    push(seqA, 'Stopped', 'stop', o.tload, null, 'Stopped', 'No current, motor at rest', 0, 0, 'READY', 'Start supervision idle', 'nu');
+    push(seqA, 'Accelerating', 'start', CFG.acc, 'START', 'Successful start — acceleration',
+      'Current stepped to ' + fmtX(iA) + ' ×FLA and held for the nameplate acceleration time of ' + fmtT(CFG.acc),
+      b.vLNs * 0.85, iA, 'NO TRIP', 'Inside the ' + fmtT(s.tacc) + ' limit', 'no');
+    push(seqA, 'Running', 'run', 10, 'TRANSITION', 'Successful start — running',
+      'Current dropped to full load, below the ' + fmt(s.trans, 2) + ' ×FLA transition level', b.vLNs, 1.0,
+      'START COMPLETE', 'Acceleration timer resets', 'op');
+    const seqB = [];
+    push(seqB, 'Stopped', 'stop', o.tload, null, 'Stalled start — stopped', 'No current, motor at rest', 0, 0, 'READY', '', 'nu');
+    push(seqB, 'Stalled', 'fault', s.tacc * 1.3, 'START', 'Stalled start — current never drops',
+      'Current held at ' + fmtX(iA) + ' ×FLA past the ' + fmtT(s.tacc) + ' limit — the motor never accelerates',
+      b.vLNs * 0.85, iA, 'TRIP AT ' + fmtT(s.tacc), 'Incomplete sequence, or the thermal curve first — see the note below', 'op');
+    const tTh = thermalTime(iA, false), tThHot = thermalTime(iA, true);
+    const notes = [
+      { lvl: 'note', lb: 'Two timers race', txt: 'At ' + fmtX(iA) + ' ×FLA the acceleration timer expires at ' + fmtT(s.tacc) + ' and the cold thermal curve at ' + fmtT(tTh) + '. Whichever is shorter is what actually trips, and the relay should report which. Confirm the target flags, not just that something operated.' },
+      { lvl: 'note', lb: 'Reduced voltage', txt: 'The start states are shown at 85% of nominal voltage because a real start pulls the terminal voltage down. If the relay has voltage-dependent start supervision this matters; if not, run them at nominal.' }
+    ];
+    if (tThHot && tThHot < CFG.acc)
+      notes.push({ lvl: 'bad', lb: 'Hot start will trip', txt: 'The hot curve reaches trip at ' + fmtT(tThHot) + ' but the motor needs ' + fmtT(CFG.acc) + ' to accelerate. A restart on a warm motor trips on the thermal element before it finishes starting. That is a real finding for the setting engineer — flag it rather than working around it on the test set.' });
+    if (CFG.acc >= s.tacc)
+      notes.push({ lvl: 'bad', lb: 'No margin', txt: 'The nameplate acceleration time of ' + fmtT(CFG.acc) + ' is at or beyond the ' + fmtT(s.tacc) + ' acceleration limit. Every healthy start will be declared incomplete.' });
+    return {
+      readout: [{ k: 'Start current', v: fmt(iA * b.flaSec, 3), u: 'A sec' },
+        { k: 'Start current', v: fmt(iA, 2), u: '× FLA' },
+        { k: 'Accel limit', v: fmtT(s.tacc), u: '' }, { k: 'Nameplate accel', v: fmtT(CFG.acc), u: '' },
+        { k: 'Cold curve there', v: fmtT(tTh), u: '' }, { k: 'Hot curve there', v: fmtT(tThHot), u: '' }],
+      points: pts,
+      tcc: thermalGeo([{ i: iA, t: s.tacc, sel: true, lab: 'accel limit' }]),
+      notes
+    };
+  }
+});
+
+/* ================= 51LR  LOCKED ROTOR / JAM ======================= */
+reg({
+  ansi: '51LR', name: 'Locked rotor and mechanical jam', group: 'Starting',
+  desc: 'Two distinct jobs sharing one name: a rotor that never turns at start, and a running machine that seizes. They are supervised differently, so both are worth proving.',
+  fields: [num('pkp', 'Jam pickup', 2.5, '× FLA', 0.1), num('dly', 'Jam delay', 1.0, 's', 0.1),
+    num('lrpkp', 'Locked rotor pickup', 4.5, '× FLA — at start', 0.1),
+    num('lrdly', 'Locked rotor delay', 2.0, 's', 0.1),
+    num('inhib', 'Start inhibit window', 10.0, 's after start — jam blocked', 0.5)],
+  opts: [num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, pts = [];
+    const mk = (iF, name, detail, expect, sub, verdict) => {
+      const p = motorPoint('j' + name, name, detail, iF, expect, sub, verdict);
+      p.tcc = { i: iF, t: expect.indexOf('s') > 0 ? s.dly : s.lrdly };
+      p.sheet[0] = '51LR'; return p;
+    };
+    pts.push(mk(s.pkp * (1 + m), 'Jam — above pickup', fmt((1 + m) * 100, 0) + '% of the jam setting, motor already running', 'TRIP', 'Operate after ' + fmtT(s.dly), 'op'));
+    pts.push(mk(s.pkp * (1 - m), 'Jam — below pickup', fmt((1 - m) * 100, 0) + '% of the jam setting', 'NO TRIP', 'No operation', 'no'));
+    pts.push(mk(s.lrpkp * (1 + m), 'Locked rotor — above pickup', fmt((1 + m) * 100, 0) + '% of the locked-rotor setting, applied from standstill', 'TRIP', 'Operate after ' + fmtT(s.lrdly), 'op'));
+    const inh = mk(CFG.lra, 'Jam blocked during start', 'Full locked-rotor current applied from standstill — the jam element must stay blocked for the first ' + fmtT(s.inhib), 'JAM BLOCKED', 'A normal start must not look like a jam', 'no');
+    pts.push(inh);
+    const notes = [
+      { lvl: 'warn', lb: 'The blocking point matters most', txt: 'Every healthy start draws far more than the jam pickup. If the start inhibit does not hold for the full ' + fmtT(s.inhib) + ', the motor trips on jam every time it is started — and that is the failure this element is most likely to have in service.' },
+      { lvl: 'note', lb: 'From standstill', txt: 'The locked-rotor points have to be applied as a step from zero current, not ramped up from load. The relay distinguishes a start from a running condition by what came before.' }
+    ];
+    if (s.pkp >= CFG.lra) notes.push({ lvl: 'warn', lb: 'Jam above LRA', txt: 'The jam pickup of ' + fmt(s.pkp, 2) + ' ×FLA is at or above the nameplate locked-rotor current of ' + fmt(CFG.lra, 2) + ' ×FLA. It can never operate on a jam that draws less than a stall — check the setting against the driven load, not the motor.' });
+    return {
+      readout: [{ k: 'Jam pickup', v: fmt(s.pkp * b.flaSec, 3), u: 'A sec' },
+        { k: 'Jam pickup', v: fmt(s.pkp * CFG.fla, 1), u: 'A pri' },
+        { k: 'LR pickup', v: fmt(s.lrpkp * b.flaSec, 3), u: 'A sec' },
+        { k: 'Nameplate LRA', v: fmt(b.lraSec, 3), u: 'A sec' },
+        { k: 'Inhibit', v: fmtT(s.inhib), u: '' }],
+      points: pts, tcc: thermalGeo(pts.map(p => ({ i: p.tcc.i, t: p.tcc.t }))), notes
+    };
+  }
+});
+
+/* ================= 66  STARTS PER HOUR ============================ */
+reg({
+  ansi: '66', name: 'Starts per hour / time between starts', group: 'Starting',
+  desc: 'A counting element, so the test is a run of starts rather than a magnitude. The point that matters is the one where the next start is refused.',
+  fields: [num('sph', 'Starts per hour', 3, 'permitted in a rolling hour', 1),
+    num('tbs', 'Time between starts', 20, 'minutes', 1),
+    num('trest', 'Restart delay after stop', 1.0, 'minutes', 0.5)],
+  opts: [num('tstart', 'Start duration', 8.0, 's of locked-rotor current', 0.5),
+    num('trun', 'Run between starts', 30, 's at full load', 5)],
+  compute(s, o) {
+    const b = base(), N = Math.max(1, Math.round(s.sph)), seq = [], pts = [];
+    const push = (lab, kind, dur, ev, name, detail, Vlev, iFla, expect, sub, verdict) => {
+      seq.push({ lab, kind, dur, ev });
+      const p = stPoint('q' + seq.length, name, detail, Vlev, iFla, expect, sub, verdict);
+      p.tl = seq; p.tlIdx = seq.length - 1;
+      p.sheet[0] = '66'; p.sheet[3] = fmtT(dur);
+      pts.push(p);
+    };
+    for (let k = 1; k <= N; k++) {
+      push('Start ' + k, 'start', o.tstart, 'START ' + k, 'Start ' + k + ' of ' + N,
+        'Locked-rotor current for ' + fmtT(o.tstart) + ', then run', b.vLNs * 0.85, CFG.lra,
+        'PERMITTED', 'Counter advances to ' + k, 'op');
+      push('Run ' + k, 'run', o.trun, null, 'Run after start ' + k, 'Full load, counter holding at ' + k,
+        b.vLNs, 1.0, 'RUNNING', k < N ? (N - k) + ' start' + (N - k > 1 ? 's' : '') + ' left in the hour' : 'No starts left', 'nu');
+      push('Stopped ' + k, 'stop', 5, 'STOP', 'Stopped after start ' + k, 'Current removed', 0, 0,
+        'STOPPED', 'Restart delay of ' + fmtT(s.trest * 60) + ' begins', 'nu');
+    }
+    push('Blocked', 'lock', 60, 'START ' + (N + 1) + ' REFUSED', 'Start ' + (N + 1) + ' — refused',
+      'Attempt one more start inside the same hour', b.vLNs * 0.85, CFG.lra,
+      'START INHIBITED', 'The relay must block the close, not trip after it', 'no');
+    return {
+      readout: [{ k: 'Starts / hour', v: String(N), u: '' }, { k: 'Between starts', v: fmt(s.tbs, 0), u: 'min' },
+        { k: 'Restart delay', v: fmt(s.trest, 1), u: 'min' },
+        { k: 'Start current', v: fmt(b.lraSec, 3), u: 'A sec' },
+        { k: 'Nameplate limit', v: String(CFG.start), u: 'starts/h' }],
+      points: pts,
+      notes: [
+        { lvl: 'warn', lb: 'It inhibits, it does not trip', txt: 'A correct result here is a refused start — the relay blocks the close permissive. If it lets the motor start and then trips, the setting is doing the opposite of its job and the machine takes the inrush anyway.' },
+        { lvl: 'warn', lb: 'Real time', txt: 'A rolling-hour counter cannot be shortcut on the test set. Either reduce the settings for the test and restore them afterwards, or accept that a full run takes an hour. Record the as-found and as-left values either way.' },
+        { lvl: 'note', lb: 'Three timers', txt: 'Starts per hour, time between starts and the restart delay after a stop are separate limits that can each block a start. Provoke them one at a time or the result does not say which one fired.' },
+        (CFG.start && N > CFG.start)
+          ? { lvl: 'bad', lb: 'Above nameplate', txt: 'The relay permits ' + N + ' starts per hour but the nameplate allows ' + CFG.start + '. The setting is more permissive than the machine.' }
+          : { lvl: 'good', lb: 'Within nameplate', txt: 'The relay permits ' + N + ' starts per hour against a nameplate limit of ' + CFG.start + '.' }
+      ]
+    };
+  }
+});
+
+/* ================= 46  CURRENT UNBALANCE ========================== *
+ * Reducing one phase to a fraction f of the other two gives
+ * I1 = (2+f)/3 and I2 = (1−f)/3, so I2/I1 = (1−f)/(2+f), which
+ * inverts to f = (1−2r)/(1+r).  A fully open phase is r = 0.5.       */
+reg({
+  ansi: '46', name: 'Current unbalance', group: 'Current',
+  desc: 'A motor is far more sensitive to unbalance than to overload, because negative-sequence current induces double-frequency rotor currents. The test reduces one phase by the exact amount that produces the ratio wanted, and shows what that does to the thermal model.',
+  fields: [num('rat', 'Pickup ratio I2/I1', 15, '%', 1), num('dly', 'Delay', 5.0, 's', 0.5),
+    num('alrm', 'Alarm ratio', 10, '%', 1), num('imin', 'Minimum load', 0.30, '× FLA', 0.05)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1), num('iload', 'Load current', 1.0, '× FLA', 0.05)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, I = o.iload * b.flaSec;
+    const la = -Math.acos(Math.min(1, CFG.pf)) * R2D;
+    const fFor = r => (1 - 2 * r) / (1 + r);
+    const pts = [];
+    const mk = (r, name, detail, expect, sub, verdict) => {
+      const f = fFor(r);
+      if (f < 0) return null;
+      const i1 = o.iload * (2 + f) / 3, i2 = o.iload * (1 - f) / 3, ie = ieqPu(i1, i2);
+      const v = P3(b.vLNs, 0);
+      const i = [P(I, la), P(I, la - 120), P(I * f, la + 120, 'reduced to ' + fmt(f * 100, 1) + '% of the others')];
+      return { id: name, name, detail, expect, expectSub: sub, verdict, iFla: ie,
+        tcc: { i: ie, t: thermalTime(ie, false) || 1e5 },
+        channels: chans(v, i, null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.filter(q => q.m > 0).map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['46', name, fmt(I, 3) + ' / ' + fmt(I, 3) + ' / ' + fmt(I * f, 3) + ' A', 'I2/I1 ' + fmt(r * 100, 1) + '% · Ieq ' + fmt(ie, 3) + ' ×FLA', expect] };
+    };
+    const r0 = s.rat / 100;
+    [[r0 * (1 + m), 'OPERATE', 'op', 'above'], [r0 * (1 - m), 'RESTRAIN', 'no', 'below']].forEach(([r, expect, vt, rel]) => {
+      const f = fFor(r), i1 = o.iload * (2 + f) / 3, i2 = o.iload * (1 - f) / 3;
+      const p = mk(r, 'Ratio — ' + rel + ' threshold',
+        'I2/I1 = ' + fmt(r * 100, 1) + '% · L3 reduced to ' + fmt(f * 100, 1) + '% · Ieq ' + fmt(ieqPu(i1, i2), 3) + ' ×FLA',
+        expect, vt === 'op' ? 'Operate after ' + fmtT(s.dly) : 'No operation', vt);
+      if (p) pts.push(p);
+    });
+    const pa = mk(s.alrm / 100, 'Alarm threshold', 'I2/I1 = ' + fmt(s.alrm, 1) + '% · below the trip ratio', 'ALARM ONLY', 'Alarm asserts, trip does not', 'wn');
+    if (pa) pts.push(pa);
+    const po = mk(0.5, 'Single phasing', 'L3 taken to zero — the deepest a single open phase can go', 'OPERATE', 'I2/I1 = 50%, the ceiling for this method', 'op');
+    if (po) pts.push(po);
+    /* the reverse-rotation case is pure negative sequence: I2 = I, I1 = 0 */
+    const ir = P3(I, la), irr = [ir[0], ir[2], ir[1]];
+    pts.push({ id: 'rev', name: 'Reverse rotation', detail: 'Balanced set with L2 and L3 exchanged — all negative sequence',
+      expect: 'OPERATE', expectSub: 'I2/I1 is undefined with I1 at zero; the element should see full unbalance', verdict: 'op',
+      iFla: ieqPu(0, o.iload), tcc: { i: ieqPu(0, o.iload), t: thermalTime(ieqPu(0, o.iload), false) || 1e5 },
+      channels: chans(P3(b.vLNs, 0), irr, null),
+      phasor: { v: P3(b.vLNs, 0).map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                i: irr.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+      sheet: ['46', 'Reverse rotation', fmt(I, 3) + ' A reversed', 'I2 = I, Ieq ' + fmt(ieqPu(0, o.iload), 3) + ' ×FLA', 'OPERATE'] });
+    const notes = [
+      { lvl: 'note', lb: 'Exact solve', txt: 'Reducing one phase to a fraction f of the other two gives I2/I1 = (1−f)/(2+f). The channel table inverts it: f = (1−2r)/(1+r) for the ratio you want.' },
+      (() => {
+        const f0 = fFor(r0), a1 = o.iload * (2 + f0) / 3, a2 = o.iload * (1 - f0) / 3, ie0 = ieqPu(a1, a2);
+        return { lvl: 'warn', lb: 'The thermal model sees it too', txt: 'With K = ' + fmt(CFG.k, 1) + ', unbalance makes the thermal model behave as though far more current were flowing. At the ' + fmt(s.rat, 0) + '% trip ratio the positive-sequence current is ' + fmt(a1, 3) + ' ×FLA but the equivalent heating current is ' + fmt(ie0, 3) + ' ×FLA — a penalty of ' + fmt(ie0 / Math.max(1e-9, a1), 3) + '×. Expect the thermal element to be running alongside this one, and decide which you are actually timing.' };
+      })(),
+      { lvl: 'note', lb: 'Single phasing', txt: 'A blown fuse on one phase of a delta-fed motor is the classic case. The 50% ceiling in the last-but-one point is the most a single open conductor can produce; anything beyond it needs a reversed phase.' }
+    ];
+    if (r0 >= 0.5) notes.push({ lvl: 'bad', lb: 'Setting out of range', txt: 'A ratio of ' + fmt(s.rat, 0) + '% cannot be produced by reducing one phase — 50% at a fully open conductor is the limit for that method.' });
+    return {
+      readout: [{ k: 'Trip ratio', v: fmt(s.rat, 1), u: '% I2/I1' }, { k: 'Alarm ratio', v: fmt(s.alrm, 1), u: '%' },
+        { k: 'Reduce L3 to', v: fmt(Math.max(0, fFor(r0)) * 100, 1), u: '% of others' },
+        { k: 'Load current', v: fmt(I, 3), u: 'A sec' }, { k: 'K factor', v: fmt(CFG.k, 1), u: '' }],
+      points: pts, tcc: thermalGeo(pts.map(p => ({ i: p.tcc.i, t: p.tcc.t }))), notes
+    };
+  }
+});
+
+/* ================= 37  UNDERCURRENT =============================== */
+reg({
+  ansi: '37', name: 'Undercurrent / loss of load', group: 'Current',
+  desc: 'Catches a pump losing suction or a coupling shearing. It operates when load falls away, so every step starts from healthy load and works down.',
+  fields: [num('pkp', 'Pickup', 0.60, '× FLA', 0.01), num('dly', 'Delay', 5.0, 's', 0.5),
+    num('inhib', 'Start inhibit', 15.0, 's after start', 0.5)],
+  opts: [num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, pts = [];
+    const mk = (iF, name, detail, expect, sub, verdict) => {
+      const p = motorPoint('u' + name, name, detail, iF, expect, sub, verdict);
+      p.sheet[0] = '37'; return p;
+    };
+    pts.push(mk(s.pkp * (1 - m), 'Pickup — below threshold', fmt((1 - m) * 100, 0) + '% of setting', 'TRIP', 'Operate after ' + fmtT(s.dly), 'op'));
+    pts.push(mk(s.pkp * (1 + m), 'Pickup — above threshold', fmt((1 + m) * 100, 0) + '% of setting', 'NO TRIP', 'No operation', 'no'));
+    pts.push(mk(s.pkp * 0.5, 'Timing at half pickup', 'Step from full load straight down', fmtT(s.dly), 'Definite time', 'nu'));
+    pts.push(mk(0, 'Motor stopped', 'No current at all — an open contactor must not read as loss of load', 'NO TRIP', 'Element supervised by the run status', 'no'));
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.pkp * b.flaSec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(s.pkp * CFG.fla, 1), u: 'A pri' },
+        { k: 'FLA', v: fmt(b.flaSec, 3), u: 'A sec' }, { k: 'Delay', v: fmtT(s.dly), u: '' },
+        { k: 'Start inhibit', v: fmtT(s.inhib), u: '' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Start from load', txt: 'Every step must begin at healthy load. Starting from zero leaves the element already below pickup and the timing means nothing.' },
+        { lvl: 'note', lb: 'Start inhibit', txt: 'During the first ' + fmtT(s.inhib) + ' after a start the element is blocked, because a motor that has not loaded up yet looks exactly like one that has lost its load.' }]
+    };
+  }
+});
+
+/* ================= 87M  MOTOR DIFFERENTIAL ======================== */
+reg({
+  ansi: '87M', name: 'Motor differential', group: 'Current',
+  desc: 'Either a core-balance arrangement where all three phases pass through one window and the pickup is a fraction of an amp, or a dual-CT percentage scheme. Which one is fitted changes the test completely.',
+  fields: [num('pkp', 'Pickup', 0.20, 'A primary (core balance) or ×CT (dual CT)', 0.01),
+    num('slp', 'Slope', 20, '% — dual CT only', 1), num('dly', 'Delay', 0.03, 's', 0.005)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1), num('thru', 'Through-current point', 4.0, '× FLA', 0.5)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, cb = CFG.diff === 'cb', pts = [];
+    if (CFG.diff === 'none')
+      return { readout: [{ k: 'Arrangement', v: 'not fitted', u: '' }], points: [],
+        notes: [{ lvl: 'warn', lb: 'Not fitted', txt: 'The Setup tab has the differential CT arrangement set to "not fitted", so there is nothing to test here. Change it if the machine does have differential protection.' }] };
+    if (cb) {
+      const Isec = s.pkp / Math.max(1e-6, CFG.ctgp / CFG.ctgs);
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const I = Isec * f;
+        pts.push({ id: 'cb' + f, name: 'Sensitivity — ' + rel + ' pickup',
+          detail: 'One conductor through the window carrying ' + fmt(s.pkp * f, 3) + ' A primary equivalent',
+          expect: verdict, expectSub: vt === 'op' ? 'Operate within ' + fmtT(s.dly) : 'No operation', verdict: vt,
+          channels: chans(P3(b.vLNs, 0), [P(I, 0, 'single conductor through the differential window')], null),
+          phasor: { v: [], i: [{ lab: 'Idiff', cls: 'ch-l1', mag: I, ang: 0 }] },
+          sheet: ['87M', 'Sensitivity ' + rel, fmt(I, 4) + ' A sec', '—', verdict] });
+      });
+      const It = o.thru * b.flaSec;
+      pts.push({ id: 'stab', name: 'Through-current stability',
+        detail: 'All three phase leads bundled through the window in the correct direction at ' + fmtX(o.thru) + ' ×FLA',
+        expect: 'RESTRAIN', expectSub: 'A balanced set through the window sums to zero', verdict: 'no',
+        channels: chans(P3(b.vLNs, 0), P3(It, 0), null),
+        phasor: { v: [], i: P3(It, 0).map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['87M', 'Through stability', fmt(It, 3) + ' A balanced', '—', 'RESTRAIN'] });
+    } else {
+      const pk = s.pkp * CFG.cts;
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const Id = pk * f;
+        pts.push({ id: 'd' + f, name: 'Minimum pickup — ' + rel + ' threshold',
+          detail: 'Line-end CTs only, neutral end at zero. Differential ' + fmt(s.pkp * f, 3) + ' ×CT.',
+          expect: verdict, expectSub: vt === 'op' ? 'Operate within ' + fmtT(s.dly) : 'No operation', verdict: vt,
+          channels: chans(P3(b.vLNs, 0), [P(Id, 0), P(0, 0), P(0, 0)], nullTriple()),
+          phasor: { v: [], i: [{ lab: 'I line', cls: 'ch-l1', mag: Id, ang: 0 }] },
+          sheet: ['87M', 'Pickup ' + rel, fmt(Id, 3) + ' A line end', '0 A neutral end', verdict] });
+      });
+      const It = o.thru * b.flaSec, Id = It * s.slp / 100 * 1.1;
+      pts.push({ id: 'slope', name: 'Slope — above the characteristic',
+        detail: 'Through current ' + fmtX(o.thru) + ' ×FLA with a differential ' + fmt(s.slp * 1.1, 0) + '% of it',
+        expect: 'OPERATE', expectSub: 'Line end ' + fmt(It, 3) + ' A, neutral end ' + fmt(It - Id, 3) + ' A', verdict: 'op',
+        channels: chans(P3(b.vLNs, 0), P3(It, 0), P3(Math.max(0, It - Id), 180)),
+        phasor: { v: [], i: [{ lab: 'I line', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'I ntl', cls: 'ch-l3', mag: Math.max(0, It - Id), ang: 180, alt: true }] },
+        sheet: ['87M', 'Slope above', fmt(It, 3) + ' A @ 0°', fmt(Math.max(0, It - Id), 3) + ' A @ 180°', 'OPERATE'] });
+      pts.push({ id: 'stab', name: 'Through-current stability',
+        detail: 'Both ends matched at ' + fmtX(o.thru) + ' ×FLA in opposition',
+        expect: 'RESTRAIN', expectSub: 'Zero differential', verdict: 'no',
+        channels: chans(P3(b.vLNs, 0), P3(It, 0), P3(It, 180)),
+        phasor: { v: [], i: [{ lab: 'I line', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'I ntl', cls: 'ch-l3', mag: It, ang: 180, alt: true }] },
+        sheet: ['87M', 'Through stability', fmt(It, 3) + ' A @ 0°', fmt(It, 3) + ' A @ 180°', 'RESTRAIN'] });
+    }
+    return {
+      readout: [{ k: 'Arrangement', v: cb ? 'core balance' : 'dual CT', u: '' },
+        { k: 'Pickup', v: cb ? fmt(s.pkp, 3) + ' A pri' : fmt(s.pkp * CFG.cts, 3) + ' A sec', u: '' },
+        { k: 'Delay', v: fmtT(s.dly), u: '' },
+        { k: cb ? 'Window CTR' : 'Slope', v: cb ? CFG.ctgp + ':' + CFG.ctgs : fmt(s.slp, 0) + '%', u: '' }],
+      points: pts,
+      notes: cb
+        ? [{ lvl: 'warn', lb: 'Through the window', txt: 'A core-balance CT measures what passes through its window, so the test current has to go through it the same way the cable does. Injecting into a phase CT proves nothing about this element, and a lead routed back through the window the wrong way inverts the result.' },
+           { lvl: 'note', lb: 'Very small currents', txt: 'The pickup here is ' + fmt(s.pkp, 3) + ' A primary. Check the CMC\'s accuracy at that output before treating a marginal result as a relay fault.' }]
+        : [{ lvl: 'warn', lb: 'Polarity', txt: 'The stability point is really a polarity test. If it operates, a neutral-end CT is reversed — chase the wiring before touching a setting.' },
+           { lvl: 'note', lb: 'Amp mode', txt: 'A dual-CT scheme drives both ends, which needs the 6 × 12.5 A arrangement. Locked-rotor magnitudes will not fit in that mode, so plan the differential and the thermal tests as separate setups.' }]
+    };
+  }
+});
+
+/* ================= OVERCURRENT FACTORIES ========================== */
+const Q_INFO = {
+  phase:  { k: 1, e: 'P',  txt: 'Operating quantity is the phase current itself.' },
+  ground: { k: 1, e: 'G',  txt: 'Injected into the ground CT input.' },
+  sens:   { k: 1, e: 'G',  txt: 'Injected through the core-balance CT window. Pickups here are a fraction of an amp primary.' }
+};
+const PUSEL = sel('pu', 'Pickup unit', 'xFLA', [['xFLA', '× FLA'], ['xCT', '×CT'], ['A_sec', 'A secondary'], ['A_pri', 'A primary']], '');
+
+function mkIOC(ansi, nm, q, dflt, unit) {
+  return {
+    ansi, name: nm, group: 'Current',
+    desc: 'Definite-time instantaneous element. Pickup is bracketed either side, then a clean multiple is applied to time the delay.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01),
+      unit === 'g' ? sel('pu', 'Pickup unit', 'A_pri', [['A_pri', 'A primary'], ['xCT', '×CT'], ['A_sec', 'A secondary']], '') : PUSEL,
+      num('dly', 'Delay', 0.05, 's', 0.01), num('inhib', 'Start inhibit', 0, 's after start — 0 disables', 0.1)],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), num('tm', 'Timing multiple', 2, '× pickup', 0.5),
+      num('iang', 'Injection angle', -30, 'deg (lags V L1)', 5)],
+    compute(s, o) {
+      const b = base(), qi = Q_INFO[q], p = ocPickup(Object.assign({}, s, { e: qi.e }), b), m = o.marg / 100, pts = [];
+      const mk = (I, name, detail, expect, sub, verdict) => {
+        const v = P3(b.vLNs, 0), i = [P(I, o.iang), P(0, 0), P(0, 0)];
+        return { id: name, name, detail, expect, expectSub: sub, verdict, iFla: I / b.flaSec,
+          channels: chans(v, i, null),
+          phasor: { v: v.map((x, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: x.m, ang: x.a })),
+                    i: [{ lab: 'I L1', cls: 'ch-l1', mag: I, ang: o.iang }] },
+          sheet: [ansi, name, fmt(I, 3) + ' A @ ' + fmt(o.iang, 0) + '°', sub, expect] };
+      };
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) =>
+        pts.push(mk(p.sec * f, 'Pickup — ' + rel + ' threshold',
+          fmt(f * 100, 0) + '% of setting · ' + fmt(p.sec * f, 3) + ' A secondary', verdict,
+          vt === 'op' ? 'Operate within ' + fmtT(s.dly) : 'No operation', vt)));
+      pts.push(mk(p.sec * o.tm, 'Timing at ' + fmtX(o.tm) + '× pickup', 'Step from prefault load straight to the test value',
+        fmtT(s.dly), 'Measured from application of current to trip', 'nu'));
+      if (s.inhib > 0) pts.push(mk(b.lraSec, 'Blocked during start',
+        'Full locked-rotor current from standstill — the element must stay blocked for ' + fmtT(s.inhib),
+        'BLOCKED', 'A healthy start must not operate this element', 'no'));
+      const notes = [{ lvl: 'note', lb: 'Quantity', txt: qi.txt }];
+      if (q === 'phase') notes.push({ lvl: 'warn', lb: 'Above locked rotor', txt: 'A motor short-circuit element has to sit above the locked-rotor current of ' + fmt(b.lraSec, 3) + ' A secondary (' + fmt(CFG.lra, 2) + ' ×FLA) or every start trips it. The pickup here is ' + fmt(p.sec / b.flaSec, 2) + ' ×FLA' + (p.sec <= b.lraSec ? ' — which is at or below locked rotor. That is a setting finding.' : ', comfortably clear of it.') });
+      if (q === 'sens') notes.push({ lvl: 'warn', lb: 'Through the window', txt: 'The current has to pass through the core-balance window the way the cable does. Injecting into a phase CT proves nothing about this element.' });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 2), u: 'A pri' },
+          { k: 'In × FLA', v: fmt(p.sec / b.flaSec, 2), u: '× FLA' },
+          { k: 'Locked rotor', v: fmt(b.lraSec, 3), u: 'A sec' }, { k: 'Delay', v: fmtT(s.dly), u: '' }],
+        points: pts, notes,
+        tcc: q === 'phase' ? thermalGeo(pts.filter(x => x.iFla > 0).map(x => ({ i: x.iFla, t: Math.max(0.02, s.dly) }))) : null
+      };
+    }
+  };
+}
+function mkTOC(ansi, nm, q, dflt, crv) {
+  return {
+    ansi, name: nm, group: 'Current',
+    desc: 'Inverse-time element. Pickup is bracketed, then operate time is predicted at each multiple from the selected curve equation.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01),
+      sel('pu', 'Pickup unit', q === 'ground' ? 'A_pri' : 'xFLA', [['xFLA', '× FLA'], ['xCT', '×CT'], ['A_sec', 'A secondary'], ['A_pri', 'A primary']], ''),
+      sel('crv', 'Curve', crv || 'IEC Curve A (SI)', Object.keys(CURVES).map(k => [k, k]), ''),
+      num('tdm', 'Time dial / TDM', 0.20, '', 0.01)],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), txt('muls', 'Timing multiples', '2, 3, 5', '× pickup'),
+      num('iang', 'Injection angle', -30, 'deg', 5)],
+    compute(s, o) {
+      const b = base(), qi = Q_INFO[q], p = ocPickup(Object.assign({}, s, { e: qi.e }), b), m = o.marg / 100, pts = [];
+      const mk = (I, name, detail, expect, sub, verdict) => {
+        const v = P3(b.vLNs, 0), i = [P(I, o.iang), P(0, 0), P(0, 0)];
+        return { id: name, name, detail, expect, expectSub: sub, verdict,
+          channels: chans(v, i, null),
+          phasor: { v: v.map((x, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: x.m, ang: x.a })),
+                    i: [{ lab: 'I L1', cls: 'ch-l1', mag: I, ang: o.iang }] },
+          sheet: [ansi, name, fmt(I, 3) + ' A', sub, expect] };
+      };
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) =>
+        pts.push(mk(p.sec * f, 'Pickup — ' + rel + ' threshold', fmt(f * 100, 0) + '% of setting', verdict,
+          vt === 'op' ? 'Long operate time — let the curve run out' : 'No operation', vt)));
+      multiplesOf(o.muls).forEach(M => {
+        const t = curveTime(s.crv, M, s.tdm);
+        pts.push(mk(p.sec * M, 'Timing at ' + fmtX(M) + '× pickup', s.crv + ' · TDM ' + fmt(s.tdm, 2),
+          t == null ? 'no operation' : fmtT(t), 'Predicted from the curve equation', 'nu'));
+      });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 2), u: 'A pri' },
+          { k: 'Curve', v: s.crv, u: '' },
+          { k: 't @ 2×', v: fmtT(curveTime(s.crv, 2, s.tdm)), u: '' }],
+        points: pts,
+        notes: [{ lvl: 'note', lb: 'Quantity', txt: qi.txt },
+          { lvl: 'warn', lb: 'Curve constants', txt: 'Times come from the published ' + s.crv + ' equation. Constants have moved between firmware revisions — check the first timing point against the relay\'s own prediction before accepting the rest.' }]
+      };
+    }
+  };
+}
+reg(mkIOC('50P', 'Short circuit', 'phase', 8.0));
+reg(mkIOC('50G', 'Ground instantaneous', 'ground', 5.0, 'g'));
+reg(mkTOC('51G', 'Ground time OC', 'ground', 3.0, 'IEC Curve A (SI)'));
+reg(mkIOC('50SG', 'Sensitive ground', 'sens', 0.50, 'g'));
+
+/* ================= 50BF  BREAKER / CONTACTOR FAILURE ============== */
+reg({
+  ansi: '50BF', name: 'Breaker or contactor failure', group: 'Current',
+  desc: 'Current is held above the detector while the initiate is asserted and never removed, so both stages time out. On a contactor-fed motor the reset check is the point that matters.',
+  fields: [num('pkp', 'Current detector', 0.20, '× FLA', 0.01),
+    num('t1', 'Timer 1 — retrip', 0.10, 's', 0.01), num('t2', 'Timer 2 — upstream trip', 0.25, 's', 0.01)],
+  opts: [num('imul', 'Test current', 3.0, '× detector pickup', 0.1), num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), Ipk = s.pkp * b.flaSec, m = o.marg / 100, pts = [];
+    const mk = (I, name, detail, expect, sub, verdict) => {
+      const p = motorPoint('b' + name, name, detail, I / b.flaSec, expect, sub, verdict);
+      p.sheet[0] = '50BF'; return p;
+    };
+    pts.push(mk(Ipk * (1 + m), 'Detector — above threshold', fmt((1 + m) * 100, 0) + '% of the detector setting, no initiate', 'DETECTOR PICKED UP', 'Flag only, no trip without initiate', 'op'));
+    pts.push(mk(Ipk * (1 - m), 'Detector — below threshold', fmt((1 - m) * 100, 0) + '% of the detector setting', 'NO PICKUP', 'Detector must drop out', 'no'));
+    pts.push(mk(Ipk * o.imul, 'Retrip timing', 'Initiate asserted with current held and never removed', fmtT(s.t1), 'Timer 1', 'nu'));
+    pts.push(mk(Ipk * o.imul, 'Upstream trip timing', 'Same state, second stage', fmtT(s.t2), 'Timer 2 — trips the feeding breaker', 'nu'));
+    pts.push(mk(0, 'Reset check', 'Initiate asserted, then current removed inside timer 1', 'NO TRIP', 'Proves the detector reset stops the scheme', 'no'));
+    return {
+      readout: [{ k: 'Detector', v: fmt(Ipk, 3), u: 'A sec' }, { k: 'Detector', v: fmt(s.pkp * CFG.fla, 1), u: 'A pri' },
+        { k: 'Timer 1', v: fmtT(s.t1), u: '' }, { k: 'Timer 2', v: fmtT(s.t2), u: '' },
+        { k: 'FLA', v: fmt(b.flaSec, 3), u: 'A sec' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Initiate', txt: 'The initiate is a binary output from the CMC into the relay\'s BFI input — it does not appear in the channel table. Start both timers from the initiate edge, not from the current step.' },
+        { lvl: 'warn', lb: 'Contactors do not interrupt faults', txt: 'A vacuum contactor cannot break a short circuit, so on a fused contactor starter the failure scheme has to reach the upstream breaker. Confirm what timer 2 actually trips before recording a pass.' }]
+    };
+  }
+});
+
+/* ================= VOLTAGE & FREQUENCY ============================ */
+const VUNIT = sel('vu', 'Pickup unit', 'xVT', [['xVT', '×VT (L-N nominal)'], ['V_sec', 'V secondary']], '');
+function mkVolt(ansi, nm, over) {
+  return {
+    ansi, name: nm, group: 'Voltage & frequency',
+    desc: over ? 'Threshold bracketed from below, then a clean multiple for the definite-time run.'
+               : 'Bracketed at the threshold from above, then driven well below for the timing run. On a motor this element is usually a restart-supervision function as much as a protection one.',
+    fields: [num('vpkp', 'Pickup', over ? 1.10 : 0.80, '', 0.01), VUNIT, num('dly', 'Delay', over ? 2.0 : 3.0, 's', 0.1),
+      num('inhib', 'Start inhibit', over ? 0 : 5.0, 's after start', 0.5),
+      num('block', 'Minimum operating V', 5, 'V sec', 0.5)],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), num('tv', 'Timing voltage', over ? 1.25 : 0.5, '× pickup', 0.05)],
+    compute(s, o) {
+      const b = base(), p = vPickup(s, b), m = o.marg / 100;
+      const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec;
+      const mk = (V, name, detail, verdict, vt, sub) => {
+        const v = P3(V, 0), i = P3(I, la);
+        return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+          channels: chans(v, i, null),
+          phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                    i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+          sheet: [ansi, name, fmt(V, 2) + ' V @ 0°', fmt(I, 3) + ' A load', verdict] };
+      };
+      const pts = [
+        mk(p.sec * (over ? 1 + m : 1 - m), 'Pickup — ' + (over ? 'above' : 'below') + ' threshold',
+          fmt((over ? 1 + m : 1 - m) * 100, 0) + '% of setting, motor on load', 'OPERATE', 'op', 'Operate after ' + fmtT(s.dly)),
+        mk(p.sec * (over ? 1 - m : 1 + m), 'Pickup — ' + (over ? 'below' : 'above') + ' threshold',
+          fmt((over ? 1 - m : 1 + m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'),
+        mk(p.sec * o.tv, 'Timing at ' + fmtX(o.tv) + '× pickup', 'Step from nominal to the test level', fmtT(s.dly), 'nu', 'Definite time')
+      ];
+      if (!over) {
+        pts.push(mk(Math.max(0, s.block * 0.8), 'Below minimum operating voltage',
+          'Proves the element blocks rather than operating on a dead starter', 'BLOCKED', 'no', 'Element inhibited'));
+        if (s.inhib > 0) pts.push(mk(b.vLNs * 0.80, 'During a start',
+          'Voltage dips on every start. The element must be inhibited for ' + fmtT(s.inhib) + ' or ride it through.',
+          'NO TRIP', 'no', 'A healthy start must not trip on undervoltage'));
+      }
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Pickup', v: fmt(p.pri / 1000, 2), u: 'kV pri L-N' },
+          { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' }, { k: 'Timing level', v: fmt(p.sec * o.tv, 2), u: 'V sec' }],
+        points: pts,
+        notes: over
+          ? [{ lvl: 'note', lb: 'Start from nominal', txt: 'Every step starts from a healthy balanced prefault state with the motor on load.' }]
+          : [{ lvl: 'warn', lb: 'Starting dip', txt: 'A direct-on-line start pulls the terminal voltage down hard for the whole acceleration. If the undervoltage element is not inhibited or delayed past ' + fmtT(CFG.acc) + ', every start trips it.' },
+             { lvl: 'note', lb: 'Restart supervision', txt: 'On many installations this element also drives the restart scheme after a supply dip. Confirm whether a pass here means "trips" or "blocks the restart" before recording it.' }]
+      };
+    }
+  };
+}
+reg(mkVolt('27', 'Undervoltage', false));
+reg(mkVolt('59', 'Overvoltage', true));
+
+reg({
+  ansi: '47', name: 'Voltage unbalance / phase reversal', group: 'Voltage & frequency',
+  desc: 'On a motor this is not a nicety — a reversed phase sequence runs the machine backwards, and the check that catches it belongs at first energisation.',
+  fields: [num('vpkp', 'Pickup', 0.08, '×VT (V2)', 0.01), VUNIT, num('dly', 'Delay', 2.0, 's', 0.1)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1),
+    sel('meth', 'Injection method', 'rev', [['rev', 'Reverse rotation — V2 = V'], ['unb', 'Unbalance one phase — V2 = ΔV/3']], '')],
+  compute(s, o) {
+    const b = base(), p = vPickup(s, b), m = o.marg / 100, pts = [];
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const V2 = p.sec * f;
+      let v, det;
+      if (o.meth === 'rev') { v = [P(V2, 0), P(V2, 120), P(V2, -120)]; det = 'Balanced set in reverse rotation — every volt applied is negative sequence'; }
+      else { const dV = 3 * V2; v = [P(Math.max(0, b.vLNs - dV), 0, 'depressed by ' + fmt(dV, 2) + ' V'), P(b.vLNs, -120), P(b.vLNs, 120)];
+             det = 'V L1 dropped ' + fmt(dV, 2) + ' V, giving V2 = ' + fmt(V2, 2) + ' V'; }
+      pts.push({ id: 'u' + f, name: 'Pickup — ' + rel + ' threshold', detail: det,
+        expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmtT(s.dly) : 'No operation', verdict: vt,
+        channels: chans(v, nullTriple(), null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['47', 'Pickup ' + rel, fmt(v[0].m, 2) + ' / ' + fmt(v[1].m, 2) + ' / ' + fmt(v[2].m, 2) + ' V', 'V2 ' + fmt(V2, 2) + ' V', verdict] });
+    });
+    const vr = [P(b.vLNs, 0), P(b.vLNs, 120), P(b.vLNs, -120)];
+    pts.push({ id: 'rot', name: 'Full phase reversal', detail: 'Nominal balanced set with L2 and L3 exchanged — the motor would run backwards',
+      expect: 'OPERATE', expectSub: 'Must block the start, not trip after it', verdict: 'op',
+      channels: chans(vr, nullTriple(), null),
+      phasor: { v: vr.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+      sheet: ['47', 'Phase reversal', fmt(b.vLNs, 2) + ' V reversed', 'V2 ' + fmt(b.vLNs, 2) + ' V', 'OPERATE'] });
+    return {
+      readout: [{ k: 'Pickup V2', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' },
+        { k: 'Unbalance needed', v: fmt(3 * p.sec, 2), u: 'V on one phase' }, { k: 'Delay', v: fmtT(s.dly), u: '' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Reversal blocks the start', txt: 'The phase-reversal point is the one that keeps a pump or fan from being run backwards on its first energisation. A correct result is a blocked start, not a trip after the motor has already turned.' },
+        { lvl: o.meth === 'unb' ? 'warn' : 'note', lb: 'Method', txt: o.meth === 'unb'
+          ? 'Dropping one phase by ΔV gives V2 = ΔV/3, so the depression is three times the setting. It also makes the same amount of zero sequence.'
+          : 'A reverse-rotation set is pure negative sequence with no zero-sequence content, so nothing else in the relay reacts.' }]
+    };
+  }
+});
+
+reg({
+  ansi: '81', name: 'Under / over frequency', group: 'Voltage & frequency',
+  desc: 'Frequency stepped across the threshold with voltage at nominal, since the element needs a healthy voltage to measure at all.',
+  fields: [sel('kind', 'Element', 'U', [['U', '81U — underfrequency'], ['O', '81O — overfrequency']], ''),
+    num('fpk', 'Pickup', 57.0, 'Hz', 0.01), num('dly', 'Delay', 2.0, 's', 0.1), num('vmin', 'Minimum voltage', 30, 'V sec', 1)],
+  opts: [num('dev', 'Test offset', 0.10, 'Hz either side', 0.01)],
+  compute(s, o) {
+    const b = base(), under = s.kind === 'U';
+    const mk = (ft, name, detail, verdict, vt, sub, Vlev) => {
+      const v = P3(Vlev == null ? b.vLNs : Vlev, 0).map(q => (q.f = ft, q));
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), null, ft),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['81' + s.kind, name, fmt(Vlev == null ? b.vLNs : Vlev, 2) + ' V', fmt(ft, 3) + ' Hz', verdict] };
+    };
+    const inF = under ? s.fpk - o.dev : s.fpk + o.dev, outF = under ? s.fpk + o.dev : s.fpk - o.dev;
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.fpk, 3), u: 'Hz' }, { k: 'Operate at', v: fmt(inF, 3), u: 'Hz' },
+        { k: 'Restrain at', v: fmt(outF, 3), u: 'Hz' }, { k: 'Delay', v: fmtT(s.dly), u: '' }],
+      points: [
+        mk(inF, 'Pickup — past threshold', fmt(o.dev, 3) + ' Hz beyond the setting', 'OPERATE', 'op', 'Operate after ' + fmtT(s.dly)),
+        mk(outF, 'Pickup — short of threshold', fmt(o.dev, 3) + ' Hz on the healthy side', 'RESTRAIN', 'no', 'No operation'),
+        mk(inF, 'Timing', 'Step from ' + fmt(CFG.freq, 1) + ' Hz straight to ' + fmt(inF, 3) + ' Hz', fmtT(s.dly), 'nu', 'Definite time'),
+        mk(inF, 'Below minimum voltage', 'Frequency past the setting but voltage under the ' + fmt(s.vmin, 0) + ' V supervision level', 'BLOCKED', 'no', 'Element inhibited', s.vmin * 0.8)
+      ],
+      notes: [{ lvl: 'note', lb: 'Step, do not ramp', txt: 'For the pickup points step the frequency rather than ramp it — a slow ramp measures the relay\'s tracking behaviour instead of its threshold.' },
+        { lvl: 'note', lb: 'On a motor', txt: 'Underfrequency on a motor bus usually means the supply is in trouble rather than the machine. Settings normally come from the plant\'s shed scheme, so record the as-found value before touching anything.' }]
+    };
+  }
+});
+
+reg({
+  ansi: '55', name: 'Power factor', group: 'Voltage & frequency',
+  desc: 'On a synchronous machine this is the pull-out element — the field can no longer hold the rotor in step and the power factor swings. Voltage stays at nominal and the current angle carries the whole test.',
+  fields: [num('pfs', 'Pickup power factor', 0.70, '', 0.01),
+    sel('dir', 'Side', 'lead', [['lead', 'Leading'], ['lag', 'Lagging']], ''),
+    num('imin', 'Minimum current', 0.30, '× FLA', 0.01), num('dly', 'Delay', 3.0, 's', 0.5)],
+  opts: [num('marg', 'Angle margin', 5, 'deg either side', 1), num('iload', 'Test current', 1.0, '× FLA', 0.05)],
+  compute(s, o) {
+    const b = base(), V = b.vLNs, I = o.iload * b.flaSec;
+    const phi = Math.acos(Math.min(1, Math.max(-1, s.pfs))) * R2D, sgn = s.dir === 'lead' ? +1 : -1;
+    const mk = (a, Im, name, detail, verdict, vt) => {
+      const v = P3(V, 0), i = P3(Im, a);
+      return { id: name, name, detail, expect: verdict,
+        expectSub: 'pf = ' + fmt(Math.abs(Math.cos(a * D2R)), 3) + ' ' + (a > 0 ? 'leading' : 'lagging'), verdict: vt,
+        channels: chans(v, i, null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['55', name, fmt(Im, 3) + ' A @ ' + fmtA(a), fmt(V, 2) + ' V @ 0°', verdict] };
+    };
+    return {
+      readout: [{ k: 'Pickup pf', v: fmt(s.pfs, 3), u: s.dir }, { k: 'Angle', v: fmt(phi, 1), u: 'deg' },
+        { k: 'Test current', v: fmt(I, 3), u: 'A sec' }, { k: 'Rated pf', v: fmt(CFG.pf, 2), u: 'nameplate' },
+        { k: 'Delay', v: fmtT(s.dly), u: '' }],
+      points: [
+        mk(sgn * (phi + o.marg), I, 'Past the limit', fmt(o.marg, 0) + '° beyond the setting angle', 'OPERATE', 'op'),
+        mk(sgn * (phi - o.marg), I, 'Short of the limit', fmt(o.marg, 0) + '° inside the setting angle', 'RESTRAIN', 'no'),
+        mk(sgn * 90, I, 'Full VAR, no watts', 'Current in quadrature — power factor zero', 'OPERATE', 'op'),
+        mk(sgn * (phi + o.marg), s.imin * b.flaSec * 0.8, 'Below minimum current',
+          'Same angle, current dropped under the ' + fmt(s.imin, 2) + ' ×FLA supervision', 'BLOCKED', 'no')
+      ],
+      notes: [
+        { lvl: CFG.type === 'syn' ? 'note' : 'warn', lb: 'Machine type', txt: CFG.type === 'syn'
+          ? 'The Setup tab has this machine as synchronous, so pull-out protection makes sense. Confirm the setting against the field-forcing scheme — the two have to agree on what counts as a loss of synchronism.'
+          : 'The Setup tab has this machine as an induction motor, where power factor is an operating quantity rather than a protection one. Check whether this element is actually enabled before spending time on it.' },
+        { lvl: 'note', lb: 'Minimum current', txt: 'Power factor is meaningless at no load, so the element is supervised by current. The last point proves that supervision rather than the angle.' },
+        { lvl: 'warn', lb: 'Not loss of field', txt: 'A power-factor element is a coarse substitute for a proper offset-mho loss-of-excitation characteristic. If the machine has a 40 element instead, it is tested in the impedance plane and this tool does not cover it — the 889 generator tool does that arithmetic.' }
+      ]
+    };
+  }
+});
+
+reg({
+  ansi: '32', name: 'Underpower / reverse power', group: 'Voltage & frequency',
+  desc: 'Power is set by holding voltage at nominal and solving for the current that produces the required watts at the characteristic angle.',
+  fields: [sel('kind', 'Function', 'low', [['low', 'Underpower — loss of load'], ['rev', 'Reverse power']], ''),
+    num('pkp', 'Pickup', 20, '% of rated kW', 1),
+    num('mta', 'Characteristic angle', 0, 'deg', 1), num('dly', 'Delay', 5.0, 's', 0.5),
+    num('inhib', 'Start inhibit', 15.0, 's after start', 0.5)],
+  opts: [num('marg', 'Margin either side', 15, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, V = b.vLNs;
+    const Ppri = (s.pkp / 100) * b.kW * 1000;                 /* watts, three phase, primary */
+    const Psec = Ppri / (b.vtr * b.ctr);
+    const low = s.kind === 'low';
+    const mk = (f, name, verdict, vt, detail) => {
+      const Pt = Psec * f, cph = Math.cos(s.mta * D2R);
+      const I = Math.abs(Pt / (3 * V * (Math.abs(cph) < 1e-6 ? 1e-6 : cph)));
+      const aI = (low ? 0 : 180) - s.mta;
+      const v = P3(V, 0), i = P3(I, aI);
+      return { id: name, name, detail, expect: verdict,
+        expectSub: fmt(Pt * b.vtr * b.ctr / 1000, 1) + ' kW primary · ' + fmt(I / b.flaSec, 3) + ' ×FLA', verdict: vt,
+        channels: chans(v, i, null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['32', name, fmt(I, 3) + ' A @ ' + fmtA(aI), fmt(V, 2) + ' V @ 0°', verdict] };
+    };
+    const pts = low
+      ? [mk(1 - m, 'Below threshold — load lost', 'OPERATE', 'op', fmt((1 - m) * 100, 0) + '% of setting'),
+         mk(1 + m, 'Above threshold', 'RESTRAIN', 'no', fmt((1 + m) * 100, 0) + '% of setting'),
+         mk(0.5, 'Timing at half pickup', fmtT(s.dly), 'nu', 'Definite time')]
+      : [mk(1 + m, 'Above threshold — reversed', 'OPERATE', 'op', fmt((1 + m) * 100, 0) + '% of setting, power out of the machine'),
+         mk(1 - m, 'Below threshold', 'RESTRAIN', 'no', fmt((1 - m) * 100, 0) + '% of setting'),
+         mk(2, 'Timing at 2× pickup', fmtT(s.dly), 'nu', 'Definite time')];
+    return {
+      readout: [{ k: 'Rated output', v: fmt(b.kW, 0), u: 'kW' }, { k: 'Pickup', v: fmt(Ppri / 1000, 1), u: 'kW pri' },
+        { k: 'Pickup', v: fmt(Psec, 2), u: 'W sec 3φ' },
+        { k: 'Current at 1×', v: fmt(Math.abs(Psec / (3 * V * Math.cos(s.mta * D2R))), 3), u: 'A sec' },
+        { k: 'Delay', v: fmtT(s.dly), u: '' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Three-phase', txt: 'The element sums all three phases. A single-phase injection reads one third of the expected power.' },
+        { lvl: 'note', lb: 'Underpower against undercurrent', txt: 'Underpower and the 37 undercurrent element cover the same failure from different angles. Power catches a load that has gone light while the current stays up on magnetising; current is simpler and faster. Confirm which one the plant relies on.' }]
+    };
+  }
+});
+
+/* ================= 19  REDUCED VOLTAGE START ====================== */
+reg({
+  ansi: '19', name: 'Reduced voltage start transition', group: 'Starting',
+  desc: 'Supervises the changeover from the reduced-voltage tap to full voltage. The failure worth catching is a transition that never happens and leaves the starter winding energised.',
+  fields: [sel('mode', 'Transition on', 'both', [['time', 'Time'], ['cur', 'Current'], ['both', 'Whichever comes first']], ''),
+    num('ttr', 'Transition time', 6.0, 's', 0.5),
+    num('itr', 'Transition current', 3.0, '× FLA — falling', 0.1),
+    num('tmax', 'Maximum on the tap', 10.0, 's before lockout', 0.5),
+    num('vtap', 'Tap voltage', 0.65, '× nominal', 0.05)],
+  opts: [num('tload', 'Prefault hold', 3.0, 's stopped', 0.5)],
+  compute(s, o) {
+    const b = base(), seqA = [], seqB = [], pts = [];
+    const push = (arr, lab, kind, dur, ev, name, detail, Vlev, iFla, expect, sub, verdict) => {
+      arr.push({ lab, kind, dur, ev });
+      const p = stPoint('t' + arr.length + kind, name, detail, Vlev, iFla, expect, sub, verdict);
+      p.tl = arr; p.tlIdx = arr.length - 1;
+      p.sheet[0] = '19'; p.sheet[3] = fmtT(dur);
+      pts.push(p);
+    };
+    const iTap = CFG.lra * s.vtap;                 /* starting current falls with the tap voltage */
+    push(seqA, 'Stopped', 'stop', o.tload, null, 'Normal — stopped', 'No current, motor at rest', 0, 0, 'READY', '', 'nu');
+    push(seqA, 'On tap', 'start', s.ttr, 'START', 'Normal — on the reduced-voltage tap',
+      'Terminal voltage at ' + fmt(s.vtap * 100, 0) + '% and current at ' + fmt(iTap, 2) + ' ×FLA — starting current falls roughly with the tap voltage',
+      b.vLNs * s.vtap, iTap, 'NO TRIP', 'Inside the ' + fmtT(s.tmax) + ' tap limit', 'no');
+    push(seqA, 'Full volts', 'start', 3, 'TRANSITION', 'Normal — transition to full voltage',
+      'Voltage restored to nominal, current drops through the ' + fmt(s.itr, 2) + ' ×FLA transition level',
+      b.vLNs, s.itr * 0.9, 'TRANSITION', 'Transition contact operates', 'op');
+    push(seqA, 'Running', 'run', 8, null, 'Normal — running', 'Full load, start complete', b.vLNs, 1.0, 'RUNNING', 'Start supervision resets', 'nu');
+
+    push(seqB, 'Stopped', 'stop', o.tload, null, 'Failed — stopped', 'No current, motor at rest', 0, 0, 'READY', '', 'nu');
+    push(seqB, 'Stuck on tap', 'fault', s.tmax * 1.3, 'START', 'Failed — transition never happens',
+      'Held on the tap past the ' + fmtT(s.tmax) + ' limit with current never falling below ' + fmt(s.itr, 2) + ' ×FLA',
+      b.vLNs * s.vtap, iTap, 'TRIP AT ' + fmtT(s.tmax), 'The starter winding is not rated to sit there', 'op');
+    const tTh = thermalTime(iTap, false);
+    return {
+      readout: [{ k: 'Tap voltage', v: fmt(s.vtap * 100, 0), u: '% nominal' },
+        { k: 'Tap voltage', v: fmt(b.vLNs * s.vtap, 2), u: 'V sec' },
+        { k: 'Current on tap', v: fmt(iTap * b.flaSec, 3), u: 'A sec' },
+        { k: 'Current on tap', v: fmt(iTap, 2), u: '× FLA' },
+        { k: 'Transition at', v: fmt(s.itr * b.flaSec, 3), u: 'A sec' },
+        { k: 'Cold curve there', v: fmtT(tTh), u: '' }],
+      points: pts,
+      tcc: thermalGeo([{ i: iTap, t: s.tmax, sel: true, lab: 'tap limit' }]),
+      notes: [
+        { lvl: 'note', lb: 'Current follows voltage', txt: 'Starting current falls roughly in proportion to the tap voltage, so at ' + fmt(s.vtap * 100, 0) + '% the motor draws about ' + fmt(iTap, 2) + ' ×FLA instead of ' + fmt(CFG.lra, 2) + '. Torque falls with the square of it, which is why the acceleration takes longer on the tap than it does across the line.' },
+        { lvl: 'warn', lb: 'The failure is the point', txt: 'A transition that works is unremarkable. The second run is the one worth doing carefully: an autotransformer tap left energised past its short-time rating is a fire, and this element is what prevents it.' },
+        { lvl: 'note', lb: 'Thermal alongside', txt: 'At ' + fmt(iTap, 2) + ' ×FLA the cold thermal curve reaches trip at ' + fmtT(tTh) + '. Confirm which element the relay reports when the tap limit and the thermal model are close together.' }
+      ]
+    };
+  }
+});
+
+/* ==================================================================
+   STATE + PERSISTENCE
+   ================================================================== */
+const STORE = 'mtr869.v1';
+let ST = { el: '49', set: {}, opt: {}, sheet: [], vec: null, pt: null };
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST })); } catch (e) {} }
+function load() {
+  try { const r = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); }
+  } catch (e) {}
+}
+const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
+function defaults(el) {
+  const s = {}, o = {};
+  el.fields.forEach(f => s[f.k] = f.d);
+  (el.opts || []).forEach(f => o[f.k] = f.d);
+  return { s, o };
+}
+function curSettings() {
+  const el = elByAnsi(ST.el), d = defaults(el);
+  return { el, s: Object.assign(d.s, ST.set[el.ansi] || {}), o: Object.assign(d.o, ST.opt[el.ansi] || {}) };
+}
+const $ = q => document.querySelector(q);
+const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const noteHTML = n => '<div class="note ' + (n.lvl === 'note' ? '' : n.lvl) + '"><span class="lb">' + n.lb + '</span><span>' + n.txt + '</span></div>';
+
+/* ==================================================================
+   RENDER — configuration
+   ================================================================== */
+function renderCfg() {
+  document.querySelectorAll('[data-cfg]').forEach(el => {
+    if (el !== document.activeElement) el.value = CFG[el.dataset.cfg];
+  });
+  const b = base();
+  $('#derived').innerHTML = [
+    ['FLA', fmt(CFG.fla, 1), 'A primary'], ['FLA', fmt(b.flaSec, 3), 'A sec'],
+    ['Service factor A', fmt(b.sfaSec, 3), 'A sec'], ['Locked rotor', fmt(b.lraPri, 0), 'A primary'],
+    ['Locked rotor', fmt(b.lraSec, 3), 'A sec'], ['Phase CTR', fmt(b.ctr, 1) + ':1', ''],
+    ['Ground CTR', fmt(b.ctrg, 1) + ':1', ''], ['VT ratio', fmt(b.vtr, 1) + ':1', ''],
+    ['Nominal secondary', fmt(b.vLNs, 2), 'V L-N'], ['Rated output', fmt(b.kW, 0), 'kW']
+  ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
+
+  const tC = thermalTime(CFG.lra, false), tH = thermalTime(CFG.lra, true);
+  $('#derivedT').innerHTML = [
+    ['Curve A', fmt(curveA(), 1), CFG.cmode === 'fit' ? 'fitted' : 's'],
+    ['Cold curve at LRA', fmtT(tC), ''], ['Safe stall cold', fmtT(CFG.lrtc), ''],
+    ['Hot curve at LRA', fmtT(tH), ''], ['Safe stall hot', fmtT(CFG.lrth), ''],
+    ['Acceleration', fmtT(CFG.acc), 'nameplate'],
+    ['Cold margin', tC ? fmt(CFG.lrtc / tC, 2) + '×' : '—', 'stall ÷ curve'],
+    ['t at 2 ×FLA', fmtT(thermalTime(2, false)), 'cold']
+  ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
+
+  const n = [];
+  if (tC && tC > CFG.lrtc)
+    n.push({ lvl: 'bad', lb: 'Curve above damage', txt: 'The cold overload curve reaches trip at ' + fmtT(tC) + ' at locked rotor, but the motor\'s safe stall time is ' + fmtT(CFG.lrtc) + '. The protection sits above the damage point — a stall would burn the rotor before the relay operated. Raise the curve multiplier or fit the curve properly before testing to it.' });
+  else if (tC)
+    n.push({ lvl: 'good', lb: 'Curve under damage', txt: 'At locked rotor the cold curve trips at ' + fmtT(tC) + ' against a safe stall time of ' + fmtT(CFG.lrtc) + ' — a margin of ' + fmt(CFG.lrtc / tC, 2) + '×. The protection sits under the machine\'s damage point where it belongs.' });
+  if (tH && tH < CFG.acc)
+    n.push({ lvl: 'bad', lb: 'Hot start will trip', txt: 'The hot curve reaches trip at ' + fmtT(tH) + ' but the motor needs ' + fmtT(CFG.acc) + ' to accelerate. A restart on a warm machine trips on the thermal element before it finishes starting. Real finding — raise it with the setting engineer rather than working around it.' });
+  else if (tC && tC < CFG.acc)
+    n.push({ lvl: 'bad', lb: 'Cold start will trip', txt: 'Even the cold curve (' + fmtT(tC) + ') is shorter than the ' + fmtT(CFG.acc) + ' acceleration time. Every start trips.' });
+  else if (tC)
+    n.push({ lvl: 'note', lb: 'Start margin', txt: 'Cold curve ' + fmtT(tC) + ' against ' + fmtT(CFG.acc) + ' acceleration leaves ' + fmtT(tC - CFG.acc) + ' of margin on a cold start' + (tH ? ', and ' + fmtT(tH - CFG.acc) + ' hot' : '') + '. Tight margins here are normal on a high-inertia drive but worth recording.' });
+  if (CFG.cmode === 'std')
+    n.push({ lvl: 'warn', lb: 'Fit the curve', txt: 'The overload curve is running on the generic constant A = ' + fmt(CFG.ca, 1) + ' s. Published motor overload families differ by product and revision, so read one point off the relay\'s own curve display — a current multiple and its time — and switch the model to fit mode. That removes the guess entirely.' });
+  if (b.lraSec > CFG.imax)
+    n.push({ lvl: 'warn', lb: 'Locked rotor over range', txt: 'Locked-rotor current is ' + fmt(b.lraSec, 2) + ' A secondary, past the ' + fmt(CFG.imax, 1) + ' A channel limit for this amplifier mode. Switch to 3 × 32 A, or test the start elements at a reduced multiple and note it on the record.' });
+  else
+    n.push({ lvl: 'note', lb: 'Locked rotor in range', txt: 'Locked-rotor current is ' + fmt(b.lraSec, 2) + ' A secondary, inside the ' + fmt(CFG.imax, 1) + ' A channel limit — the start elements can be tested at full magnitude.' });
+  if (CFG.start && CFG.tbs && CFG.start * CFG.tbs > 60)
+    n.push({ lvl: 'note', lb: 'Start limits', txt: CFG.start + ' starts per hour with ' + CFG.tbs + ' minutes between them cannot both be satisfied in one hour — the time-between-starts limit is the binding one.' });
+  $('#cfgNotes').innerHTML = n.map(noteHTML).join('');
+  chipStrip();
+}
+function chipStrip() {
+  const b = base();
+  $('#topChips').innerHTML = [
+    ['<span class="dot"></span>' + CFG.hp + ' hp', CFG.kv + ' kV · ' + CFG.fla + ' A FLA'],
+    ['LRA', fmt(CFG.lra, 1) + ' ×FLA · stall ' + fmt(CFG.lrtc, 0) + ' s'],
+    ['Curve', 'CM ' + fmt(CFG.cm, 1) + ' · A ' + fmt(curveA(), 0)],
+    ['K', fmt(CFG.k, 1)],
+    ['CT', CFG.ctp + ':' + CFG.cts],
+    ['CMC', CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A']
+  ].map(([a, v]) => '<span class="chip">' + a + '<b>' + v + '</b></span>').join('');
+}
+
+/* ==================================================================
+   RENDER — element workspace
+   ================================================================== */
+function renderRail() {
+  const groups = [];
+  ELEMENTS.forEach(e => {
+    let g = groups.find(x => x.n === e.group);
+    if (!g) groups.push(g = { n: e.group, items: [] });
+    g.items.push(e);
+  });
+  $('#rail').innerHTML = groups.map(g =>
+    '<div class="rail-h">' + esc(g.n) + '</div>' + g.items.map(e =>
+      '<button class="rail-i" type="button" data-el="' + e.ansi + '" aria-current="' + (e.ansi === ST.el) + '">' +
+      '<span class="ansi">' + esc(e.ansi) + '</span><span class="nm">' + esc(e.name) + '</span></button>').join('')
+  ).join('');
+}
+function fieldHTML(f, v, ns) {
+  const id = ns + '_' + f.k;
+  let ctl;
+  if (f.t === 'sel') ctl = '<select id="' + id + '" data-' + ns + '="' + f.k + '">' +
+    f.opts.map(([val, lab]) => '<option value="' + esc(val) + '"' + (String(v) === String(val) ? ' selected' : '') + '>' + esc(lab) + '</option>').join('') + '</select>';
+  else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  /* step drives only the spinner increment; "any" keeps the browser from
+     rejecting a value that does not land on it, which a relay setting rarely
+     does. */
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  const wide = (f.t === 'sel' && f.opts.some(o => o[1].length > 22)) || f.t === 'txt';
+  return '<div class="f' + (wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
+    (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
+}
+
+/* keepForms: leave the settings inputs exactly as the user is typing them.
+   Rebuilding them mid-entry rewrote the field from the parsed number, so a
+   half-typed "0." became "0" and a decimal could never be completed. */
+function renderElement(keepForms) {
+  const { el, s, o } = curSettings();
+  document.querySelectorAll('.rail-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.el === el.ansi)));
+  $('#setHint').textContent = 'ANSI ' + el.ansi;
+  if (!keepForms) {
+    $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
+    $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  }
+
+  let R;
+  try { R = el.compute(s, o); }
+  catch (err) { $('#outPane').innerHTML = '<div class="note bad"><span class="lb">Error</span><span>' + esc(err.message) +
+    ' — check the settings above for a value that cannot be resolved (a zero ratio, an empty list, a pickup of zero).</span></div>'; return; }
+
+  if (!R.points.length) {
+    $('#outPane').innerHTML = '<div class="ehead"><span class="badge">' + esc(el.ansi) + '</span><div><h2>' + esc(el.name) +
+      '</h2><p class="desc">' + esc(el.desc) + '</p></div></div><div class="notes">' + (R.notes || []).map(noteHTML).join('') + '</div>';
+    window.__lastResult = { el, R }; return;
+  }
+  if (!ST.pt || !R.points.some(p => p.id === ST.pt)) ST.pt = R.points[0].id;
+  const pt = R.points.find(p => p.id === ST.pt) || R.points[0];
+  const chNotes = checkChannels(pt.channels);
+
+  let tlHTML = '';
+  if (pt.tl) {
+    const states = pt.tl.map((x, k) => Object.assign({}, x, { sel: k === pt.tlIdx }));
+    tlHTML = '<div class="phbox full"><div class="cap">Sequence — the selected state is outlined</div>' + timelineSVG(states, 660) + '</div>';
+  }
+  let tccHTML = '';
+  if (R.tcc) {
+    const geo = { curves: R.tcc.curves, marks: R.tcc.marks,
+      points: (R.tcc.points || []).map((q, k) => Object.assign({}, q, { sel: R.points[k] ? R.points[k].id === ST.pt : q.sel })) };
+    tccHTML = '<div class="phbox full"><div class="cap">Overload curve against the motor&rsquo;s own limits</div>' + tccSVG(geo, 660) +
+      '<div class="legend wide" style="padding:6px 2px 0;">' +
+      '<div class="lgi"><span class="sw" style="border-top-color:var(--accent)"></span><span>cold overload curve</span></div>' +
+      '<div class="lgi"><span class="sw" style="border-top-color:var(--accent);border-top-style:dashed"></span><span>hot curve</span></div>' +
+      '<div class="lgi"><span class="sw" style="border-top-color:var(--fail);border-top-style:dotted"></span><span>locked-rotor damage points</span></div>' +
+      '<div class="lgi"><span class="sw" style="border-top-color:var(--l3);border-top-style:dashed"></span><span>acceleration time at LRA</span></div>' +
+      '</div></div>';
+  }
+
+  $('#outPane').innerHTML =
+    '<div class="ehead"><span class="badge">' + esc(el.ansi) + '</span><div><h2>' + esc(el.name) + '</h2>' +
+      '<p class="desc">' + esc(el.desc) + '</p></div></div>' +
+    '<div class="blk"><div class="blk-h"><h3>Derived from settings</h3></div><dl class="readout">' +
+      R.readout.map(r => '<div><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) + (r.u ? '<small>' + esc(r.u) + '</small>' : '') + '</dd></div>').join('') + '</dl></div>' +
+    (tlHTML || tccHTML ? '<div class="blk"><div class="plots">' + tlHTML + tccHTML + '</div></div>' : '') +
+    '<div class="blk"><div class="blk-h"><h3>Test points</h3><span class="hint">select a row to load its channels</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Step</th><th>What is applied</th><th>Expected</th></tr></thead><tbody>' +
+      R.points.map(p => {
+        const pk = Math.max(0, ...p.channels.filter(c => c.unit === 'A').map(c => c.mag));
+        const vk = Math.max(0, ...p.channels.filter(c => c.unit === 'V').map(c => c.mag));
+        const over = pk > CFG.imax + 1e-9 ? 'needs ' + fmt(pk, 1) + ' A — past the ' + fmt(CFG.imax, 1) + ' A channel limit'
+                   : vk > CFG.vmax + 1e-9 ? 'needs ' + fmt(vk, 0) + ' V — past the ' + fmt(CFG.vmax, 0) + ' V channel limit' : '';
+        return '<tr data-pt="' + esc(p.id) + '" style="cursor:pointer' + (p.id === ST.pt ? ';background:var(--accent-soft)' : '') + '">' +
+          '<td class="key">' + esc(p.name) + (over ? '<span class="sm" style="color:var(--fail)">' + over + '</span>' : '') + '</td>' +
+          '<td>' + esc(p.detail) + '</td>' +
+          '<td><span class="pill ' + (p.verdict || 'nu') + '">' + esc(p.expect) + '</span><span class="sm">' + esc(p.expectSub || '') + '</span></td></tr>';
+      }).join('') + '</tbody></table></div></div>' +
+    '<div class="blk"><div class="chan"><div class="chan-h"><h3>CMC 356 channels</h3>' +
+      '<span class="cfg">' + esc(pt.name) + ' · ' + (CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A') + '</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Output</th><th class="n">Magnitude</th><th class="n">Angle</th><th class="n">Freq</th><th>Note</th></tr></thead><tbody>' +
+      pt.channels.map(c => '<tr><td class="chname ' + c.cls + '">' + esc(c.ch) + '</td>' +
+        '<td class="n">' + fmt(c.mag, c.unit === 'A' ? 3 : 2) + ' ' + c.unit + '</td>' +
+        '<td class="n">' + fmtA(c.ang) + '</td><td class="n">' + fmt(c.freq, 3) + ' Hz</td>' +
+        '<td>' + esc(c.note || '') + '</td></tr>').join('') + '</tbody></table></div></div></div>' +
+    (pt.phasor && (pt.phasor.v.length || pt.phasor.i.length) ?
+      '<div class="blk"><div class="blk-h"><h3>Applied vectors</h3><span class="hint">' + esc(pt.name) + '</span></div>' +
+      '<div class="plots"><div class="phbox"><div class="cap">Phasors</div>' + phasorSVG(pt.phasor, 280) + '</div>' +
+      '<div class="legend wide" style="align-self:start;">' + phasorLegend(pt.phasor) + '</div></div></div>' : '') +
+    '<div class="blk"><div class="blk-h"><h3>Before you inject</h3></div><div class="notes">' +
+      chNotes.concat(R.notes || []).map(noteHTML).join('') + '</div></div>';
+
+  $('#outPane').querySelectorAll('[data-pt]').forEach(tr =>
+    tr.addEventListener('click', () => { ST.pt = tr.dataset.pt; save(); renderElement(); }));
+  window.__lastResult = { el, R };
+}
+
+/* ==================================================================
+   RENDER — vector calculator
+   ================================================================== */
+const PRESETS = {
+  'Full load': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec;
+    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
+  'Service factor': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.sfaSec;
+    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
+  'Starting': b => { const I = b.lraSec, la = -80, V = b.vLNs * 0.85;
+    return { v: [[V, 0], [V, -120], [V, 120]], i1: [[I, la], [I, la - 120], [I, la + 120]] }; },
+  '10% unbalance': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec, f = (1 - 2 * 0.10) / 1.10;
+    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [I * f, la + 120]] }; },
+  'Single phasing': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec * 1.3;
+    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, la], [I, la - 120], [0, 0]] }; },
+  'Light load': b => { const I = b.flaSec * 0.35;
+    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]], i1: [[I, -55], [I, -175], [I, 65]] }; },
+  'Reverse rotation': b => { const la = -Math.acos(Math.min(1, CFG.pf)) * R2D, I = b.flaSec;
+    return { v: [[b.vLNs, 0], [b.vLNs, 120], [b.vLNs, -120]], i1: [[I, la], [I, la + 120], [I, la - 120]] }; }
+};
+function rowsHTML(id, vals) {
+  return vals.map((p, k) =>
+    '<div class="vin-row"><span class="lbl ' + PHC[k] + '">' + PH[k] + '</span>' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
+}
+const r2 = a => a.map(p => [Math.round(p[0] * 1000) / 1000, Math.round(wrap(p[1]) * 10) / 10]);
+
+/* keepInputs: same reason as renderElement — do not rewrite the boxes the
+   user is typing into. */
+function renderVector(keepInputs) {
+  if (!ST.vec) ST.vec = PRESETS['Full load'](base());
+  ST.vec = { v: r2(ST.vec.v), i1: r2(ST.vec.i1) };
+  const V = ST.vec, b = base();
+  $('#presets').innerHTML = Object.keys(PRESETS).map(k => '<button class="pbtn" type="button" data-preset="' + esc(k) + '">' + esc(k) + '</button>').join('');
+  if (!keepInputs) {
+    $('#vIn').innerHTML = rowsHTML('v', V.v);
+    $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+  }
+
+  const Vp = V.v.map(p => pol(p[0], p[1])), Ip = V.i1.map(p => pol(p[0], p[1]));
+  const ph = {
+    v: Vp.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) })),
+    i: Ip.map((p, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) })).filter(x => x.mag > 1e-9)
+  };
+  $('#vecPhasor').innerHTML = phasorSVG(ph, 290);
+  $('#vecLegend').innerHTML = phasorLegend(ph);
+
+  const si = seq(Ip[0], Ip[1], Ip[2]), sv = seq(Vp[0], Vp[1], Vp[2]);
+  const i1pu = mag(si.p) / Math.max(1e-9, b.flaSec), i2pu = mag(si.n) / Math.max(1e-9, b.flaSec);
+  const ieq = ieqPu(i1pu, i2pu);
+  const tC = thermalTime(ieq, false), tH = thermalTime(ieq, true);
+  const ratio = mag(si.p) > 1e-9 ? mag(si.n) / mag(si.p) : (mag(si.n) > 1e-9 ? Infinity : 0);
+
+  $('#vecTcc').innerHTML = tccSVG(Object.assign(thermalGeo([]), {
+    points: [{ i: Math.max(1.001, ieq), t: tC || 1e5, sel: true, lab: 'Ieq ' + fmt(ieq, 2) }]
+  }), 320);
+
+  const trow = (k, v, u, cls) => '<tr><td class="key ' + (cls || '') + '">' + k + '</td><td class="n">' + v + '</td><td class="ch-n">' + u + '</td></tr>';
+  $('#vecThTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Value</th><th>Unit</th></tr></thead><tbody>' +
+    trow('I1 — positive sequence', fmt(i1pu, 4), '× FLA') +
+    trow('I2 — negative sequence', fmt(i2pu, 4), '× FLA') +
+    trow('I2 / I1', isFinite(ratio) ? fmt(ratio * 100, 2) : 'all negative seq', '%') +
+    trow('K factor', fmt(CFG.k, 1), 'from setup') +
+    trow('Ieq = √(I1² + K·I2²)', fmt(ieq, 4), '× FLA') +
+    trow('Heating penalty', fmt(i1pu > 1e-9 ? ieq / i1pu : 0, 3), '× over I1 alone') +
+    '<tr class="grp"><td colspan="3">Against the overload curve</td></tr>' +
+    trow('Operate time — cold', fmtT(tC), '') +
+    trow('Operate time — hot', fmtT(tH), '') +
+    trow('Capacity rate', fmt(tcuRate(ieq, false), 4), '% per second') +
+    trow('Time to alarm at 75%', fmtT(tC ? tC * 0.75 : null), '') +
+    '</tbody>';
+
+  const srow = (lab, c, u, cls) => '<tr><td class="chname ' + cls + '">' + lab + '</td><td class="n">' + fmt(mag(c), u === 'V' ? 2 : 3) + ' ' + u + '</td><td class="n">' + fmtA(ang(c)) + '</td></tr>';
+  $('#vecSeqTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Magnitude</th><th class="n">Angle</th></tr></thead><tbody>' +
+    '<tr class="grp"><td colspan="3">Voltage</td></tr>' + srow('V1', sv.p, 'V', 'ch-l2') + srow('V2', sv.n, 'V', 'ch-l1') + srow('3V0', scale(sv.z, 3), 'V', 'ch-n') +
+    '<tr class="grp"><td colspan="3">Current</td></tr>' + srow('I1', si.p, 'A', 'ch-l2') + srow('I2', si.n, 'A', 'ch-l1') + srow('3I0', scale(si.z, 3), 'A', 'ch-n') +
+    '</tbody>';
+
+  let S = cx(0, 0);
+  for (let k = 0; k < 3; k++) S = add(S, mul(Vp[k], conj(Ip[k])));
+  const Sm = mag(S), pf = Sm > 1e-9 ? S.re / Sm : 0, scaleP = b.vtr * b.ctr;
+  const prow = (k, v, u) => '<tr><td class="key">' + k + '</td><td class="n">' + v + '</td><td class="ch-n">' + u + '</td></tr>';
+  $('#vecPwrTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Value</th><th>Unit</th></tr></thead><tbody>' +
+    prow('P — primary', fmt(S.re * scaleP / 1000, 2), 'kW') + prow('Q — primary', fmt(S.im * scaleP / 1000, 2), 'kvar') +
+    prow('S — primary', fmt(Sm * scaleP / 1000, 2), 'kVA') +
+    prow('Loading', fmt(100 * mag(si.p) / Math.max(1e-9, b.flaSec), 1), '% of FLA') +
+    prow('Power factor', fmt(Math.abs(pf), 4), (S.im >= 0 ? 'lagging' : 'leading')) +
+    prow('Direction', S.re >= 0 ? 'motoring' : 'generating', '') +
+    prow('Phase currents', fmt(mag(Ip[0]), 3) + ' / ' + fmt(mag(Ip[1]), 3) + ' / ' + fmt(mag(Ip[2]), 3), 'A sec') +
+    prow('3I0', fmt(mag(scale(si.z, 3)), 4), 'A sec') +
+    '</tbody>';
+}
+
+/* ==================================================================
+   TEST SHEET
+   ================================================================== */
+const SHEAD = ['Element', 'Test step', 'Quantity 1', 'Quantity 2', 'Expected', 'Measured', 'Pass/Fail'];
+function renderSheet() {
+  const rows = ST.sheet || [], b = base();
+  $('#sheetCount').textContent = rows.length;
+  const hdr = '# 869-MTR test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+    '\n# ' + CFG.hp + ' hp  ' + CFG.kv + ' kV  FLA ' + CFG.fla + ' A  LRA ' + CFG.lra + ' xFLA  stall ' + CFG.lrtc + '/' + CFG.lrth + ' s' +
+    '\t curve CM ' + CFG.cm + ' A ' + fmt(curveA(), 1) + ' K ' + CFG.k +
+    '\t CT ' + CFG.ctp + ':' + CFG.cts + '\t CMC ' + (CFG.cmc === '6x' ? '6x12.5A' : CFG.cmc === '3x' ? '3x32A' : '1x64A') + '\n\n';
+  $('#sheetOut').value = rows.length
+    ? hdr + SHEAD.join('\t') + '\n' + rows.map(r => r.concat(['', '']).slice(0, 7).join('\t')).join('\n')
+    : 'No test points collected yet.\n\nOpen the Elements tab, set an element up, then use "Add these test points to sheet".';
+}
+
+/* ==================================================================
+   METHOD
+   ================================================================== */
+function renderMethod() {
+  const b = base(), tC = thermalTime(CFG.lra, false), tH = thermalTime(CFG.lra, true);
+  $('#methodDoc').innerHTML = `
+    <h2>How this tool arrives at its numbers</h2>
+    <p>Everything below is stated so the arithmetic can be checked by hand. It does not replace the relay
+       manual, the setting file or the motor&rsquo;s thermal-limit sheet &mdash; it replaces the conversion
+       between them and the test set.</p>
+
+    <h3>Reference frame</h3>
+    <p>All applied quantities are <strong>secondary</strong>, at the relay terminals, and all angles are quoted
+       against V&nbsp;L1 at 0&deg; with counter-clockwise positive. Currents are expressed in multiples of full
+       load, because that is the language every motor setting is written in.</p>
+    <div class="eq">FLA secondary = FLA primary / CTR = ${fmt(CFG.fla, 1)} / ${fmt(b.ctr, 1)} = ${fmt(b.flaSec, 3)} A
+locked rotor  = ${fmt(CFG.lra, 2)} &times; FLA           = ${fmt(b.lraSec, 3)} A secondary</div>
+
+    <h3>Equivalent heating current</h3>
+    <p>This is the one calculation that makes a motor relay different from every other relay in the family:</p>
+    <div class="eq">Ieq = &radic;( I1&sup2; + K &middot; I2&sup2; )      K = ${fmt(CFG.k, 1)}</div>
+    <p>Negative-sequence current induces double-frequency currents in the rotor, which heat it several times
+       harder than the same magnitude of balanced current. K is the weighting, and it means a modestly
+       unbalanced supply trips the thermal element far sooner than its measured phase current suggests. Every
+       thermal calculation in this tool runs on Ieq, not on the applied current.</p>
+
+    <h3>The overload curve</h3>
+    <div class="eq">standard form   t = CM &middot; A / ( I&#8319; &minus; 1 )
+hot curve       t hot = hot/cold ratio &times; t cold
+IEC replica     t = &tau; &middot; ln[ I&sup2; / (I&sup2; &minus; (k&middot;SF)&sup2;) ]</div>
+    <p>Published motor overload families differ between products and firmware revisions, so the constant A is
+       exposed rather than assumed. The honest way to set it is the <strong>fit mode</strong> on the Setup tab:
+       read one point off the relay&rsquo;s own curve display &mdash; a current multiple and the time it shows
+       &mdash; and the tool solves</p>
+    <div class="eq">A = t &middot; ( I&#8319; &minus; 1 ) / CM</div>
+    <p>Check a second point at a different multiple afterwards; that confirms the exponent as well as the
+       constant. Until you do, treat every predicted time here as provisional.</p>
+
+    <h3>Thermal capacity</h3>
+    <div class="eq">accumulation   d(TCU)/dt = 100% / t(Ieq)
+decay          TCU(t) = TCU&#8320; &middot; e^(&minus;t/&tau;)</div>
+    <p>&tau; is ${fmt(CFG.taur, 0)}&nbsp;minutes running and ${fmt(CFG.taus, 0)}&nbsp;minutes stopped here. The
+       model has memory, which is why the order of your tests changes the answers: a point run on a warm model
+       reads short. Reset the capacity between points where the relay allows it and record the starting value
+       for each.</p>
+
+    <h3>Does the protection fit the machine?</h3>
+    <p>A motor relay is the one place where the tool can check the settings against the machine rather than
+       just against themselves. Three comparisons matter, and all three are made on the Setup tab:</p>
+    <ul>
+      <li><strong>Curve under the damage point.</strong> At locked rotor the cold curve gives
+          ${fmtT(tC)} against a safe stall time of ${fmtT(CFG.lrtc)}. The curve must sit below the stall point
+          or a locked rotor burns before the relay operates.</li>
+      <li><strong>Curve above the start.</strong> The motor needs ${fmtT(CFG.acc)} to accelerate. The hot curve
+          reaches trip at ${fmtT(tH)} &mdash; if that is shorter than the acceleration time, a warm restart
+          trips before the machine finishes starting.</li>
+      <li><strong>Short circuit above locked rotor.</strong> A 50P pickup at or below
+          ${fmt(CFG.lra, 2)}&nbsp;&times;FLA trips on every healthy start.</li>
+    </ul>
+    <p>Any of these three failing is a setting finding, not a test failure. Raise it rather than working around
+       it on the test set.</p>
+
+    <h3>Unbalance</h3>
+    <div class="eq">one phase at fraction f:   I1 = (2 + f)/3 ,  I2 = (1 &minus; f)/3
+                          I2/I1 = (1 &minus; f)/(2 + f)
+for a target ratio r:     f = (1 &minus; 2r) / (1 + r)</div>
+    <p>A fully open phase is f&nbsp;=&nbsp;0, giving 50% &mdash; the most a single break can produce and the
+       ceiling for that method. Beyond it you need a reversed phase.</p>
+
+    <h3>What this tool does not do</h3>
+    <ul>
+      <li><strong>RTD inputs.</strong> Stator and bearing temperature protection is tested with resistance
+          boxes on the RTD inputs, not with a current source. That belongs to a different procedure.</li>
+      <li><strong>40 loss of excitation on synchronous machines.</strong> That is an offset-mho characteristic
+          in the impedance plane; the 889 generator tool in this family does that arithmetic. The 55
+          power-factor element here is the coarser substitute.</li>
+      <li><strong>60 CT/VT supervision.</strong> The logic varies enough between revisions that a generic model
+          would mislead rather than help.</li>
+      <li><strong>Setting file import.</strong> Settings are entered by hand, which means they get read off the
+          relay once and checked.</li>
+    </ul>
+
+    <h3>Before the first use on a job</h3>
+    <ul>
+      <li>Enter the real nameplate and thermal-limit data, then read the Setup tab&rsquo;s checks before
+          touching the test set. They will tell you whether the settings fit the machine.</li>
+      <li>Put the overload curve into fit mode from a point read off the relay, and confirm with a second
+          point at a different multiple.</li>
+      <li>Plan the thermal points as one ordered run with resets between them, and write the starting thermal
+          capacity next to every recorded time.</li>
+      <li>Run the start-inhibit points on 51LR, 37 and 27 &mdash; the elements that must <em>not</em> operate
+          during a start are the ones that strand a motor in service.</li>
+    </ul>`;
+}
+
+/* ==================================================================
+   EVENTS
+   ================================================================== */
+function setTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === id)));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === id));
+  if (id === 'v-vec') renderVector();
+  if (id === 'v-sheet') renderSheet();
+  if (id === 'v-meth') renderMethod();
+  if (id === 'v-setup') renderCfg();
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setTab(t.dataset.view)));
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.cfg) {
+    const k = t.dataset.cfg, v = t.type === 'number' ? parseFloat(t.value) : t.value;
+    CFG[k] = (t.type === 'number' && !isFinite(v)) ? CFG[k] : v;
+    if (k === 'cmc') { CFG.imax = v === '6x' ? 12.5 : v === '3x' ? 32 : 64; const f = document.querySelector('[data-cfg="imax"]'); if (f) f.value = CFG.imax; }
+    save(); renderCfg(); renderElement();
+  } else if (t.dataset.set || t.dataset.opt) {
+    const ns = t.dataset.set ? 'set' : 'opt', k = t.dataset[ns], el = elByAnsi(ST.el);
+    ST[ns][el.ansi] = ST[ns][el.ansi] || {};
+    if (t.type === 'number') {
+      const v = parseFloat(t.value);
+      /* An empty box, a lone minus or a trailing point are all stages of
+         typing a number. Hold the last good value and let the entry finish. */
+      if (isFinite(v)) ST[ns][el.ansi][k] = v;
+    } else ST[ns][el.ansi][k] = t.value;
+    save();
+    renderElement(true);
+  } else if (t.dataset.vec) {
+    const [g, i, j] = t.dataset.vec.split('.'), v = parseFloat(t.value);
+    if (isFinite(v)) { ST.vec[g][+i][+j] = v; save(); }
+    renderVector(true);
+  }
+});
+document.addEventListener('click', e => {
+  const rail = e.target.closest('[data-el]');
+  if (rail) { ST.el = rail.dataset.el; ST.pt = null; save(); renderElement(); return; }
+  const pre = e.target.closest('[data-preset]');
+  if (pre) { ST.vec = PRESETS[pre.dataset.preset](base()); save(); renderVector(); return; }
+});
+$('#addSheet').addEventListener('click', () => {
+  const L = window.__lastResult;
+  if (!L) return;
+  L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
+  save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
+  const btn = $('#addSheet');
+  btn.textContent = L.R.points.length + ' points added — see Test sheet';
+  setTimeout(() => { btn.textContent = 'Add these test points to sheet'; }, 2200);
+});
+$('#copySheet').addEventListener('click', () => { const t = $('#sheetOut'); t.focus(); t.select(); try { document.execCommand('copy'); } catch (e) {} });
+$('#printSheet').addEventListener('click', () => window.print());
+$('#clearSheet').addEventListener('click', () => { ST.sheet = []; save(); renderSheet(); });
+$('#resetBtn').addEventListener('click', () => {
+  CFG = Object.assign({}, SAMPLE);
+  ST = { el: '49', set: {}, opt: {}, sheet: [], vec: null, pt: null };
+  save(); renderCfg(); renderRail(); renderElement();
+});
+$('#themeBtn').addEventListener('click', () => {
+  const r = document.documentElement, cur = r.getAttribute('data-theme');
+  const dark = cur ? cur === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.setAttribute('data-theme', dark ? 'light' : 'dark');
+  renderElement();
+  if ($('#v-vec').classList.contains('on')) renderVector();
+});
+
+/* ==================================================================
+   INIT
+   ================================================================== */
+load();
+renderCfg();
+renderRail();
+renderElement();
+</script>
+</body>
+</html>

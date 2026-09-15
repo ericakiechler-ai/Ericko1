@@ -1,0 +1,2432 @@
+<!doctype html>
+<!--
+  889-GEN — GE Multilin 889 generator protection
+  Part of Relay Test-Value Calculators.
+
+  Copyright (c) 2026 Eric Kiechler. All rights reserved.
+  Licensed per-user. See the licence terms at the foot of the page.
+
+  NOT A SUBSTITUTE FOR ENGINEERING JUDGEMENT. This tool computes proposed
+  secondary injection values from settings entered by its user. It does not
+  read the relay, it cannot know the relay's firmware or its as-built wiring,
+  and the values it produces are a starting point to be verified against the
+  device and the drawings before any current or voltage is applied to plant.
+  The user remains responsible for the test and for the safety of it.
+
+  Not affiliated with, endorsed by, or a product of General Electric, GE
+  Vernova, Siemens AG, or OMICRON electronics. Product names are used to
+  identify the equipment this tool is designed to be used with.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>889 Generator Test Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   TOKENS — light is the base; dark redefines tokens only.
+   Companion to 845-VEC: same instrument system, indigo accent
+   so the two tools are never confused for one another.
+   ============================================================ */
+:root{
+  --ground:#F3F3F7; --surface:#FFFFFF; --surface-2:#EBEBF2; --surface-3:#E1E1EC;
+  --line:#D5D5E0; --line-strong:#B2B2C4;
+  --ink:#15151F; --ink-2:#454556; --ink-3:#6F6F87;
+  --accent:#4A45A8; --accent-ink:#FFFFFF; --accent-soft:#E5E4F6; --accent-line:#A8A4DC;
+  --pass:#1C7340; --pass-bg:#DCEFE2; --fail:#AC2A2A; --fail-bg:#F6DEDE;
+  --warn:#8E5A05; --warn-bg:#FAEBD2;
+  --l1:#C93232; --l2:#2A8642; --l3:#3560C4; --l0:#7A6BB5;
+  --shadow:0 1px 2px rgba(21,21,31,.07), 0 6px 18px -10px rgba(21,21,31,.22);
+  --r:5px;
+  --f-disp:"Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E0E15; --surface:#16161F; --surface-2:#1D1D28; --surface-3:#252533;
+    --line:#2A2A39; --line-strong:#3E3E52;
+    --ink:#E5E5EE; --ink-2:#A6A6BA; --ink-3:#7B7B92;
+    --accent:#9089EC; --accent-ink:#0B0A1C; --accent-soft:#221F45; --accent-line:#4A4590;
+    --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+    --warn:#E0A63C; --warn-bg:#33260D;
+    --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#AA9BE8;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E0E15; --surface:#16161F; --surface-2:#1D1D28; --surface-3:#252533;
+  --line:#2A2A39; --line-strong:#3E3E52;
+  --ink:#E5E5EE; --ink-2:#A6A6BA; --ink-3:#7B7B92;
+  --accent:#9089EC; --accent-ink:#0B0A1C; --accent-soft:#221F45; --accent-line:#4A4590;
+  --pass:#57C282; --pass-bg:#10301F; --fail:#F0736E; --fail-bg:#361718;
+  --warn:#E0A63C; --warn-bg:#33260D;
+  --l1:#F06A66; --l2:#54C070; --l3:#7398F2; --l0:#AA9BE8;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -12px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+/* ============================================================ RESET / BASE */
+*,*::before,*::after{box-sizing:border-box;}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--f-body); font-size:13.5px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0; text-wrap:balance; font-family:var(--f-disp); font-weight:600; letter-spacing:.01em;}
+p{margin:0;}
+button,input,select{font:inherit; color:inherit;}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px;}
+
+/* ============================================================ SHELL */
+.shell{min-height:100vh; display:grid; grid-template-rows:auto auto 1fr;}
+.topbar{display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:10px 18px; background:var(--surface); border-bottom:1px solid var(--line);}
+.brand{display:flex; align-items:baseline; gap:10px; margin-right:auto;}
+.brand .mark{font-family:var(--f-disp); font-weight:700; font-size:22px; letter-spacing:.02em; color:var(--ink); line-height:1;}
+.brand .mark em{font-style:normal; color:var(--accent);}
+.brand .sub{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.12em;
+  font-size:11px; color:var(--ink-3); font-weight:600;}
+.chipstrip{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+.chip{display:inline-flex; align-items:center; gap:6px; padding:3px 9px;
+  border:1px solid var(--line); border-radius:100px; background:var(--surface-2);
+  font-size:11.5px; color:var(--ink-2); white-space:nowrap;}
+.chip b{font-family:var(--f-num); font-weight:500; color:var(--ink); font-size:11.5px;}
+.chip .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none;}
+.tbtn{padding:5px 11px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:var(--r); cursor:pointer; font-size:12.5px; color:var(--ink-2);}
+.tbtn:hover{border-color:var(--accent); color:var(--accent);}
+
+.tabs{display:flex; gap:2px; padding:0 18px; background:var(--surface);
+  border-bottom:1px solid var(--line); overflow-x:auto;}
+.tab{padding:9px 14px 8px; border:0; background:none; cursor:pointer;
+  font-family:var(--f-disp); font-weight:600; font-size:14px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-3); border-bottom:2px solid transparent; white-space:nowrap;}
+.tab:hover{color:var(--ink);}
+.tab[aria-selected="true"]{color:var(--accent); border-bottom-color:var(--accent);}
+.view{display:none; min-width:0;}
+.view.on{display:block;}
+
+/* ============================================================ WORKSPACE */
+.work{display:grid; grid-template-columns:216px minmax(300px,360px) 1fr; align-items:start; min-height:0;}
+.rail{border-right:1px solid var(--line); background:var(--surface);
+  padding:12px 0 24px; position:sticky; top:0; align-self:stretch;}
+.rail-h{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.13em;
+  font-size:10.5px; font-weight:600; color:var(--ink-3); padding:10px 16px 5px;}
+.rail-h:first-child{padding-top:0;}
+.rail-i{display:grid; grid-template-columns:50px 1fr; align-items:center; gap:8px;
+  width:100%; text-align:left; padding:5px 16px; border:0; background:none;
+  cursor:pointer; border-left:2px solid transparent; color:var(--ink-2);}
+.rail-i:hover{background:var(--surface-2); color:var(--ink);}
+.rail-i[aria-current="true"]{background:var(--accent-soft); border-left-color:var(--accent); color:var(--ink);}
+.rail-i .ansi{font-family:var(--f-num); font-weight:600; font-size:12.5px; color:var(--accent); letter-spacing:-.03em;}
+.rail-i .nm{font-size:11.5px; line-height:1.25;}
+
+.pane{padding:16px 18px 40px; min-width:0;}
+.pane.set{border-right:1px solid var(--line); background:var(--surface);}
+.pane.out{background:var(--ground);}
+.blk{margin-bottom:18px;}
+.blk-h{display:flex; align-items:baseline; gap:8px; margin-bottom:9px;
+  padding-bottom:5px; border-bottom:1px solid var(--line);}
+.blk-h h3{font-size:12px; text-transform:uppercase; letter-spacing:.13em; color:var(--ink-3); font-weight:600;}
+.blk-h .hint{margin-left:auto; font-size:11px; color:var(--ink-3);}
+
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:8px 10px;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px 10px;}
+.f{display:flex; flex-direction:column; gap:3px; min-width:0;}
+.f > label{font-family:var(--f-disp); font-size:11px; text-transform:uppercase;
+  letter-spacing:.08em; font-weight:600; color:var(--ink-3); line-height:1.3;}
+.f input, .f select{width:100%; padding:5px 7px; border:1px solid var(--line-strong);
+  background:var(--ground); border-radius:4px;
+  font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;}
+.f select{font-family:var(--f-body); font-size:12px;}
+.f input:focus, .f select:focus{border-color:var(--accent); outline:none; box-shadow:0 0 0 2px var(--accent-soft);}
+.f .u{font-family:var(--f-num); font-size:10.5px; color:var(--ink-3);}
+.f.wide{grid-column:1/-1;}
+
+.ehead{display:flex; align-items:flex-start; gap:12px; margin-bottom:14px;}
+.ehead .badge{font-family:var(--f-num); font-weight:600; font-size:15px; color:var(--accent-ink);
+  background:var(--accent); padding:4px 10px; border-radius:4px; flex:none; letter-spacing:-.03em;}
+.ehead h2{font-size:21px; line-height:1.1; letter-spacing:.01em;}
+.ehead .desc{font-size:12px; color:var(--ink-2); margin-top:2px; max-width:64ch;}
+
+/* ============================================================ TABLES */
+.tw{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface);}
+table{border-collapse:collapse; width:100%; font-size:12.5px;}
+thead th{font-family:var(--f-disp); font-size:10.5px; text-transform:uppercase; letter-spacing:.1em;
+  font-weight:600; color:var(--ink-3); text-align:left; padding:7px 10px;
+  border-bottom:1px solid var(--line-strong); white-space:nowrap; background:var(--surface-2); position:sticky; top:0;}
+tbody td{padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover td{background:var(--surface-2);}
+td.n, th.n{text-align:right; font-family:var(--f-num); font-variant-numeric:tabular-nums; white-space:nowrap;}
+td.key{font-weight:500;}
+td .sm{display:block; font-size:11px; color:var(--ink-3); font-family:var(--f-body); margin-top:1px;}
+tbody tr.grp td{background:var(--surface-3); font-family:var(--f-disp); text-transform:uppercase;
+  letter-spacing:.1em; font-size:10.5px; font-weight:600; color:var(--ink-2); padding:5px 10px;}
+tbody tr.grp:hover td{background:var(--surface-3);}
+
+.pill{display:inline-block; padding:1px 7px; border-radius:100px; font-size:11px;
+  font-family:var(--f-disp); font-weight:600; letter-spacing:.06em; white-space:nowrap;}
+.pill.nu{font-family:var(--f-num); font-size:10.5px; letter-spacing:0;}
+.pill.op{background:var(--pass-bg); color:var(--pass);}
+.pill.no{background:var(--fail-bg); color:var(--fail);}
+.pill.wn{background:var(--warn-bg); color:var(--warn);}
+.pill.nu{background:var(--surface-3); color:var(--ink-2);}
+
+.chan{border:1px solid var(--accent-line); border-radius:var(--r); overflow:hidden; background:var(--surface);}
+.chan-h{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:8px 12px; background:var(--accent-soft); border-bottom:1px solid var(--accent-line);}
+.chan-h h3{font-size:13px; text-transform:uppercase; letter-spacing:.12em; color:var(--accent);}
+.chan-h .cfg{font-size:11px; color:var(--ink-2); margin-left:auto; font-family:var(--f-num);}
+.chan .tw{border:0; border-radius:0;}
+.ch-l1{color:var(--l1);} .ch-l2{color:var(--l2);} .ch-l3{color:var(--l3);} .ch-n{color:var(--ink-3);}
+td.chname{font-family:var(--f-num); font-weight:600; font-size:12px; white-space:nowrap;}
+
+.notes{display:flex; flex-direction:column; gap:6px;}
+.note{display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:start;
+  padding:7px 10px; border-radius:4px; font-size:12px; line-height:1.45;
+  background:var(--surface-2); border-left:3px solid var(--line-strong); color:var(--ink-2);}
+.note.warn{background:var(--warn-bg); border-left-color:var(--warn); color:var(--ink);}
+.note.bad{background:var(--fail-bg); border-left-color:var(--fail); color:var(--ink);}
+.note.good{background:var(--pass-bg); border-left-color:var(--pass); color:var(--ink);}
+.note .lb{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.09em;
+  font-size:10px; font-weight:700; padding-top:2px; white-space:nowrap;}
+
+.readout{display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;}
+.readout div{background:var(--surface); padding:7px 10px;}
+.readout dt{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;}
+.readout dd{margin:1px 0 0; font-family:var(--f-num); font-size:14px; font-weight:500; letter-spacing:-.01em;}
+.readout dd small{font-size:10.5px; color:var(--ink-3); font-weight:400; margin-left:2px;}
+
+/* ============================================================ PLOTS */
+.plots{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; align-items:start;}
+.phwrap{display:grid; grid-template-columns:minmax(210px,1fr) auto; gap:12px; align-items:start;}
+.phbox{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:8px;}
+.phbox .cap{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--ink-3); font-weight:600; padding:0 2px 5px;}
+svg.phasor, svg.rx{display:block; width:100%; height:auto;}
+.ph-grid{stroke:var(--line); fill:none; stroke-width:1;}
+.ph-axis{stroke:var(--line-strong); fill:none; stroke-width:1;}
+.ph-tick{fill:var(--ink-3); font-family:var(--f-num); font-size:9px;}
+.v-l1,.i-l1{stroke:var(--l1);} .v-l2,.i-l2{stroke:var(--l2);}
+.v-l3,.i-l3{stroke:var(--l3);} .v-l0,.i-l0{stroke:var(--l0);}
+.f-l1{fill:var(--l1);} .f-l2{fill:var(--l2);} .f-l3{fill:var(--l3);} .f-l0{fill:var(--l0);}
+.vec-v{stroke-width:2.2; fill:none; stroke-linecap:round;}
+.vec-i{stroke-width:2.2; fill:none; stroke-linecap:round; stroke-dasharray:5 3.5;}
+.vec-i.alt{stroke-width:1.8; stroke-dasharray:1.5 3;}
+/* R-X plane */
+.rx-char{stroke:var(--accent); fill:var(--accent); fill-opacity:.10; stroke-width:1.8;}
+.rx-char2{stroke:var(--accent); fill:none; stroke-width:1.4; stroke-dasharray:5 3;}
+.rx-blind{stroke:var(--accent); fill:none; stroke-width:1.4; stroke-dasharray:2 3;}
+.rx-op{fill:var(--pass); stroke:var(--surface); stroke-width:1.2;}
+.rx-no{fill:var(--fail); stroke:var(--surface); stroke-width:1.2;}
+.rx-nu{fill:var(--ink-3); stroke:var(--surface); stroke-width:1.2;}
+.rx-sel{stroke:var(--ink); stroke-width:2; fill:none;}
+.rx-lab{fill:var(--ink-2); font-family:var(--f-num); font-size:9px;}
+.legend{display:flex; flex-direction:column; gap:5px; min-width:126px;}
+.legend .lgi{display:grid; grid-template-columns:16px 1fr; gap:7px; align-items:center; font-size:11px;}
+.legend .sw{height:0; border-top-width:2.4px; border-top-style:solid;}
+.legend .val{font-family:var(--f-num); font-size:11px; color:var(--ink-2);}
+.legend .scale{font-size:10.5px; color:var(--ink-3); font-family:var(--f-num);
+  padding-bottom:2px; border-bottom:1px solid var(--line); margin-bottom:2px;}
+.legend.wide{display:grid; grid-template-columns:repeat(auto-fit,minmax(186px,1fr)); gap:4px 16px;}
+.legend.wide .scale{grid-column:1/-1;}
+
+/* ============================================================ VECTOR TAB */
+.vgrid{display:grid; grid-template-columns:minmax(280px,336px) minmax(280px,1fr) minmax(258px,336px); align-items:start;}
+.vin-row{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; align-items:center; margin-bottom:6px;}
+.vin-row .lbl{font-family:var(--f-num); font-weight:600; font-size:12px; text-align:right;}
+.vin-row input{width:100%; padding:4px 6px; border:1px solid var(--line-strong); background:var(--ground);
+  border-radius:4px; font-family:var(--f-num); font-size:12.5px; font-variant-numeric:tabular-nums;}
+.vin-row input:focus{border-color:var(--accent); outline:none;}
+.colhead{display:grid; grid-template-columns:36px 1fr 1fr; gap:8px; margin-bottom:4px;}
+.colhead span{font-family:var(--f-disp); font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+  color:var(--ink-3); font-weight:600;}
+.presets{display:flex; flex-wrap:wrap; gap:5px;}
+.pbtn{padding:3px 9px; border:1px solid var(--line-strong); background:var(--surface);
+  border-radius:100px; cursor:pointer; font-size:11.5px; color:var(--ink-2);}
+.pbtn:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+
+/* ============================================================ DOC */
+.doc{max-width:78ch; margin:0 auto; padding:26px 22px 60px;}
+.doc h2{font-size:24px; margin-bottom:4px;}
+.doc h3{font-size:15px; text-transform:uppercase; letter-spacing:.11em; color:var(--accent); margin:22px 0 7px;}
+.doc p{margin:0 0 9px; color:var(--ink-2); max-width:66ch;}
+.doc ul{margin:0 0 10px; padding-left:19px; color:var(--ink-2);}
+.doc li{margin-bottom:4px;}
+.doc code{font-family:var(--f-num); font-size:12px; background:var(--surface-2); padding:1px 4px; border-radius:3px; color:var(--ink);}
+.doc .eq{font-family:var(--f-num); font-size:12.5px; background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:4px; padding:8px 11px; margin:0 0 10px;
+  overflow-x:auto; white-space:pre; color:var(--ink);}
+.sheet-tools{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px;}
+#sheetOut{width:100%; min-height:300px; padding:10px; border:1px solid var(--line-strong);
+  background:var(--surface); border-radius:var(--r);
+  font-family:var(--f-num); font-size:11.5px; line-height:1.5; white-space:pre; overflow-x:auto;}
+
+@media (max-width:1180px){
+  .work{grid-template-columns:184px 1fr;}
+  .pane.out{grid-column:1/-1; border-top:1px solid var(--line);}
+  .vgrid{grid-template-columns:minmax(260px,320px) 1fr;}
+}
+@media (max-width:860px){
+  .work{grid-template-columns:1fr;}
+  .rail{position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .pane.set{border-right:0; border-bottom:1px solid var(--line);}
+  .pane.out{grid-column:auto;}
+  .vgrid{grid-template-columns:1fr;} .phwrap{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+@media print{
+  .topbar,.tabs,.rail,.tbtn,.pbtn{display:none !important;}
+  .work{grid-template-columns:1fr;} .pane{padding:0 0 14px;} body{background:#fff;}
+  .tw,.chan,.phbox{break-inside:avoid;}
+}
+
+/* ---- product footer ------------------------------------------------ */
+.pfoot{max-width:1500px; margin:28px auto 0; padding:16px 18px 26px;
+  border-top:1px solid var(--line); color:var(--ink-3);
+  font-family:var(--f-body); font-size:11px; line-height:1.6;}
+.pfoot .prow{display:flex; flex-wrap:wrap; gap:10px 26px; align-items:baseline;}
+.pfoot .pname{font-family:var(--f-disp); font-size:12px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:600;}
+.pfoot .psep{color:var(--line-strong);}
+.pfoot details{margin-top:10px;}
+.pfoot summary{cursor:pointer; color:var(--ink-2); font-size:11px;
+  padding:3px 0; user-select:none;}
+.pfoot summary:hover{color:var(--ink);}
+.pfoot .pbody{margin-top:8px; padding:12px 14px; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); max-width:74ch;}
+.pfoot .pbody p{margin:0 0 9px;}
+.pfoot .pbody p:last-child{margin-bottom:0;}
+.pfoot .pbody strong{color:var(--ink-2);}
+@media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">889<em>&#8901;</em>GEN</span>
+      <span class="sub">Multilin 889 &nbsp;/&nbsp; Omicron CMC 356</span>
+    </div>
+    <div class="chipstrip" id="topChips"></div>
+    <button class="tbtn" id="themeBtn" type="button">Theme</button>
+    <button class="tbtn" id="resetBtn" type="button">Reset sample</button>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" data-view="v-setup" aria-selected="false">Machine setup</button>
+    <button class="tab" role="tab" data-view="v-elem" aria-selected="true">Elements</button>
+    <button class="tab" role="tab" data-view="v-vec" aria-selected="false">Vector calculator</button>
+    <button class="tab" role="tab" data-view="v-sheet" aria-selected="false">Test sheet</button>
+    <button class="tab" role="tab" data-view="v-meth" aria-selected="false">Method</button>
+  </nav>
+
+  <!-- ================================================= SETUP ================= -->
+  <section class="view" id="v-setup" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">GEN</span>
+        <div>
+          <h2>Machine, instrument transformers and test set</h2>
+          <p class="desc">Off the generator nameplate, the machine data sheet, the CT/VT schedule and the
+             relay&rsquo;s <em>System Setup</em> pages. The saturated reactances matter here in a way they never
+             did on a transformer relay &mdash; 40, 21 and 78 are all placed in the impedance plane from them.
+             Values shown on load are a worked sample, not your machine.</p>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(292px,1fr)); gap:22px;">
+
+        <div class="blk">
+          <div class="blk-h"><h3>Generator</h3><span class="hint">nameplate</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_mva">Rating</label><input id="cfg_mva" type="number" step="any" inputmode="decimal" data-cfg="mva"><span class="u">MVA</span></div>
+            <div class="f"><label for="cfg_kv">Terminal voltage</label><input id="cfg_kv" type="number" step="any" inputmode="decimal" data-cfg="kv"><span class="u">kV, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_pf">Rated power factor</label><input id="cfg_pf" type="number" step="any" inputmode="decimal" data-cfg="pf"><span class="u">lagging</span></div>
+            <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="any" inputmode="decimal" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_rot">Phase rotation</label>
+              <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select>
+              <span class="u">as configured in relay</span></div>
+            <div class="f"><label for="cfg_poles">Poles</label><input id="cfg_poles" type="number" step="any" inputmode="decimal" data-cfg="poles"><span class="u">for speed reference</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Machine reactances</h3><span class="hint">per unit on machine base</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_xd">Xd &mdash; synchronous</label><input id="cfg_xd" type="number" step="any" inputmode="decimal" data-cfg="xd"><span class="u">pu &mdash; sets 40 zone 2</span></div>
+            <div class="f"><label for="cfg_xdp">X&prime;d &mdash; transient</label><input id="cfg_xdp" type="number" step="any" inputmode="decimal" data-cfg="xdp"><span class="u">pu &mdash; sets 40 offset</span></div>
+            <div class="f"><label for="cfg_xdpp">X&Prime;d &mdash; subtransient</label><input id="cfg_xdpp" type="number" step="any" inputmode="decimal" data-cfg="xdpp"><span class="u">pu</span></div>
+            <div class="f"><label for="cfg_x2">X2 &mdash; negative sequence</label><input id="cfg_x2" type="number" step="any" inputmode="decimal" data-cfg="x2"><span class="u">pu</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Current transformers</h3><span class="hint">CT schedule</span></div>
+          <div class="grid3">
+            <div class="f"><label for="cfg_cttp">Terminal CT prim.</label><input id="cfg_cttp" type="number" step="any" inputmode="decimal" data-cfg="cttp"><span class="u">A &mdash; line end</span></div>
+            <div class="f"><label for="cfg_ctts">Terminal CT sec.</label>
+              <select id="cfg_ctts" data-cfg="ctts"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ctnp">Neutral CT prim.</label><input id="cfg_ctnp" type="number" step="any" inputmode="decimal" data-cfg="ctnp"><span class="u">A &mdash; neutral end</span></div>
+            <div class="f"><label for="cfg_ctns">Neutral CT sec.</label>
+              <select id="cfg_ctns" data-cfg="ctns"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+            <div class="f"><label for="cfg_ctgp">Ground CT prim.</label><input id="cfg_ctgp" type="number" step="any" inputmode="decimal" data-cfg="ctgp"><span class="u">A (50G/51G)</span></div>
+            <div class="f"><label for="cfg_ctgs">Ground CT sec.</label>
+              <select id="cfg_ctgs" data-cfg="ctgs"><option value="5">5 A</option><option value="1">1 A</option></select><span class="u">A</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Voltage transformers</h3><span class="hint">VT schedule</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_vtp">Terminal VT primary</label><input id="cfg_vtp" type="number" step="any" inputmode="decimal" data-cfg="vtp"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vts">Terminal VT secondary</label><input id="cfg_vts" type="number" step="any" inputmode="decimal" data-cfg="vts"><span class="u">V, line&ndash;line</span></div>
+            <div class="f"><label for="cfg_vtc">Connection</label>
+              <select id="cfg_vtc" data-cfg="vtc"><option value="wye">Wye (4-wire)</option><option value="delta">Open / closed delta</option></select><span class="u">as wired to relay</span></div>
+            <div class="f"><label for="cfg_zsrc">Impedance test source</label>
+              <select id="cfg_zsrc" data-cfg="zsrc"><option value="I">Hold current, solve V</option><option value="V">Hold voltage, solve I</option></select><span class="u">for 40 / 21 / 78</span></div>
+            <div class="f"><label for="cfg_zhold">Held magnitude</label><input id="cfg_zhold" type="number" step="any" inputmode="decimal" data-cfg="zhold"><span class="u">A sec, or V sec L&ndash;N</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>Stator grounding</h3><span class="hint">neutral circuit</span></div>
+          <div class="grid2">
+            <div class="f"><label for="cfg_ngtp">Grounding xfmr primary</label><input id="cfg_ngtp" type="number" step="any" inputmode="decimal" data-cfg="ngtp"><span class="u">V &mdash; usually kV L&ndash;N</span></div>
+            <div class="f"><label for="cfg_ngts">Grounding xfmr secondary</label><input id="cfg_ngts" type="number" step="any" inputmode="decimal" data-cfg="ngts"><span class="u">V</span></div>
+            <div class="f wide"><label for="cfg_gnd">Grounding method</label>
+              <select id="cfg_gnd" data-cfg="gnd">
+                <option value="hr">High-resistance, distribution transformer</option>
+                <option value="lr">Low-resistance, neutral resistor</option>
+                <option value="solid">Solidly grounded</option>
+                <option value="ung">Ungrounded</option>
+              </select><span class="u">decides which stator-ground scheme applies</span></div>
+          </div>
+        </div>
+
+        <div class="blk">
+          <div class="blk-h"><h3>CMC 356 output configuration</h3><span class="hint">amplifier setup</span></div>
+          <div class="grid2">
+            <div class="f wide"><label for="cfg_cmc">Current amplifier mode</label>
+              <select id="cfg_cmc" data-cfg="cmc">
+                <option value="6x">6 &times; 12.5 A &mdash; two triples (needed for 3&phi; 87G)</option>
+                <option value="3x">3 &times; 32 A &mdash; one triple, high current</option>
+                <option value="1x">1 &times; 64 A &mdash; triples paralleled, single phase</option>
+              </select>
+              <span class="u">Triple A feeds the terminal-end CTs, triple B the neutral-end CTs.</span></div>
+            <div class="f"><label for="cfg_imax">Current limit / channel</label><input id="cfg_imax" type="number" step="any" inputmode="decimal" data-cfg="imax"><span class="u">A &mdash; editable, verify vs. your unit</span></div>
+            <div class="f"><label for="cfg_vmax">Voltage limit / channel</label><input id="cfg_vmax" type="number" step="any" inputmode="decimal" data-cfg="vmax"><span class="u">V</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Derived base quantities</h3><span class="hint">used by every element below</span></div>
+        <dl class="readout" id="derived"></dl>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Machine reactances referred to the relay</h3><span class="hint">secondary ohms</span></div>
+        <dl class="readout" id="derivedZ"></dl>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Configuration checks</h3></div>
+        <div class="notes" id="cfgNotes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= ELEMENTS ============== -->
+  <section class="view on" id="v-elem" role="tabpanel">
+    <div class="work">
+      <aside class="rail" id="rail"></aside>
+      <div class="pane set">
+        <div class="blk">
+          <div class="blk-h"><h3>Relay settings</h3><span class="hint" id="setHint"></span></div>
+          <div class="grid2" id="setForm"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Test options</h3></div>
+          <div class="grid2" id="optForm"></div>
+        </div>
+        <button class="tbtn" id="addSheet" type="button" style="width:100%; padding:8px;">Add these test points to sheet</button>
+      </div>
+      <div class="pane out" id="outPane"></div>
+    </div>
+  </section>
+
+  <!-- ================================================= VECTOR ================ -->
+  <section class="view" id="v-vec" role="tabpanel">
+    <div class="vgrid">
+      <div class="pane set">
+        <div class="ehead" style="margin-bottom:12px;">
+          <span class="badge">V/I</span>
+          <div><h2>Applied vectors</h2>
+          <p class="desc">Secondary quantities as they leave the test set.</p></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Machine condition presets</h3></div>
+          <div class="presets" id="presets"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Voltage &mdash; terminal VT</h3><span class="hint">V sec, L&ndash;N</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="vIn"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Current &mdash; terminal end, triple A</h3><span class="hint">A sec</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="i1In"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Current &mdash; neutral end, triple B</h3><span class="hint">A sec</span></div>
+          <div class="colhead"><span></span><span>Magnitude</span><span>Angle &deg;</span></div>
+          <div id="i2In"></div>
+        </div>
+      </div>
+
+      <div class="pane out">
+        <div class="blk">
+          <div class="blk-h"><h3>Phasors and impedance plane</h3><span class="hint">CCW positive, V L1 reference</span></div>
+          <div class="plots">
+            <div class="phbox"><div class="cap">Phasors</div><div id="vecPhasor"></div></div>
+            <div class="phbox"><div class="cap">R&ndash;X plane &mdash; Z1 against the 40 zone-2 outline</div><div id="vecRX"></div></div>
+          </div>
+          <div class="legend wide" id="vecLegend" style="margin-top:10px; min-width:0;"></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Differential &amp; restraint per phase</h3><span class="hint">per unit of machine rating</span></div>
+          <div class="tw"><table id="vecDiffTbl"></table></div>
+        </div>
+      </div>
+
+      <div class="pane" style="border-left:1px solid var(--line); background:var(--surface);">
+        <div class="blk">
+          <div class="blk-h"><h3>Symmetrical components</h3></div>
+          <div class="tw"><table id="vecSeqTbl"></table></div>
+        </div>
+        <div class="blk">
+          <div class="blk-h"><h3>Machine quantities</h3><span class="hint">terminal end</span></div>
+          <div class="tw"><table id="vecPwrTbl"></table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= SHEET ================= -->
+  <section class="view" id="v-sheet" role="tabpanel">
+    <div class="pane" style="max-width:1180px;">
+      <div class="ehead">
+        <span class="badge">REC</span>
+        <div><h2>Collected test points</h2>
+        <p class="desc">Everything sent over from the Elements tab, tab-separated. Select all and copy,
+           then paste into a test record or a Test Universe table.</p></div>
+      </div>
+      <div class="sheet-tools">
+        <button class="tbtn" id="copySheet" type="button">Select all for copy</button>
+        <button class="tbtn" id="printSheet" type="button">Print</button>
+        <button class="tbtn" id="clearSheet" type="button">Clear</button>
+        <span class="chip"><span class="dot"></span>Rows <b id="sheetCount">0</b></span>
+      </div>
+      <textarea id="sheetOut" spellcheck="false" readonly></textarea>
+    </div>
+  </section>
+
+  <!-- ================================================= METHOD =============== -->
+  <section class="view" id="v-meth" role="tabpanel">
+    <div class="doc" id="methodDoc"></div>
+  </section>
+
+</div>
+
+<footer class="pfoot">
+  <div class="prow">
+    <span class="pname">889-GEN</span>
+    <span>GE Multilin 889 generator protection</span>
+    <span class="psep">|</span>
+    <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
+    <span class="psep">|</span>
+    <span>Licensed per user &mdash; not for redistribution.</span>
+  </div>
+  <details>
+    <summary>Licence, disclaimer and trademark notice</summary>
+    <div class="pbody">
+      <p><strong>Licence.</strong> This file is licensed to one named user, who may install
+      it on the machines they personally use and may not redistribute, resell, sublicense or
+      publish it. A site or team licence covering named users at one location is available
+      separately. Nothing here transfers ownership of the software.</p>
+      <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
+      settings typed in by its user. The tool does not read the device, does not know its
+      firmware revision or its as-built wiring, and cannot tell whether the settings entered
+      match the ones in service. Treat what it produces as a proposal to be checked against
+      the relay and the drawings.</p>
+      <p><strong>Verify before you inject.</strong> Confirm the CT and VT ratios, the curve
+      constants and at least the first timing point against the device's own prediction before
+      accepting the rest of a table. Curve constants move between firmware revisions; if the
+      first point disagrees, every other time in that table is wrong by the same factor.</p>
+      <p><strong>No warranty.</strong> The software is provided as is, without warranty of any
+      kind, express or implied, including but not limited to the warranties of merchantability
+      and fitness for a particular purpose. To the maximum extent permitted by law the author is
+      not liable for any claim, damage, loss or other liability arising from the software or its
+      use &mdash; including damage to plant, loss of production, or injury. Commissioning
+      protection equipment is hazardous work and remains the responsibility of the competent
+      person carrying it out.</p>
+      <p><strong>Trademarks.</strong> Multilin is a trademark of GE Vernova. SIPROTEC and DIGSI
+      are trademarks of Siemens AG. CMC and Test Universe are trademarks of OMICRON electronics
+      GmbH. These names are used only to identify the equipment this tool is designed to be used
+      with. This tool is an independent work: it is not affiliated with, endorsed by, sponsored
+      by or a product of any of those companies, and no setting file, firmware or source
+      material of theirs is included in it.</p>
+      <p><strong>Fonts.</strong> Barlow Condensed and IBM Plex are used under the SIL Open Font
+      Licence 1.1 and are loaded from Google Fonts where a connection is available. With no
+      connection the page falls back to system fonts and every calculation is unaffected.</p>
+    </div>
+  </details>
+</footer>
+
+<script>
+"use strict";
+/* ==================================================================
+   889-GEN  -  generator protection test-value calculator
+   GE Multilin 889 Generator Protection  x  Omicron CMC 356
+   Built on the 845-VEC core; the machine-specific work is the
+   impedance plane (40 / 21 / 78) and the stator ground schemes.
+   All internal work is in SECONDARY quantities unless named _pri.
+   ================================================================== */
+
+/* ---------------- complex arithmetic, angles in degrees ------------- */
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const cx  = (re, im) => ({ re, im });
+const pol = (m, a) => ({ re: m * Math.cos(a * D2R), im: m * Math.sin(a * D2R) });
+const add = (x, y) => cx(x.re + y.re, x.im + y.im);
+const sub = (x, y) => cx(x.re - y.re, x.im - y.im);
+const mul = (x, y) => cx(x.re * y.re - x.im * y.im, x.re * y.im + x.im * y.re);
+const div = (x, y) => { const d = y.re * y.re + y.im * y.im;
+  return d === 0 ? cx(0, 0) : cx((x.re * y.re + x.im * y.im) / d, (x.im * y.re - x.re * y.im) / d); };
+const conj  = x => cx(x.re, -x.im);
+const scale = (x, k) => cx(x.re * k, x.im * k);
+const mag   = x => Math.hypot(x.re, x.im);
+const ang   = x => (mag(x) < 1e-12 ? 0 : Math.atan2(x.im, x.re) * R2D);
+const wrap  = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
+
+const A1 = pol(1, 120), A2 = pol(1, 240);
+function seq(ia, ib, ic) {
+  return {
+    z: scale(add(add(ia, ib), ic), 1 / 3),
+    p: scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3),
+    n: scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3)
+  };
+}
+const fmt  = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d));
+const fmtA = v => (!isFinite(v) ? '—' : (wrap(v) >= 0 ? '+' : '−') + Math.abs(wrap(v)).toFixed(1) + '°');
+
+/* ---------------- inverse-time curve library ------------------------
+   Same families the 8 Series offers on its overcurrent elements.
+   Constants must be checked against the firmware revision in service. */
+const CURVES = {
+  'IEEE Mod Inv':   { f: 'ieee', A: 0.0515, B: 0.1140, p: 0.02 },
+  'IEEE Very Inv':  { f: 'ieee', A: 19.61,  B: 0.491,  p: 2.0  },
+  'IEEE Ext Inv':   { f: 'ieee', A: 28.2,   B: 0.1217, p: 2.0  },
+  'IEC Curve A (SI)':  { f: 'iec', K: 0.14, E: 0.02 },
+  'IEC Curve B (VI)':  { f: 'iec', K: 13.5, E: 1.0  },
+  'IEC Curve C (EI)':  { f: 'iec', K: 80.0, E: 2.0  },
+  'IEC Short Inverse': { f: 'iec', K: 0.05, E: 0.04 },
+  'IEC Long Inverse':  { f: 'iec', K: 120,  E: 1.0  },
+  'IAC Inverse':       { f: 'iac', A: 0.2078, B: 0.8630, C: 0.8000, D: -0.4180, E: 0.1947 },
+  'IAC Short Inverse': { f: 'iac', A: 0.0428, B: 0.0609, C: 0.6200, D: -0.0010, E: 0.0221 },
+  'IAC Very Inverse':  { f: 'iac', A: 0.0900, B: 0.7955, C: 0.1000, D: -1.2885, E: 7.9586 },
+  'IAC Ext Inverse':   { f: 'iac', A: 0.0040, B: 0.6379, C: 0.6200, D:  1.7872, E: -0.2461 },
+  'ANSI Mod Inv':   { f: 'iac', A: 0.1735, B: 0.6791, C: 0.8000, D: -0.0800, E: 0.1271 },
+  'ANSI Norm Inv':  { f: 'iac', A: 0.0274, B: 2.2614, C: 0.3000, D: -4.1899, E: 9.1272 },
+  'ANSI Very Inv':  { f: 'iac', A: 0.0615, B: 0.7989, C: 0.3400, D: -0.2840, E: 4.0505 },
+  'ANSI Ext Inv':   { f: 'iac', A: 0.0399, B: 0.2294, C: 0.5000, D:  3.0094, E: 0.7222 },
+  'Definite Time':  { f: 'def' }
+};
+function curveTime(name, M, tdm) {
+  const c = CURVES[name];
+  if (!c) return null;
+  if (c.f === 'def') return tdm;
+  if (M <= 1.0001) return null;
+  if (c.f === 'ieee') return tdm * (c.A / (Math.pow(M, c.p) - 1) + c.B);
+  if (c.f === 'iec')  return tdm * (c.K / (Math.pow(M, c.E) - 1));
+  if (c.f === 'iac') {
+    const d = M - c.C;
+    if (d <= 0) return null;
+    return tdm * (c.A + c.B / d + c.D / (d * d) + c.E / (d * d * d));
+  }
+  return null;
+}
+
+/* ==================================================================
+   CONFIGURATION — worked sample: 100 MVA, 13.8 kV, high-resistance ground
+   ================================================================== */
+const SAMPLE = {
+  mva: 100, kv: 13.8, pf: 0.85, freq: 60, rot: 'ABC', poles: 2,
+  xd: 1.80, xdp: 0.25, xdpp: 0.18, x2: 0.20,
+  cttp: 5000, ctts: 5, ctnp: 5000, ctns: 5, ctgp: 200, ctgs: 5,
+  vtp: 13800, vts: 120, vtc: 'wye',
+  zsrc: 'I', zhold: 5.0,
+  ngtp: 7970, ngts: 240, gnd: 'hr',
+  cmc: '6x', imax: 12.5, vmax: 300
+};
+let CFG = Object.assign({}, SAMPLE);
+
+function base() {
+  const c = CFG;
+  const Irp  = c.mva * 1e6 / (Math.sqrt(3) * c.kv * 1e3);     /* rated stator current, primary A */
+  const ctrT = c.cttp / c.ctts, ctrN = c.ctnp / c.ctns, ctrG = c.ctgp / c.ctgs;
+  const vtr  = c.vtp / c.vts, ngtr = c.ngtp / c.ngts;
+  const vLLs = c.vts, vLNs = c.vtc === 'wye' ? c.vts / Math.sqrt(3) : c.vts;
+  const Zbp  = (c.kv * c.kv) / c.mva;                          /* base ohms, primary, per phase */
+  const Zbs  = Zbp * ctrT / vtr;                               /* base ohms referred to the relay */
+  return {
+    Irp, ctrT, ctrN, ctrG, vtr, ngtr, vLLs, vLNs, Zbp, Zbs,
+    IrT: Irp / ctrT,                       /* rated current at the terminal CT secondary */
+    IrN: Irp / ctrN,                       /* rated current at the neutral CT secondary  */
+    zSec: pu => pu * Zbs,                  /* machine per-unit reactance -> secondary ohms */
+    zPri: pu => pu * Zbp,
+    ctPri: e => (e === 'N' ? c.ctnp : c.cttp),
+    ctSec: e => (e === 'N' ? c.ctns : c.ctts),
+    ctr:   e => (e === 'N' ? ctrN : ctrT),
+    Ir:    e => (e === 'N' ? Irp / ctrN : Irp / ctrT),
+    rpm: 120 * c.freq / Math.max(2, c.poles)
+  };
+}
+const secToPu = (Isec, e) => { const b = base(); return Isec * b.ctr(e) / b.Irp; };
+const puToSec = (Ipu,  e) => { const b = base(); return Ipu * b.Irp / b.ctr(e); };
+
+/* ==================================================================
+   CHANNEL MAPPING  ->  Omicron CMC 356 outputs
+   Triple A = terminal-end CTs, triple B = neutral-end CTs.
+   ================================================================== */
+const PH = ['L1', 'L2', 'L3'], PHC = ['ch-l1', 'ch-l2', 'ch-l3'];
+function chans(v, i1, i2, f, v4) {
+  const F = f == null ? CFG.freq : f, out = [], mode = CFG.cmc;
+  if (v)  v.forEach((p, k) => p && out.push({ ch: 'V ' + PH[k], cls: PHC[k], mag: p.m, unit: 'V', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (v4) out.push({ ch: 'V 4', cls: 'ch-n', mag: v4.m, unit: 'V', ang: v4.a, freq: v4.f == null ? F : v4.f, note: v4.n || '' });
+  const p1 = mode === '6x' ? 'I A-' : 'I ';
+  if (i1) i1.forEach((p, k) => p && out.push({ ch: p1 + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  if (i2) i2.forEach((p, k) => p && out.push({ ch: 'I B-' + PH[k], cls: PHC[k], mag: p.m, unit: 'A', ang: p.a, freq: p.f == null ? F : p.f, note: p.n || '' }));
+  return out;
+}
+const P  = (m, a, n) => ({ m, a, n });
+const P3 = (m, a, rot) => { const s = (rot || CFG.rot) === 'ACB' ? +120 : -120;
+  return [P(m, a), P(m, a + s), P(m, a - s)]; };
+const nullTriple = () => [P(0, 0), P(0, 0), P(0, 0)];
+/* route one energised triple to the terminal ('T') or neutral ('N') CT set */
+function iTriples(trip, e) {
+  if (CFG.cmc !== '6x') {
+    const t = trip.map((p, k) => (k === 0 && e === 'N' ? Object.assign({}, p, { n: (p.n ? p.n + ' — ' : '') + 'land on the neutral-end CT inputs' }) : p));
+    return [t, null];
+  }
+  return e === 'N' ? [nullTriple(), trip] : [trip, nullTriple()];
+}
+
+function checkChannels(list) {
+  const n = [], usesB = list.some(c => c.ch.startsWith('I B-'));
+  const iMax = Math.max(0, ...list.filter(c => c.unit === 'A').map(c => c.mag));
+  const vMax = Math.max(0, ...list.filter(c => c.unit === 'V').map(c => c.mag));
+  if (usesB && CFG.cmc !== '6x')
+    n.push({ lvl: 'bad', lb: 'Amp mode', txt: 'This test drives both CT sets. Switch the CMC to 6 × 12.5 A and re-check the values — the present mode has one triple only.' });
+  if (iMax > CFG.imax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak demand ' + fmt(iMax, 2) + ' A exceeds the ' + fmt(CFG.imax, 1) + ' A per-channel limit for this amplifier mode. Lower the held current on the Setup tab, drop the test multiple, or move to a higher-current mode.' });
+  else if (iMax > 0.85 * CFG.imax)
+    n.push({ lvl: 'warn', lb: 'Near limit', txt: 'Peak demand ' + fmt(iMax, 2) + ' A is within 15% of the channel limit. Confirm the amplifier holds it into the relay burden for the whole run.' });
+  if (vMax > CFG.vmax + 1e-9)
+    n.push({ lvl: 'bad', lb: 'Over range', txt: 'Peak voltage ' + fmt(vMax, 1) + ' V exceeds the ' + fmt(CFG.vmax, 0) + ' V channel limit. Hold current instead of voltage for this impedance, or reduce the held magnitude.' });
+  return n;
+}
+
+/* ==================================================================
+   IMPEDANCE INJECTION
+   A balanced three-phase set with V on 0° and I on −∠Z presents an
+   apparent positive-sequence impedance of exactly |Z|∠Z to the relay.
+   One of the two magnitudes is held; the other follows from Ohm's law.
+   ================================================================== */
+function zInject(Zm, Za) {
+  const hold = CFG.zhold, useI = CFG.zsrc === 'I';
+  let Im, Vm;
+  if (useI) { Im = hold; Vm = hold * Zm; }
+  else      { Vm = hold; Im = Zm > 1e-9 ? hold / Zm : 0; }
+  return { Vm, Im, Va: 0, Ia: -Za };
+}
+/* the same, presented as a phase-to-phase loop:  Z = (Vb−Vc)/(Ib−Ic) */
+function zInjectPP(Zm, Za) {
+  const hold = CFG.zhold, useI = CFG.zsrc === 'I';
+  let Im, Vm;                                   /* Im per phase, Vm per phase (half of Vbc) */
+  if (useI) { Im = hold; Vm = hold * Zm; }
+  else      { Vm = hold; Im = Zm > 1e-9 ? hold / Zm : 0; }
+  return { Vm, Im, Za };
+}
+const zPolar = (r, x) => ({ m: Math.hypot(r, x), a: Math.atan2(x, r) * R2D });
+const zRect  = (m, a) => ({ r: m * Math.cos(a * D2R), x: m * Math.sin(a * D2R) });
+
+/* ==================================================================
+   R–X PLANE RENDERER
+   geometry: { circles:[{r0,x0,rad,cls,label}], lines:[{r1,x1,r2,x2,cls,label}],
+               points:[{r,x,cls,label,sel}] }
+   ================================================================== */
+function rxSVG(g, size) {
+  const S = size || 300, C = S / 2;
+  let ext = 1e-6;
+  (g.circles || []).forEach(c => ext = Math.max(ext, Math.abs(c.r0) + c.rad, Math.abs(c.x0) + c.rad));
+  (g.points || []).forEach(p => ext = Math.max(ext, Math.abs(p.r), Math.abs(p.x)));
+  (g.lines || []).forEach(l => ext = Math.max(ext, Math.abs(l.r1), Math.abs(l.x1), Math.abs(l.r2), Math.abs(l.x2)));
+  /* round the full scale up to a readable step */
+  const raw = ext * 1.18, pow = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 1.5, 2, 2.5, 4, 5, 8, 10].map(m => m * pow).find(v => v >= raw) || raw;
+  const K = (C - 16) / step;
+  const px = r => C + r * K, py = x => C - x * K;
+  let s = '';
+  /* grid at quarter divisions */
+  for (let i = 1; i <= 4; i++) {
+    const d = step * i / 4;
+    [d, -d].forEach(v => {
+      s += '<line class="ph-grid" x1="' + px(v).toFixed(1) + '" y1="16" x2="' + px(v).toFixed(1) + '" y2="' + (S - 16) + '"/>';
+      s += '<line class="ph-grid" x1="16" y1="' + py(v).toFixed(1) + '" x2="' + (S - 16) + '" y2="' + py(v).toFixed(1) + '"/>';
+    });
+  }
+  s += '<line class="ph-axis" x1="12" y1="' + C + '" x2="' + (S - 12) + '" y2="' + C + '"/>';
+  s += '<line class="ph-axis" x1="' + C + '" y1="12" x2="' + C + '" y2="' + (S - 12) + '"/>';
+  s += '<text class="rx-lab" x="' + (S - 10) + '" y="' + (C - 5) + '" text-anchor="end">R</text>';
+  s += '<text class="rx-lab" x="' + (C + 5) + '" y="14">X</text>';
+  s += '<text class="rx-lab" x="10" y="' + (S - 6) + '">full scale ' + fmt(step, step < 2 ? 2 : 1) + ' Ω</text>';
+  (g.circles || []).forEach(c => {
+    s += '<circle class="' + (c.cls || 'rx-char') + '" cx="' + px(c.r0).toFixed(1) + '" cy="' + py(c.x0).toFixed(1) +
+         '" r="' + (c.rad * K).toFixed(1) + '"/>';
+  });
+  (g.lines || []).forEach(l => {
+    s += '<line class="' + (l.cls || 'rx-blind') + '" x1="' + px(l.r1).toFixed(1) + '" y1="' + py(l.x1).toFixed(1) +
+         '" x2="' + px(l.r2).toFixed(1) + '" y2="' + py(l.x2).toFixed(1) + '"/>';
+  });
+  (g.points || []).forEach(p => {
+    const X = px(p.r), Y = py(p.x);
+    if (p.sel) s += '<circle class="rx-sel" cx="' + X.toFixed(1) + '" cy="' + Y.toFixed(1) + '" r="7.5"/>';
+    s += '<circle class="' + (p.cls || 'rx-nu') + '" cx="' + X.toFixed(1) + '" cy="' + Y.toFixed(1) + '" r="4"/>';
+    if (p.label) s += '<text class="rx-lab" x="' + (X + 7).toFixed(1) + '" y="' + (Y - 6).toFixed(1) + '">' + p.label + '</text>';
+  });
+  return '<svg class="rx" viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Impedance plane">' + s + '</svg>';
+}
+
+/* ==================================================================
+   PHASOR RENDERER
+   ================================================================== */
+function phasorSVG(data, size) {
+  const S = size || 300, C = S / 2, R = S * 0.365;
+  const vs = (data.v || []).filter(x => x && isFinite(x.mag));
+  const is = (data.i || []).filter(x => x && isFinite(x.mag));
+  const vMax = Math.max(1e-9, ...vs.map(x => Math.abs(x.mag)));
+  const iMax = Math.max(1e-9, ...is.map(x => Math.abs(x.mag)));
+  let g = '';
+  [0.25, 0.5, 0.75, 1].forEach(f =>
+    g += '<circle class="ph-grid" cx="' + C + '" cy="' + C + '" r="' + (R * f).toFixed(1) + '" fill="none"/>');
+  for (let a = 0; a < 360; a += 30) {
+    const x = C + R * Math.cos(a * D2R), y = C - R * Math.sin(a * D2R);
+    g += '<line class="' + (a % 90 === 0 ? 'ph-axis' : 'ph-grid') + '" x1="' + C + '" y1="' + C + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>';
+  }
+  [[0, '0°'], [90, '90°'], [180, '180°'], [270, '270°']].forEach(([a, t]) => {
+    const r = R + 13, x = C + r * Math.cos(a * D2R), y = C - r * Math.sin(a * D2R);
+    g += '<text class="ph-tick" x="' + x.toFixed(1) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="middle">' + t + '</text>';
+  });
+  const draw = (arr, max, kind) => arr.forEach(p => {
+    const L = R * Math.min(1, Math.abs(p.mag) / max);
+    if (L < 1.5) return;
+    const a = p.ang * D2R, x = C + L * Math.cos(a), y = C - L * Math.sin(a);
+    const hw = 4.2, hl = 9;
+    const bx = C + (L - hl) * Math.cos(a), by = C - (L - hl) * Math.sin(a);
+    const dx = -Math.sin(a) * hw, dy = -Math.cos(a) * hw;
+    const cls = p.cls.replace('ch-', kind === 'v' ? 'v-' : 'i-') + (p.alt ? ' alt' : '');
+    const fcl = p.cls.replace('ch-', 'f-');
+    g += '<line class="' + (kind === 'v' ? 'vec-v ' : 'vec-i ') + cls + '" x1="' + C + '" y1="' + C + '" x2="' + bx.toFixed(1) + '" y2="' + by.toFixed(1) + '"/>';
+    g += '<polygon class="' + fcl + '" points="' + x.toFixed(1) + ',' + y.toFixed(1) + ' ' +
+      (bx + dx).toFixed(1) + ',' + (by + dy).toFixed(1) + ' ' + (bx - dx).toFixed(1) + ',' + (by - dy).toFixed(1) + '"/>';
+  });
+  draw(vs, vMax, 'v'); draw(is, iMax, 'i');
+  return '<svg class="phasor" viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Phasor diagram">' + g + '</svg>';
+}
+function phasorLegend(data) {
+  const rows = [];
+  const vm = Math.max(0, ...(data.v || []).map(x => x.mag)), im = Math.max(0, ...(data.i || []).map(x => x.mag));
+  if (vm > 0 || im > 0) rows.push('<div class="scale">full scale ' +
+    (vm > 0 ? fmt(vm, 1) + ' V' : '') + (vm > 0 && im > 0 ? ' · ' : '') + (im > 0 ? fmt(im, 2) + ' A' : '') + '</div>');
+  (data.v || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ')"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 2) + ' V ' + fmtA(p.ang) + '</span></span></div>'));
+  (data.i || []).forEach(p => rows.push('<div class="lgi"><span class="sw" style="border-top-color:var(--' + p.cls.replace('ch-', '') + ');border-top-style:' + (p.alt ? 'dotted' : 'dashed') + '"></span><span><b>' + p.lab + '</b> <span class="val">' + fmt(p.mag, 3) + ' A ' + fmtA(p.ang) + '</span></span></div>'));
+  if (!rows.length) rows.push('<div class="lgi"><span></span><span class="val">no quantities</span></div>');
+  return rows.join('');
+}
+
+/* ==================================================================
+   ELEMENT LIBRARY
+   ================================================================== */
+const num = (k, l, d, u, st) => ({ k, l, d, u, t: 'num', step: st == null ? 0.01 : st });
+const sel = (k, l, d, o, u) => ({ k, l, d, u, t: 'sel', opts: o });
+const txt = (k, l, d, u) => ({ k, l, d, u, t: 'txt' });
+const ESEL = d => sel('e', 'CT set', d || 'T', [['T', 'Terminal end'], ['N', 'Neutral end']], 'which input');
+const ZUNIT = sel('zu', 'Reactance unit', 'pu', [['pu', 'per unit on machine base'], ['ohm', 'secondary ohms']], '');
+/* Show a user-supplied multiple exactly as it was entered. Rounding it to a
+   fixed place made a label disagree with the current beneath it — "2.8x
+   pickup" against an injection of 2.75x, which reads as a test-set error on
+   the record rather than as a rounded caption. */
+const fmtX = v => !isFinite(v) ? '\u2014'
+  : String(Math.round(v * 1000) / 1000);
+
+const multiplesOf = s => String(s || '').split(/[,;\s]+/).map(Number).filter(x => isFinite(x) && x > 0);
+
+const ELEMENTS = [];
+const reg = e => { ELEMENTS.push(e); return e; };
+
+/* ---- overcurrent pickup, shared ---------------------------------- */
+function ocPickup(s, b) {
+  const e = s.e || 'T';
+  if (s.pu === 'A_sec') return { sec: s.pkp, pri: s.pkp * b.ctr(e), e };
+  if (s.pu === 'A_pri') return { sec: s.pkp / b.ctr(e), pri: s.pkp, e };
+  if (s.pu === 'xIr')   return { sec: s.pkp * b.Ir(e), pri: s.pkp * b.Irp, e };   /* × rated stator */
+  return { sec: s.pkp * b.ctSec(e), pri: s.pkp * b.ctPri(e), e };                 /* ×CT */
+}
+function vPickup(s, b) {
+  if (s.vu === 'V_sec') return { sec: s.vpkp, pri: s.vpkp * b.vtr };
+  if (s.vu === 'kV_pri') return { sec: s.vpkp * 1000 / b.vtr, pri: s.vpkp * 1000 };
+  return { sec: s.vpkp * b.vLNs, pri: s.vpkp * b.vLNs * b.vtr };                  /* ×VT L-N */
+}
+
+/* ---- a plain overcurrent injection ------------------------------- */
+function ocPoint(id, name, detail, Isec, iAng, e, expect, expectSub, vLevel) {
+  const b = base(), vm = vLevel == null ? b.vLNs : vLevel;
+  const v = P3(vm, 0), trip = [P(Isec, iAng), P(0, 0), P(0, 0)];
+  const [t1, t2] = iTriples(trip, e);
+  return { id, name, detail, expect, expectSub,
+    channels: chans(v, t1, t2),
+    phasor: { v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+              i: [{ lab: 'I' + PH[0] + ' ' + (e === 'N' ? 'ntl' : 'term'), cls: 'ch-l1', mag: Isec, ang: iAng }] } };
+}
+
+/* ---- an impedance-plane injection -------------------------------- *
+ * A balanced set with V on 0° and I on −∠Z presents |Z|∠Z to the relay.
+ * Whichever magnitude the Setup tab holds constant, the other follows. */
+function zPoint(id, name, detail, Zm, Za, expect, expectSub, verdict, ppLoop) {
+  const inj = zInject(Zm, Za), b = base(), z = zRect(Zm, Za);
+  let v, i, note;
+  if (ppLoop) {
+    /* phase-to-phase loop:  Z = (Vb − Vc)/(Ib − Ic).  Vbc is put on 0°,
+       which places the healthy phase A at +90°. */
+    v = [P(b.vLNs, 90, 'healthy phase, held at nominal'), P(inj.Vm, 0), P(inj.Vm, 180)];
+    i = [P(0, 0), P(inj.Im, -Za), P(inj.Im, 180 - Za)];
+    note = 'phase-to-phase loop L2–L3';
+  } else {
+    v = P3(inj.Vm, 0); i = P3(inj.Im, -Za);
+    note = 'balanced three-phase';
+  }
+  const [t1, t2] = iTriples(i, 'T');
+  return { id, name, detail, expect, expectSub, verdict, z: { r: z.r, x: z.x },
+    channels: chans(v, t1, t2),
+    phasor: { v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+              i: i.map((p, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })) },
+    sheet: ['', name, fmt(inj.Vm, 2) + ' V @ ' + fmt(v[ppLoop ? 1 : 0].a, 1) + '°',
+            fmt(inj.Im, 3) + ' A @ ' + fmtA(ppLoop ? -Za : inj.Ia), 'Z = ' + fmt(Zm, 3) + ' Ω ' + fmtA(Za) + ' · ' + note] };
+}
+
+/* ================= 87G  GENERATOR DIFFERENTIAL ==================== */
+reg({
+  ansi: '87G', name: 'Generator differential', group: 'Differential & ground',
+  desc: 'Percent differential across the machine — terminal-end CTs against neutral-end CTs. Same machine, so there is no phase shift and no vector group to compensate; the only correction is for a CT ratio mismatch between the two ends.',
+  fields: [
+    num('pkp', 'Minimum pickup', 0.10, 'pu of rated stator', 0.01),
+    num('s1', 'Slope 1', 10, '%', 1),
+    num('br1', 'Break 1', 2.0, 'pu restraint', 0.1),
+    num('s2', 'Slope 2', 50, '%', 1),
+    num('br2', 'Break 2', 6.0, 'pu restraint', 0.1),
+    sel('rst', 'Restraint definition', 'max', [['max', 'max(|IT|,|IN|)'], ['avg', '(|IT|+|IN|)/2'], ['sum', '(|IT|+|IN|)']], 'confirm in manual')
+  ],
+  opts: [txt('rests', 'Restraint points', '0.5, 1.0, 3.0, 7.0', 'pu'),
+    num('marg', 'Margin either side', 10, '%', 1),
+    sel('ph', 'Test phase set', '3ph', [['3ph', 'Balanced three-phase'], ['A', 'Single phase L1 only']], '')],
+  compute(s, o) {
+    const b = base(), marg = o.marg / 100;
+    const req = Ir => {
+      if (Ir <= s.br1) return s.pkp;
+      if (Ir <= s.br2) return Math.max(s.pkp, (s.s1 / 100) * Ir);
+      return Math.max(s.pkp, (s.s1 / 100) * s.br2 + (s.s2 / 100) * (Ir - s.br2));
+    };
+    const split = (Ir, Id) => {
+      if (s.rst === 'avg') return [Ir + Id / 2, Ir - Id / 2];
+      if (s.rst === 'sum') return [(Ir + Id) / 2, (Ir - Id) / 2];
+      return [Ir, Ir - Id];
+    };
+    const pts = [];
+    multiplesOf(o.rests).forEach(Ir => {
+      [['op', 1 + marg, 'OPERATE'], ['no', 1 - marg, 'RESTRAIN']].forEach(([tag, f, verdict]) => {
+        const Id = req(Ir) * f;
+        let [pT, pN] = split(Ir, Id);
+        const flip = pN < 0; if (flip) pN = 0;
+        const iT = puToSec(pT, 'T'), iN = puToSec(Math.abs(pN), 'N');
+        const v = P3(b.vLNs, 0);
+        const T1 = o.ph === '3ph' ? P3(iT, 0)   : [P(iT, 0),   P(0, 0), P(0, 0)];
+        const T2 = o.ph === '3ph' ? P3(iN, 180) : [P(iN, 180), P(0, 0), P(0, 0)];
+        pts.push({
+          id: '87-' + Ir + '-' + tag,
+          name: 'Irest ' + fmtX(Ir) + ' pu — ' + (tag === 'op' ? 'above' : 'below') + ' slope',
+          detail: 'Idiff required ' + fmt(req(Ir), 3) + ' pu · applied ' + fmt(Id, 3) + ' pu (' + (tag === 'op' ? '+' : '−') + fmt(o.marg, 0) + '%)'
+            + (flip ? ' · neutral end driven to zero' : ''),
+          expect: verdict, expectSub: 'IT ' + fmt(pT, 3) + ' pu · IN ' + fmt(Math.abs(pN), 3) + ' pu',
+          verdict: tag === 'op' ? 'op' : 'no',
+          channels: chans(v, T1, T2),
+          phasor: { v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+                    i: [{ lab: 'IT L1', cls: 'ch-l1', mag: iT, ang: 0 }, { lab: 'IN L1', cls: 'ch-l3', mag: iN, ang: 180, alt: true }] },
+          sheet: ['87G', 'Irest ' + fmtX(Ir) + ' pu ' + verdict, fmt(iT, 3) + ' A @ 0°', fmt(iN, 3) + ' A @ 180°', verdict]
+        });
+      });
+    });
+    const notes = [
+      { lvl: 'note', lb: 'No phase shift', txt: 'Both CT sets sit on the same machine winding, so through current is a straight 180° opposition — nothing like the vector-group compensation a transformer differential needs. If the relay reports a differential on balanced through current, the cause is CT ratio, polarity or wiring, not compensation.' }
+    ];
+    if (CFG.cttp !== CFG.ctnp || CFG.ctts !== CFG.ctns)
+      notes.push({ lvl: 'warn', lb: 'CT mismatch', txt: 'The two ends are ' + CFG.cttp + ':' + CFG.ctts + ' and ' + CFG.ctnp + ':' + CFG.ctns + '. The secondary currents in the channel table already carry that correction, so they will not match each other — confirm the relay has the same two ratios entered.' });
+    else
+      notes.push({ lvl: 'good', lb: 'CT match', txt: 'Both ends are ' + CFG.cttp + ':' + CFG.ctts + ', so a through condition gives equal and opposite secondary currents. Any difference the relay reports is real.' });
+    notes.push({ lvl: 'warn', lb: 'Polarity', txt: 'The single most valuable outcome of this test is proving neutral-end CT polarity. A reversed neutral CT turns every through-fault into a full internal-fault differential and will trip the machine on the first external fault.' });
+    return {
+      readout: [
+        { k: 'Rated stator', v: fmt(b.Irp, 1), u: 'A pri' },
+        { k: 'Terminal end', v: fmt(b.IrT, 3), u: 'A sec' },
+        { k: 'Neutral end', v: fmt(b.IrN, 3), u: 'A sec' },
+        { k: 'Min pickup', v: fmt(puToSec(s.pkp, 'T'), 3), u: 'A sec' }
+      ], points: pts, notes
+    };
+  }
+});
+
+/* ================= 87GN / 64REF =================================== */
+reg({
+  ansi: '87GN', name: 'Restricted ground fault', group: 'Differential & ground',
+  desc: 'Low-impedance REF comparing the residual of the phase CTs against the neutral CT. Sensitivity is proved on the ground input alone; stability is proved with matched through current.',
+  fields: [num('pkp', 'Pickup', 0.10, '×CT (ground input)', 0.01), num('slp', 'Slope', 20, '%', 1), num('dly', 'Delay', 0.00, 's', 0.01)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1), num('thru', 'Through-current point', 4.0, '×CT', 0.5)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, Ipk = s.pkp * CFG.ctgs, pts = [];
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const I = Ipk * f;
+      pts.push({ id: 'ref' + f, name: 'Sensitivity — ' + rel + ' pickup',
+        detail: 'Ground CT input only, phase CTs at zero. Applied ' + fmt(I / CFG.ctgs, 3) + ' ×CT.',
+        expect: verdict, expectSub: 'Operate time ' + fmt(s.dly, 2) + ' s', verdict: vt,
+        channels: chans(P3(b.vLNs, 0), [P(I, 0, 'ground / neutral CT input')], null),
+        phasor: { v: [], i: [{ lab: 'Ig', cls: 'ch-l1', mag: I, ang: 0 }] },
+        sheet: ['87GN', 'Sensitivity ' + rel, fmt(I, 3) + ' A @ 0°', '—', verdict] });
+    });
+    /* External ground fault: the same primary amperes flow in the terminal CTs
+       (as residual) and in the ground CT. Terminal-secondary -> primary ->
+       ground-secondary, through the full RATIOS. The secondary ratings alone
+       cancel whenever both CTs are 5 A and mis-scale by the ratio of the
+       ratios whenever they are not. */
+    const It = o.thru * CFG.ctts, Ig = It * b.ctrT / b.ctrG;
+    const maxThru = Math.min(CFG.imax / CFG.ctts, CFG.imax * b.ctrG / (CFG.ctts * b.ctrT));
+    pts.push({ id: 'stab', name: 'Through-fault stability',
+      detail: 'Phase L1 and the ground input driven in opposition at ' + fmtX(o.thru) + ' ×CT — an external ground fault.',
+      expect: 'RESTRAIN', expectSub: 'No operation anywhere on the ramp', verdict: 'no',
+      channels: chans(P3(b.vLNs, 0), [P(It, 0, 'terminal phase L1'), P(0, 0), P(0, 0)], null)
+        .concat([{ ch: CFG.cmc === '6x' ? 'I B-L1' : 'I aux', cls: 'ch-n', mag: Ig, unit: 'A', ang: 180, freq: CFG.freq, note: 'ground CT input, reversed polarity' }]),
+      phasor: { v: [], i: [{ lab: 'Iph', cls: 'ch-l1', mag: It, ang: 0 }, { lab: 'Ig', cls: 'ch-l3', mag: Ig, ang: 180, alt: true }] },
+      sheet: ['87GN', 'Through stability', fmt(It, 3) + ' A @ 0°', fmt(Ig, 3) + ' A @ 180°', 'RESTRAIN'] });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(Ipk, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(s.pkp * CFG.ctgp, 1), u: 'A pri' },
+        { k: 'Ground CTR', v: CFG.ctgp + ':' + CFG.ctgs, u: '' }, { k: 'Slope', v: fmt(s.slp, 0), u: '%' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Polarity', txt: 'If the stability point operates, a CT is reversed. Chase the wiring before touching a setting.' },
+        { lvl: 'note', lb: 'Ratio mismatch', txt: 'Terminal CTs are ' + CFG.cttp + ':' + CFG.ctts + ' and the ground CT is ' + CFG.ctgp + ':' + CFG.ctgs + '. Both inputs are scaled to the same primary current: ' + fmt(It, 3) + ' A into the terminal input is ' + fmt(It * b.ctrT, 0) + ' A primary, which is ' + fmt(Ig, 3) + ' A out of the ground CT.' + (maxThru < o.thru ? ' The ground side reaches the ' + fmt(CFG.imax, 1) + ' A channel limit first: the largest through-current this CT pair can be tested at is about ' + fmtX(maxThru) + ' \u00d7CT. Above that, prove REF stability by primary injection or accept a reduced through level and say so on the record.' : ' Both sit inside the ' + fmt(CFG.imax, 1) + ' A channel limit.') },
+        { lvl: 'note', lb: 'Applicability', txt: CFG.gnd === 'hr' || CFG.gnd === 'ung'
+          ? 'This machine is set as ' + (CFG.gnd === 'hr' ? 'high-resistance grounded' : 'ungrounded') + ', which limits stator ground current to a few amps primary. REF has little to work with there — 59N and 27TN carry the stator ground duty. Confirm REF is actually in service before spending time on it.'
+          : 'With this machine grounded through a low-impedance path there is enough ground current for REF to be the fast stator ground element.' }]
+    };
+  }
+});
+
+/* ================= 59N  NEUTRAL OVERVOLTAGE ======================= */
+reg({
+  ansi: '59N', name: 'Stator ground — fundamental', group: 'Differential & ground',
+  desc: 'Fundamental neutral overvoltage measured across the grounding transformer secondary. Covers the stator from the terminals down to roughly 90–95% of the winding; it goes blind at the neutral, which is what 27TN is for.',
+  fields: [num('vpkp', 'Pickup', 5.0, 'V sec at the relay', 0.1), num('dly', 'Delay', 0.50, 's', 0.05),
+    sel('src', 'Applied to', 'aux', [['aux', 'Neutral input (V4)'], ['calc', 'Show equivalent stator fault position']], '')],
+  opts: [num('marg', 'Margin either side', 10, '%', 1), txt('pos', 'Winding positions', '100, 50, 10, 5', '% from neutral')],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, pts = [];
+    /* A ground fault x% up from the neutral drives x% of the phase-neutral
+       voltage across the grounding transformer primary. */
+    const vFull = (CFG.kv * 1000 / Math.sqrt(3)) / b.ngtr;   /* relay volts for a terminal fault */
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const V = s.vpkp * f;
+      pts.push({ id: 'n' + f, name: 'Pickup — ' + rel + ' threshold',
+        detail: fmt(V, 2) + ' V at the neutral input · equivalent to a fault ' + fmt(100 * V / vFull, 1) + '% up the winding',
+        expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 2) + ' s' : 'No operation', verdict: vt,
+        channels: chans(P3(b.vLNs, 0), nullTriple(), null, null, P(V, 0, 'grounding transformer secondary')),
+        phasor: { v: [{ lab: 'VN', cls: 'ch-n', mag: V, ang: 0 }], i: [] },
+        sheet: ['59N', 'Pickup ' + rel, fmt(V, 2) + ' V neutral', '—', verdict] });
+    });
+    multiplesOf(o.pos).forEach(pct => {
+      const V = vFull * pct / 100;
+      pts.push({ id: 'p' + pct, name: 'Fault ' + fmt(pct, 0) + '% from neutral',
+        detail: 'Drives ' + fmt(V, 2) + ' V at the relay',
+        expect: V > s.vpkp ? 'OPERATE' : 'BELOW PICKUP', expectSub: V > s.vpkp ? 'Detected by 59N' : 'Needs 27TN to cover this depth',
+        verdict: V > s.vpkp ? 'op' : 'no',
+        channels: chans(P3(b.vLNs, 0), nullTriple(), null, null, P(V, 0, 'grounding transformer secondary')),
+        phasor: { v: [{ lab: 'VN', cls: 'ch-n', mag: V, ang: 0 }], i: [] },
+        sheet: ['59N', pct + '% winding', fmt(V, 2) + ' V neutral', '—', V > s.vpkp ? 'OPERATE' : 'NO OP'] });
+    });
+    const cov = 100 * s.vpkp / vFull;
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.vpkp, 2), u: 'V sec' }, { k: 'Terminal fault', v: fmt(vFull, 1), u: 'V sec' },
+        { k: 'NGT ratio', v: fmt(b.ngtr, 1) + ':1', u: '' }, { k: 'Blind zone', v: fmt(cov, 1), u: '% from neutral' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Coverage', txt: 'A solid fault at the terminals puts ' + fmt(vFull, 1) + ' V on the relay. The ' + fmt(s.vpkp, 2) + ' V pickup therefore leaves the bottom ' + fmt(cov, 1) + '% of the winding uncovered — 27TN exists to cover exactly that band, and the two are only worth commissioning together.' },
+        { lvl: 'warn', lb: 'Third harmonic', txt: 'Normal machines produce third-harmonic neutral voltage in service. Confirm the relay filters to fundamental before accepting a pickup measured here — a relay measuring RMS will pick up early on a clean fundamental injection and mislead you.' }]
+    };
+  }
+});
+
+/* ================= 27TN  THIRD HARMONIC =========================== */
+reg({
+  ansi: '27TN', name: 'Stator ground — third harmonic', group: 'Differential & ground',
+  desc: 'Third-harmonic neutral undervoltage. A healthy machine produces third harmonic at the neutral; a ground fault near the neutral shorts it out. The element trips when it disappears, so the test drives the harmonic down through the setting, not up.',
+  fields: [num('vpkp', 'Pickup', 0.50, 'V sec, third harmonic', 0.05), num('dly', 'Delay', 1.0, 's', 0.1),
+    num('psup', 'Forward power supervision', 10, '% of rating', 1),
+    num('vsup', 'Positive-sequence V supervision', 0.80, '×VT', 0.01)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, f3 = CFG.freq * 3, pts = [];
+    /* supervision has to be satisfied or the element never arms */
+    const Isup = (s.psup / 100) * b.IrT;
+    const build = (V3, name, detail, verdict, vt, sub) => ({
+      id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+      channels: chans(P3(b.vLNs, 0), P3(Isup, 0), CFG.cmc === '6x' ? nullTriple() : null, null,
+        P(V3, 0, 'third harmonic at the neutral input')).map(c => c.ch === 'V 4' ? Object.assign(c, { freq: f3 }) : c),
+      phasor: { v: [{ lab: 'VN 3rd', cls: 'ch-n', mag: V3, ang: 0 }], i: [{ lab: 'I sup', cls: 'ch-l1', mag: Isup, ang: 0 }] },
+      sheet: ['27TN', name, fmt(V3, 3) + ' V @ ' + f3 + ' Hz', fmt(Isup, 3) + ' A supervision', verdict]
+    });
+    pts.push(build(s.vpkp * (1 + m), 'Above threshold — healthy', 'Third harmonic held ' + fmt(o.marg, 0) + '% above the setting', 'RESTRAIN', 'no', 'Element must not operate'));
+    pts.push(build(s.vpkp * (1 - m), 'Below threshold — fault', 'Third harmonic dropped ' + fmt(o.marg, 0) + '% below the setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 1) + ' s'));
+    pts.push(build(0, 'Third harmonic removed', 'Neutral input taken to zero — the deepest condition', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 1) + ' s'));
+    const noSup = build(0, 'Supervision withdrawn', 'Third harmonic at zero but the machine off load — proves the element stays blocked when it has no basis to measure', 'BLOCKED', 'no', 'Element inhibited');
+    noSup.channels = chans(P3(b.vLNs, 0), nullTriple(), CFG.cmc === '6x' ? nullTriple() : null, null, P(0, 0, 'third harmonic removed'));
+    pts.push(noSup);
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.vpkp, 3), u: 'V 3rd' }, { k: 'Harmonic', v: fmt(f3, 0), u: 'Hz' },
+        { k: 'Supervision I', v: fmt(Isup, 3), u: 'A sec' }, { k: 'Delay', v: fmt(s.dly, 1), u: 's' }],
+      points: pts,
+      notes: [{ lvl: 'note', lb: 'Undervoltage logic', txt: 'This is the one element on the relay where removing a quantity is what makes it trip. Build the steps so the harmonic starts healthy and steps down — starting from zero can leave the supervision unsatisfied and the element never arms.' },
+        { lvl: 'warn', lb: 'Supervision', txt: 'Forward power and positive-sequence voltage supervision has to be satisfied throughout, or nothing happens no matter what you do to the neutral input. The channel table carries the supervision current alongside the harmonic.' },
+        { lvl: 'note', lb: 'Site value', txt: 'The pickup is normally set from the machine\'s own measured third-harmonic profile at several load points, not from a calculation. A bench-verified threshold still needs that survey before the setting is trusted in service.' }]
+    };
+  }
+});
+
+/* ================= 40  LOSS OF EXCITATION ========================= *
+ * Offset mho sitting on the negative X axis.  Given "offset" as the
+ * distance from the origin down to the top of the circle and "diameter"
+ * as its size, the centre is at (0, −(offset + diameter/2)) with a
+ * radius of diameter/2.  Every test point is a place on that circle. */
+reg({
+  ansi: '40', name: 'Loss of excitation', group: 'Machine',
+  desc: 'Two offset mho zones below the R axis. Each test point is an impedance placed on or near the characteristic and then converted into a balanced injection — hold the current and the voltage follows, or the other way round.',
+  fields: [
+    ZUNIT,
+    num('off1', 'Zone 1 offset', 0.125, "typically X'd / 2", 0.005),
+    num('dia1', 'Zone 1 diameter', 1.00, 'typically 1.0 pu', 0.05),
+    num('dly1', 'Zone 1 delay', 0.10, 's', 0.01),
+    num('off2', 'Zone 2 offset', 0.125, "typically X'd / 2", 0.005),
+    num('dia2', 'Zone 2 diameter', 1.80, 'typically Xd', 0.05),
+    num('dly2', 'Zone 2 delay', 0.60, 's', 0.05),
+    sel('zone', 'Zone under test', '1', [['1', 'Zone 1'], ['2', 'Zone 2']], ''),
+    num('vsup', 'Undervoltage supervision', 0.80, '×VT', 0.01)
+  ],
+  opts: [num('marg', 'Boundary margin', 8, '% of radius', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, toZ = v => (s.zu === 'pu' ? b.zSec(v) : v);
+    const z1 = { off: toZ(s.off1), dia: toZ(s.dia1) }, z2 = { off: toZ(s.off2), dia: toZ(s.dia2) };
+    const Z = s.zone === '2' ? z2 : z1, dly = s.zone === '2' ? s.dly2 : s.dly1;
+    const cX = -(Z.off + Z.dia / 2), rad = Z.dia / 2;
+    const at = (thetaDeg, k) => {
+      const r = rad * k * Math.cos(thetaDeg * D2R), x = cX + rad * k * Math.sin(thetaDeg * D2R);
+      return zPolar(r, x);
+    };
+    const pts = [];
+    const p0 = at(0, 0);
+    pts.push(zPoint('c', 'Circle centre', 'Deepest point inside zone ' + s.zone + ' — ' + fmt(Math.abs(cX), 2) + ' Ω on the −X axis',
+      p0.m, p0.a, 'OPERATE', 'Operate after ' + fmt(dly, 2) + ' s', 'op'));
+    [[90, 'top'], [270, 'bottom'], [0, 'right'], [180, 'left']].forEach(([th, nm]) => {
+      [[1 - m, 'inside', 'OPERATE', 'op'], [1 + m, 'outside', 'RESTRAIN', 'no']].forEach(([k, rel, verdict, vt]) => {
+        const q = at(th, k);
+        pts.push(zPoint(nm + rel, 'Boundary ' + nm + ' — ' + rel,
+          fmt(o.marg, 0) + '% ' + rel + ' the circle · Z = ' + fmt(q.m, 2) + ' Ω ' + fmtA(q.a),
+          q.m, q.a, verdict, vt === 'op' ? 'Operate after ' + fmt(dly, 2) + ' s' : 'No operation', vt));
+      });
+    });
+    const norm = zPolar(0, b.zSec(1.0));
+    pts.push(zPoint('norm', 'Normal excitation', 'Positive reactance, machine exporting VARs — well clear of the characteristic',
+      norm.m, norm.a, 'RESTRAIN', 'No operation', 'no'));
+    pts.forEach(p => p.sheet[0] = '40');
+    const geo = {
+      circles: [
+        { r0: 0, x0: -(z1.off + z1.dia / 2), rad: z1.dia / 2, cls: s.zone === '1' ? 'rx-char' : 'rx-char2' },
+        { r0: 0, x0: -(z2.off + z2.dia / 2), rad: z2.dia / 2, cls: s.zone === '2' ? 'rx-char' : 'rx-char2' }
+      ], lines: [], points: []
+    };
+    return {
+      readout: [
+        { k: 'Zone ' + s.zone + ' centre', v: fmt(Math.abs(cX), 2), u: 'Ω sec' },
+        { k: 'Zone ' + s.zone + ' radius', v: fmt(rad, 2), u: 'Ω sec' },
+        { k: 'Base impedance', v: fmt(b.Zbs, 2), u: 'Ω sec' },
+        { k: "X'd / 2", v: fmt(b.zSec(CFG.xdp / 2), 2), u: 'Ω sec' },
+        { k: 'Xd', v: fmt(b.zSec(CFG.xd), 2), u: 'Ω sec' },
+        { k: 'Delay', v: fmt(dly, 2), u: 's' }
+      ],
+      points: pts, rx: geo,
+      notes: [
+        { lvl: 'note', lb: 'Machine check', txt: "This machine's X'd/2 is " + fmt(b.zSec(CFG.xdp / 2), 2) + ' Ω and Xd is ' + fmt(b.zSec(CFG.xd), 2) + ' Ω secondary. A zone offset well away from the first, or a zone 2 diameter well away from the second, is worth querying with the setting engineer before testing to it.' },
+        { lvl: 'warn', lb: 'Supervision', txt: 'Undervoltage supervision at ' + fmt(s.vsup, 2) + ' ×VT (' + fmt(s.vsup * b.vLNs, 1) + ' V) must stay satisfied. Holding current rather than voltage keeps the terminal voltage moving as the impedance changes — check each point\'s voltage against that threshold in the channel table.' },
+        { lvl: 'note', lb: 'Why it looks like this', txt: 'On losing field the machine draws VARs from the system, so the apparent impedance swings from the first quadrant down into the fourth. The characteristic sits below the R axis because that is where the machine goes, not because of anything about the fault.' }
+      ]
+    };
+  }
+});
+
+/* ================= 46  NEGATIVE SEQUENCE (I2²t) =================== */
+reg({
+  ansi: '46', name: 'Negative-sequence capability', group: 'Machine',
+  desc: 'The rotor heating limit, I2²t = K. Operate time falls with the square of the unbalance, so the test points spread over a wide range of times — the low multiples take minutes.',
+  fields: [num('pkp', 'Pickup', 0.08, 'pu I2 of rated stator', 0.01),
+    num('kk', 'K factor', 10, 'machine capability', 0.5),
+    num('tmax', 'Maximum time', 999, 's', 1),
+    num('tmin', 'Minimum time', 0.25, 's', 0.05)],
+  opts: [txt('lv', 'I2 test levels', '0.15, 0.20, 0.30, 0.50', 'pu'),
+    sel('meth', 'Injection method', '1ph', [['1ph', 'Single phase — I2 = I/3, applied current ×3'], ['rev', 'Balanced reverse rotation — I2 = I']], ''),
+    num('marg', 'Pickup margin', 10, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, K = o.meth === '1ph' ? 3 : 1, pts = [];
+    const iFor = i2pu => i2pu * b.IrT * K;
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const i2 = s.pkp * f, I = iFor(i2);
+      const p = o.meth === '1ph'
+        ? ocPoint('pk' + f, 'Pickup — ' + rel + ' threshold', 'I2 = ' + fmt(i2, 3) + ' pu · single phase, so ' + fmt(I, 3) + ' A applied', I, 0, 'T', verdict, vt === 'op' ? 'Very long operate time at this level' : 'No operation')
+        : (() => {
+            const v = P3(b.vLNs, 0), i = [P(I, 0), P(I, 120), P(I, -120)], [t1, t2] = iTriples(i, 'T');
+            return { id: 'pk' + f, name: 'Pickup — ' + rel + ' threshold', detail: 'I2 = ' + fmt(i2, 3) + ' pu · balanced set in reverse rotation',
+              expect: verdict, expectSub: vt === 'op' ? 'Very long operate time at this level' : 'No operation',
+              channels: chans(v, t1, t2),
+              phasor: { v: v.map((q, k2) => ({ lab: 'V' + PH[k2], cls: PHC[k2], mag: q.m, ang: q.a })),
+                        i: i.map((q, k2) => ({ lab: 'I' + PH[k2], cls: PHC[k2], mag: q.m, ang: q.a })) } };
+          })();
+      p.verdict = vt; p.sheet = ['46', 'Pickup ' + rel, fmt(I, 3) + ' A', 'I2 ' + fmt(i2, 3) + ' pu', verdict];
+      pts.push(p);
+    });
+    multiplesOf(o.lv).forEach(i2 => {
+      const t = Math.min(s.tmax, Math.max(s.tmin, s.kk / (i2 * i2))), I = iFor(i2);
+      const clip = (s.kk / (i2 * i2)) > s.tmax ? ' — clipped by the maximum time setting' : '';
+      const p = o.meth === '1ph'
+        ? ocPoint('t' + i2, 'Timing at I2 = ' + fmtX(i2) + ' pu', 'K / I2² = ' + fmt(s.kk / (i2 * i2), 1) + ' s' + clip, I, 0, 'T', fmt(t, 1) + ' s', fmt(t / 60, 2) + ' minutes')
+        : (() => {
+            const v = P3(b.vLNs, 0), i = [P(I, 0), P(I, 120), P(I, -120)], [t1, t2] = iTriples(i, 'T');
+            return { id: 't' + i2, name: 'Timing at I2 = ' + fmtX(i2) + ' pu', detail: 'K / I2² = ' + fmt(s.kk / (i2 * i2), 1) + ' s' + clip,
+              expect: fmt(t, 1) + ' s', expectSub: fmt(t / 60, 2) + ' minutes',
+              channels: chans(v, t1, t2),
+              phasor: { v: v.map((q, k2) => ({ lab: 'V' + PH[k2], cls: PHC[k2], mag: q.m, ang: q.a })),
+                        i: i.map((q, k2) => ({ lab: 'I' + PH[k2], cls: PHC[k2], mag: q.m, ang: q.a })) } };
+          })();
+      p.verdict = 'nu'; p.sheet = ['46', 'Timing I2 ' + fmt(i2, 2) + ' pu', fmt(I, 3) + ' A', fmt(t, 1) + ' s', 'TIME'];
+      pts.push(p);
+    });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.pkp, 3), u: 'pu I2' }, { k: 'Applied at pickup', v: fmt(iFor(s.pkp), 3), u: 'A sec' },
+        { k: 'K', v: fmt(s.kk, 1), u: '' }, { k: 'Rated stator', v: fmt(b.IrT, 3), u: 'A sec' },
+        { k: 't at 0.2 pu', v: fmt(Math.min(s.tmax, s.kk / 0.04), 0), u: 's' }],
+      points: pts,
+      notes: [
+        { lvl: o.meth === '1ph' ? 'warn' : 'note', lb: 'Method', txt: o.meth === '1ph'
+          ? 'Single-phase injection gives I2 = I/3, so the channel currents are already three times the intended I2. It also produces equal I1 and I0 — if any other element is in service on those quantities it will operate first and spoil the timing.'
+          : 'A balanced set in reverse rotation gives I2 = I with no positive- or zero-sequence content, so nothing else in the relay sees anything. It is the cleaner test where the test set can do it.' },
+        { lvl: 'warn', lb: 'Long times', txt: 'At the pickup itself the operate time runs into the thousands of seconds. Test the curve at the higher levels and confirm pickup separately rather than waiting one out.' },
+        { lvl: 'note', lb: 'Machine limit', txt: 'K is the machine\'s published short-time unbalance capability, not a protection preference. It comes off the generator data sheet — if the relay setting and the data sheet disagree, that is a finding worth raising.' }
+      ]
+    };
+  }
+});
+
+/* ================= 32  DIRECTIONAL POWER ========================== */
+reg({
+  ansi: '32', name: 'Reverse / low forward power', group: 'Machine',
+  desc: 'Anti-motoring and sequential-trip supervision. Power is set by holding voltage at nominal and solving for the current that makes the required watts at the characteristic angle.',
+  fields: [
+    sel('kind', 'Function', 'rev', [['rev', '32R — reverse power, anti-motoring'], ['low', '32F — low forward power, sequential trip']], ''),
+    num('pkp', 'Pickup', 1.0, '', 0.1),
+    sel('pu', 'Pickup unit', 'pctMW', [['pctMW', '% of rated MW'], ['pctMVA', '% of rated MVA'], ['W_sec', 'W secondary, 3-phase']], ''),
+    num('mta', 'Characteristic angle', 0, 'deg', 1),
+    num('dly', 'Delay', 10.0, 's', 0.5)],
+  opts: [num('marg', 'Margin either side', 20, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, V = b.vLNs, ratedMW = CFG.mva * CFG.pf;
+    let Psec;
+    if (s.pu === 'W_sec') Psec = s.pkp;
+    else if (s.pu === 'pctMVA') Psec = (s.pkp / 100) * CFG.mva * 1e6 / (b.vtr * b.ctrT);
+    else Psec = (s.pkp / 100) * ratedMW * 1e6 / (b.vtr * b.ctrT);
+    const rev = s.kind === 'rev';
+    const mk = (f, name, verdict, vt, detail) => {
+      const Pt = Psec * f, cosphi = Math.cos(s.mta * D2R);
+      const I = Math.abs(Pt / (3 * V * (Math.abs(cosphi) < 1e-6 ? 1e-6 : cosphi)));
+      const aI = (rev ? 180 : 0) - s.mta;
+      const v = P3(V, 0), i = P3(I, aI), [t1, t2] = iTriples(i, 'T');
+      return { id: name, name, detail, expect: verdict, expectSub: 'Balanced 3φ · current at ' + fmtA(aI) + ' · ' + fmt(Pt * b.vtr * b.ctrT / 1e6, 4) + ' MW primary',
+        verdict: vt, channels: chans(v, t1, t2),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['32', name, fmt(I, 3) + ' A @ ' + fmtA(aI), fmt(V, 2) + ' V @ 0°', verdict] };
+    };
+    const pts = rev ? [
+      mk(1 + m, 'Above threshold — motoring', 'OPERATE', 'op', fmt((1 + m) * 100, 0) + '% of setting, power into the machine'),
+      mk(1 - m, 'Below threshold', 'RESTRAIN', 'no', fmt((1 - m) * 100, 0) + '% of setting'),
+      mk(2, 'Timing at 2× pickup', fmt(s.dly, 1) + ' s', 'nu', 'Long definite time — this element is deliberately slow')
+    ] : [
+      mk(1 - m, 'Below threshold — low output', 'OPERATE', 'op', fmt((1 - m) * 100, 0) + '% of setting, machine nearly unloaded'),
+      mk(1 + m, 'Above threshold', 'RESTRAIN', 'no', fmt((1 + m) * 100, 0) + '% of setting'),
+      mk(0.5, 'Timing at half pickup', fmt(s.dly, 1) + ' s', 'nu', 'Definite time')
+    ];
+    return {
+      readout: [{ k: 'Pickup', v: fmt(Psec, 2), u: 'W sec 3φ' },
+        { k: 'Pickup', v: fmt(Psec * b.vtr * b.ctrT / 1e6, 4), u: 'MW pri' },
+        { k: 'Rated output', v: fmt(ratedMW, 1), u: 'MW' },
+        { k: 'Current at 1×', v: fmt(Math.abs(Psec / (3 * V * Math.cos(s.mta * D2R))), 4), u: 'A sec' },
+        { k: 'Delay', v: fmt(s.dly, 1), u: 's' }],
+      points: pts,
+      notes: [
+        { lvl: 'warn', lb: 'Very small currents', txt: 'Anti-motoring settings of a percent or two of rating put the test current down near ' + fmt(Math.abs(Psec / (3 * V * Math.cos(s.mta * D2R))), 4) + ' A. That is inside the noise of some amplifiers and below the accuracy class of others. Check the CMC\'s specified accuracy at that output before trusting a marginal result.' },
+        { lvl: 'note', lb: 'Direction', txt: rev
+          ? 'Reverse power means the machine is drawing real power from the system — the current is turned 180° from the forward case. Confirm the sign against the relay\'s own power metering; it follows the CT polarity as wired, not the setting.'
+          : 'Low forward power is a permissive for sequential tripping: it confirms the machine has stopped exporting before the breaker is allowed to open. It operates when power falls, so approach the threshold from above.' },
+        { lvl: 'note', lb: 'Three-phase', txt: 'The element sums all three phases. A single-phase injection reads a third of the expected power.' }
+      ]
+    };
+  }
+});
+
+/* ================= 21  DISTANCE BACKUP ============================ *
+ * Mho through the origin, diameter = reach at the characteristic
+ * angle.  Along a ray at φ the boundary sits at |Z| = reach·cos(φ−MTA). */
+reg({
+  ansi: '21', name: 'Distance backup', group: 'Machine',
+  desc: 'System backup mho. The reach is checked along the characteristic angle and either side of it, where the circle closes in by the cosine of the offset.',
+  fields: [ZUNIT, num('reach', 'Reach', 1.20, 'diameter at MTA', 0.05),
+    num('mta', 'Characteristic angle', 85, 'deg', 1), num('dly', 'Delay', 0.50, 's', 0.05),
+    sel('meth', 'Test loop', 'pp', [['pp', 'Phase-to-phase L2–L3'], ['3ph', 'Balanced three-phase']], '')],
+  opts: [num('marg', 'Reach margin', 8, '%', 1), txt('offs', 'Angle offsets', '0, 30, -30', 'deg from MTA')],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, pp = s.meth === 'pp';
+    const reach = s.zu === 'pu' ? b.zSec(s.reach) : s.reach;
+    const pts = [];
+    String(o.offs).split(/[,;\s]+/).map(Number).filter(isFinite).forEach(d => {
+      const phi = s.mta + d, bnd = reach * Math.cos(d * D2R);
+      if (bnd <= 1e-6) return;
+      [[1 - m, 'inside', 'OPERATE', 'op'], [1 + m, 'outside', 'RESTRAIN', 'no']].forEach(([k, rel, verdict, vt]) => {
+        pts.push(zPoint('r' + d + rel, (d === 0 ? 'Reach at MTA' : 'Reach at MTA ' + (d > 0 ? '+' : '−') + Math.abs(d) + '°') + ' — ' + rel,
+          'Boundary here is ' + fmt(bnd, 2) + ' Ω · applied ' + fmt(bnd * k, 2) + ' Ω ' + fmtA(phi),
+          bnd * k, phi, verdict, vt === 'op' ? 'Operate after ' + fmt(s.dly, 2) + ' s' : 'No operation', vt, pp));
+      });
+    });
+    pts.forEach(p => p.sheet[0] = '21');
+    const cr = (reach / 2) * Math.cos(s.mta * D2R), cxx = (reach / 2) * Math.sin(s.mta * D2R);
+    return {
+      readout: [{ k: 'Reach', v: fmt(reach, 2), u: 'Ω sec' }, { k: 'Reach', v: fmt(reach * b.vtr / b.ctrT, 2), u: 'Ω pri' },
+        { k: 'MTA', v: fmt(s.mta, 0), u: 'deg' }, { k: 'Base impedance', v: fmt(b.Zbs, 2), u: 'Ω sec' },
+        { k: 'Reach', v: fmt(reach / b.Zbs, 3), u: 'pu' }],
+      points: pts,
+      rx: { circles: [{ r0: cr, x0: cxx, rad: reach / 2, cls: 'rx-char' }], lines: [], points: [] },
+      notes: [
+        { lvl: 'note', lb: 'Loop', txt: pp
+          ? 'Phase-to-phase testing puts V L2–L3 on 0° with the healthy phase at +90°, and takes the apparent impedance as (V L2 − V L3)/(I L2 − I L3). The two current channels are equal and opposite, so each carries the loop current.'
+          : 'A balanced three-phase set presents its positive-sequence impedance directly. Simplest to set up, and correct for the three-phase element.' },
+        { lvl: 'warn', lb: 'Reach at the offsets', txt: 'Off the characteristic angle the circle closes in by cos of the offset — at ±30° the boundary is 86.6% of the reach, not the reach. A point placed at full reach 30° off will not operate, and that is the characteristic behaving correctly.' },
+        { lvl: 'note', lb: 'Coordination', txt: 'This element backs up the system, so its reach is set against transmission impedances rather than the machine. The per-unit figure alongside the readout is only there to keep it in proportion.' }
+      ]
+    };
+  }
+});
+
+/* ================= 78  OUT OF STEP ================================ */
+reg({
+  ansi: '78', name: 'Out of step', group: 'Machine',
+  desc: 'Double-blinder scheme. The static points prove where each blinder sits; the timer that separates a swing from a fault has to be run as a sequence through them.',
+  fields: [ZUNIT, num('rr', 'Right blinder', 0.60, 'R at X = 0', 0.05),
+    num('rl', 'Left blinder', 0.60, 'R at X = 0', 0.05),
+    num('bang', 'Blinder angle', 90, 'deg from R axis', 1),
+    num('xf', 'Forward reach', 1.00, 'X', 0.05), num('xr', 'Reverse reach', 0.30, 'X', 0.05),
+    num('tsw', 'Swing timer', 0.05, 's between blinders', 0.005)],
+  opts: [num('marg', 'Blinder margin', 25, '%', 5), num('xoff', 'Locus height', 0, 'X of the test locus', 0.05)],
+  compute(s, o) {
+    const b = base(), toZ = v => (s.zu === 'pu' ? b.zSec(v) : v), m = o.marg / 100;
+    const Rr = toZ(s.rr), Rl = toZ(s.rl), Xf = toZ(s.xf), Xr = toZ(s.xr), Xo = toZ(o.xoff);
+    const pts = [], mk = (R, name, detail, verdict, vt) => {
+      const q = zPolar(R, Xo);
+      const p = zPoint(name, name, detail, q.m, q.a, verdict, vt === 'op' ? 'Inside the blinder pair' : 'Outside the blinder pair', vt);
+      p.sheet[0] = '78'; return p;
+    };
+    pts.push(mk(Rr * (1 + m), 'Right of the right blinder', 'R = ' + fmt(Rr * (1 + m), 2) + ' Ω — outside, where a swing starts', 'OUTSIDE', 'no'));
+    pts.push(mk(Rr * (1 - m), 'Inside the right blinder', 'R = ' + fmt(Rr * (1 - m), 2) + ' Ω — first blinder crossed', 'INSIDE', 'op'));
+    pts.push(mk(-Rl * (1 - m), 'Inside the left blinder', 'R = −' + fmt(Rl * (1 - m), 2) + ' Ω — still between the blinders', 'INSIDE', 'op'));
+    pts.push(mk(-Rl * (1 + m), 'Left of the left blinder', 'R = −' + fmt(Rl * (1 + m), 2) + ' Ω — second blinder crossed, pole slip complete', 'OUTSIDE', 'no'));
+    const tanb = Math.tan(s.bang * D2R), dR = Math.abs(s.bang - 90) < 0.01 ? 0 : (Xf + Xr) / (2 * (Math.abs(tanb) < 1e-6 ? 1e-6 : tanb));
+    return {
+      readout: [{ k: 'Right blinder', v: fmt(Rr, 2), u: 'Ω sec' }, { k: 'Left blinder', v: fmt(Rl, 2), u: 'Ω sec' },
+        { k: 'Forward reach', v: fmt(Xf, 2), u: 'Ω sec' }, { k: 'Reverse reach', v: fmt(Xr, 2), u: 'Ω sec' },
+        { k: 'Swing timer', v: fmt(s.tsw * 1000, 0), u: 'ms' }, { k: 'Locus height', v: fmt(Xo, 2), u: 'Ω sec' }],
+      points: pts,
+      rx: { circles: [], points: [],
+        lines: [
+          { r1: Rr - dR, x1: -Xr, r2: Rr + dR, x2: Xf, cls: 'rx-blind' },
+          { r1: -Rl - dR, x1: -Xr, r2: -Rl + dR, x2: Xf, cls: 'rx-blind' },
+          { r1: -Rl - dR, x1: Xf, r2: Rr + dR, x2: Xf, cls: 'rx-char2' },
+          { r1: -Rl - dR, x1: -Xr, r2: Rr + dR, x2: -Xr, cls: 'rx-char2' }
+        ] },
+      notes: [
+        { lvl: 'warn', lb: 'Static points are not the test', txt: 'These four impedances only prove where the blinders sit. The scheme discriminates a swing from a fault by how long the locus takes to cross between them — run the points as a state sequence with at least ' + fmt(s.tsw * 1000, 0) + ' ms in the middle two, and confirm that a fast step straight through does not trip.' },
+        { lvl: 'note', lb: 'Direction of travel', txt: 'Order matters. A swing entering from the right and leaving on the left is a pole slip; the same impedances applied in a different order, or applied instantaneously, should not be declared one.' },
+        { lvl: 'note', lb: 'Locus height', txt: 'The points sit at X = ' + fmt(Xo, 2) + ' Ω. Real swings cross nearer the electrical centre than the R axis — raising the locus height on the Test options is closer to the machine\'s actual behaviour and still crosses both blinders.' }
+      ]
+    };
+  }
+});
+
+/* ================= 50/27  INADVERTENT ENERGIZATION ================ */
+reg({
+  ansi: '50/27', name: 'Inadvertent energization', group: 'Machine',
+  desc: 'Armed by sustained undervoltage on a machine off line, then tripped instantly by current. The order of the steps is the whole test — current with the scheme disarmed must do nothing.',
+  fields: [num('varm', 'Arming undervoltage', 0.50, '×VT', 0.01),
+    num('tarm', 'Arming delay', 5.0, 's', 0.5),
+    num('tdis', 'Disarming delay', 0.25, 's', 0.05),
+    num('pkp', 'Current pickup', 0.50, '×CT', 0.01), ESEL('T')],
+  opts: [num('marg', 'Margin either side', 10, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, e = s.e, Ipk = s.pkp * b.ctSec(e);
+    const st = (Vm, Im, name, detail, verdict, vt, sub) => {
+      const v = P3(Vm, 0), trip = [P(Im, -75), P(Im, -195), P(Im, 45)], [t1, t2] = iTriples(Im > 0 ? trip : nullTriple(), e);
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, t1, t2),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: Im > 0 ? trip.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) : [] },
+        sheet: ['50/27', name, fmt(Vm, 2) + ' V', fmt(Im, 3) + ' A', verdict] };
+    };
+    const Varm = s.varm * b.vLNs;
+    return {
+      readout: [{ k: 'Arming V', v: fmt(Varm, 2), u: 'V sec' }, { k: 'Arming delay', v: fmt(s.tarm, 1), u: 's' },
+        { k: 'Current pickup', v: fmt(Ipk, 3), u: 'A sec' }, { k: 'Current pickup', v: fmt(s.pkp * b.ctPri(e), 1), u: 'A pri' },
+        { k: 'Disarm delay', v: fmt(s.tdis, 2), u: 's' }],
+      points: [
+        st(b.vLNs, 0, 'Step 1 — machine on line, disarmed', 'Voltage at nominal, no current. Hold well past the arming delay.', 'DISARMED', 'no', 'Arming flag must stay dropped'),
+        st(b.vLNs, Ipk * 2, 'Step 2 — current while disarmed', 'Full current applied with voltage still at nominal', 'NO TRIP', 'no', 'This is the step that catches a scheme armed by mistake'),
+        st(Varm * 0.8, 0, 'Step 3 — machine off line, arming', 'Voltage below the arming threshold, held for ' + fmt(s.tarm, 1) + ' s', 'ARMS', 'op', 'Arming flag picks up after ' + fmt(s.tarm, 1) + ' s'),
+        st(Varm * 0.8, Ipk * (1 - m), 'Step 4 — current below pickup', 'Armed, but current short of the detector', 'NO TRIP', 'no', fmt((1 - m) * 100, 0) + '% of pickup'),
+        st(Varm * 0.8, Ipk * (1 + m), 'Step 5 — current above pickup', 'Armed, current past the detector — the real event', 'TRIP', 'op', 'Instantaneous, no intentional delay'),
+        st(b.vLNs, Ipk * 2, 'Step 6 — disarm and re-apply', 'Restore voltage, wait past ' + fmt(s.tdis, 2) + ' s, then re-apply current', 'NO TRIP', 'no', 'Proves the scheme disarms on restoration')
+      ],
+      notes: [
+        { lvl: 'warn', lb: 'Run it in order', txt: 'Every step depends on the state the one before it left behind. Build this as a single state sequence, not six separate shots — restarting the test set between steps resets the arming logic and the result means nothing.' },
+        { lvl: 'note', lb: 'What it protects against', txt: 'A machine at standstill energised by a closed breaker looks like an induction motor with a solid rotor. Damage takes seconds, which is why this scheme is instantaneous once armed and why step 2 matters more than step 5.' }
+      ]
+    };
+  }
+});
+
+/* ================= 51V  VOLTAGE-RESTRAINED OC ===================== */
+reg({
+  ansi: '51V', name: 'Voltage-restrained OC', group: 'Machine',
+  desc: 'System backup that stays above load current until the voltage collapses. Every test point needs its own voltage as well as its own current — the effective pickup moves with the terminal voltage.',
+  fields: [
+    sel('mode', 'Mode', 'restr', [['restr', 'Voltage restrained — pickup scales with V'], ['ctrl', 'Voltage controlled — enabled below a threshold']], ''),
+    num('pkp', 'Pickup at nominal V', 1.50, '×CT', 0.01),
+    num('kmin', 'Minimum multiplier', 0.25, 'restrained mode floor', 0.05),
+    num('vctl', 'Control threshold', 0.80, '×VT — controlled mode', 0.01),
+    sel('crv', 'Curve', 'IEEE Very Inv', Object.keys(CURVES).map(k => [k, k]), ''),
+    num('tdm', 'Time dial / TDM', 0.20, '', 0.01), ESEL('T')],
+  opts: [txt('vs', 'Restraint voltages', '1.00, 0.75, 0.50, 0.25', '×VT'), num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, e = s.e, base_pk = s.pkp * b.ctSec(e), pts = [];
+    const effAt = vpu => s.mode === 'ctrl'
+      ? (vpu < s.vctl ? base_pk : null)
+      : base_pk * Math.min(1, Math.max(s.kmin, vpu));
+    multiplesOf(o.vs).forEach(vpu => {
+      const V = vpu * b.vLNs, eff = effAt(vpu);
+      if (eff == null) {
+        const p = ocPoint('v' + vpu, 'V = ' + fmtX(vpu) + ' ×VT — element blocked',
+          'Above the ' + fmt(s.vctl, 2) + ' ×VT control threshold, so the element is out of service', base_pk * 2, -75, e,
+          'BLOCKED', 'No operation at any current', V);
+        p.verdict = 'no'; p.sheet = ['51V', 'V ' + fmt(vpu, 2) + ' blocked', fmt(base_pk * 2, 3) + ' A', fmt(V, 2) + ' V', 'BLOCKED'];
+        pts.push(p); return;
+      }
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const p = ocPoint('v' + vpu + f, 'V = ' + fmtX(vpu) + ' ×VT — ' + rel + ' pickup',
+          'Effective pickup ' + fmt(eff, 3) + ' A sec at ' + fmt(V, 2) + ' V', eff * f, -75, e, verdict,
+          vt === 'op' ? 'Curve runs from here' : 'No operation', V);
+        p.verdict = vt; p.sheet = ['51V', 'V ' + fmt(vpu, 2) + ' ' + rel, fmt(eff * f, 3) + ' A', fmt(V, 2) + ' V', verdict];
+        pts.push(p);
+      });
+      const t2 = curveTime(s.crv, 2, s.tdm);
+      const p2 = ocPoint('t' + vpu, 'V = ' + fmtX(vpu) + ' ×VT — timing at 2× effective',
+        s.crv + ' · TDM ' + fmt(s.tdm, 2), eff * 2, -75, e, t2 == null ? 'no operation' : fmt(t2, 3) + ' s',
+        'Multiple is of the effective pickup, not the nominal one', V);
+      p2.verdict = 'nu'; p2.sheet = ['51V', 'V ' + fmt(vpu, 2) + ' timing 2×', fmt(eff * 2, 3) + ' A', t2 == null ? '—' : fmt(t2, 3) + ' s', 'TIME'];
+      pts.push(p2);
+    });
+    return {
+      readout: [{ k: 'Pickup at 1.0 V', v: fmt(base_pk, 3), u: 'A sec' },
+        { k: 'Pickup at 0.5 V', v: (effAt(0.5) == null ? 'blocked' : fmt(effAt(0.5), 3)), u: 'A sec' },
+        { k: 'Floor', v: fmt(base_pk * s.kmin, 3), u: 'A sec' },
+        { k: 'Rated stator', v: fmt(b.Ir(e), 3), u: 'A sec' }, { k: 'Curve', v: s.crv, u: '' }],
+      points: pts,
+      notes: [
+        { lvl: 'warn', lb: 'Characteristic', txt: s.mode === 'restr'
+          ? 'The restraint here is modelled as pickup × (V/Vnom), clamped between ' + fmt(s.kmin, 2) + ' and 1.0. That is the classic form, but the clamp and its shape vary between products. Measure the pickup at two voltages and check the ratio matches before accepting the rest of the table.'
+          : 'In controlled mode the pickup does not move — the element is simply out of service above ' + fmt(s.vctl, 2) + ' ×VT and at full pickup below it. The blocked row is the one that proves it.' },
+        { lvl: 'note', lb: 'Why it exists', txt: 'A generator feeding a remote fault delivers little more than rated current once the field collapses, so a plain 51 set above load current would never see it. Dropping the pickup as the voltage falls is what makes the element useful, and is exactly what these points measure.' },
+        { lvl: 'note', lb: 'Timing multiples', txt: 'Multiples are taken against the effective pickup at each voltage. Timing at "2×" therefore means a different current at every voltage in the table.' }
+      ]
+    };
+  }
+});
+
+/* ================= 24  VOLTS PER HERTZ ============================ */
+reg({
+  ansi: '24', name: 'Volts per hertz', group: 'Machine',
+  desc: 'Overexcitation. The whole point of the element is that V/Hz is reachable from either variable — the table gives the voltage required at each test frequency, which is usually the cheaper way to reach it.',
+  fields: [num('vhz', 'Pickup', 1.10, 'pu V/Hz', 0.01),
+    sel('mode', 'Characteristic', 'inv', [['def', 'Definite time'], ['inv', 'Inverse']], ''),
+    num('dly', 'Definite time delay', 5.0, 's', 0.1),
+    num('ia', 'Inverse constant A', 1.0, 't = TD·A/(M−1)^n', 0.05),
+    num('ie', 'Inverse exponent n', 1.0, '', 0.1),
+    num('td', 'Time dial', 1.0, '', 0.05),
+    sel('bs', 'Voltage base', 'LN', [['LN', 'Nominal L-N secondary'], ['LL', 'Nominal L-L secondary']], '')],
+  opts: [txt('fs', 'Test frequencies', '60, 57, 54', 'Hz'), num('marg', 'Margin either side', 5, '%', 1)],
+  compute(s, o) {
+    const b = base(), Vb = s.bs === 'LL' ? b.vLLs : b.vLNs, m = o.marg / 100, pts = [];
+    const tAt = M => s.mode === 'def' ? s.dly
+      : (M <= 1.0001 ? null : s.td * s.ia / Math.pow(M - 1, s.ie));
+    multiplesOf(o.fs).forEach(ft => {
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const target = s.vhz * f, Vreq = target * Vb * (ft / CFG.freq), t = tAt(f);
+        const v = P3(Vreq, 0).map(q => (q.f = ft, q));
+        pts.push({ id: 'vh' + ft + f, name: fmtX(ft) + ' Hz — ' + rel + ' threshold',
+          detail: fmt(target, 3) + ' pu V/Hz needs ' + fmt(Vreq, 2) + ' V secondary at ' + fmtX(ft) + ' Hz',
+          expect: verdict, expectSub: vt === 'op' ? (t == null ? 'operates' : 'Operate after ' + fmt(t, 2) + ' s') : 'No operation',
+          verdict: vt, channels: chans(v, nullTriple(), null, ft),
+          phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+          sheet: ['24', fmtX(ft) + ' Hz ' + rel, fmt(Vreq, 2) + ' V', fmtX(ft) + ' Hz', verdict] });
+      });
+    });
+    [1.2, 1.5].forEach(M => {
+      const ft = CFG.freq, Vreq = s.vhz * M * Vb, t = tAt(M);
+      const v = P3(Vreq, 0).map(q => (q.f = ft, q));
+      pts.push({ id: 'tm' + M, name: 'Timing at ' + fmtX(M) + '× pickup',
+        detail: fmt(s.vhz * M, 3) + ' pu V/Hz at nominal frequency', expect: t == null ? '—' : fmt(t, 2) + ' s',
+        expectSub: s.mode === 'def' ? 'Definite time' : 'From the inverse characteristic', verdict: 'nu',
+        channels: chans(v, nullTriple(), null, ft),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['24', 'Timing ' + fmtX(M) + '×', fmt(Vreq, 2) + ' V', t == null ? '—' : fmt(t, 2) + ' s', 'TIME'] });
+    });
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.vhz, 3), u: 'pu V/Hz' }, { k: 'V base', v: fmt(Vb, 2), u: 'V sec' },
+        { k: 'V at nominal f', v: fmt(s.vhz * Vb, 2), u: 'V sec' },
+        { k: 'V at 54 Hz', v: fmt(s.vhz * Vb * 54 / CFG.freq, 2), u: 'V sec' },
+        { k: 't at 1.2×', v: (tAt(1.2) == null ? '—' : fmt(tAt(1.2), 2)), u: 's' }],
+      points: pts,
+      notes: [
+        { lvl: 'warn', lb: 'Inverse form', txt: 'The inverse characteristic here is the general form t = TD·A/(M−1)^n with A and n exposed as settings, because the published generator V/Hz curve families differ between products and revisions. Fit A and n to your relay\'s own curve, or use definite time and check the inverse separately against the relay\'s prediction.' },
+        { lvl: 'note', lb: 'Reduced frequency', txt: 'At 54 Hz the voltage needed for the same per-unit V/Hz falls to ' + fmt(s.vhz * Vb * 54 / CFG.freq, 1) + ' V. Testing there keeps the amplifier well inside range and proves the frequency term at the same time.' },
+        { lvl: 'warn', lb: 'Base', txt: 'Products differ on whether the V/Hz base is the L-N or the L-L nominal. Getting it wrong shows up as a clean √3 error — check the relay\'s own V/Hz metering against the first point.' }
+      ]
+    };
+  }
+});
+
+/* ================= 55  POWER FACTOR =============================== */
+reg({
+  ansi: '55', name: 'Power factor', group: 'Machine',
+  desc: 'Underexcitation or overexcitation limit expressed as a power factor. Voltage stays at nominal and the current angle carries the whole test.',
+  fields: [num('pfs', 'Pickup power factor', 0.95, '', 0.01),
+    sel('dir', 'Side', 'lead', [['lead', 'Leading — underexcited'], ['lag', 'Lagging — overexcited']], ''),
+    num('imin', 'Minimum current', 0.20, '×rated stator', 0.01), num('dly', 'Delay', 5.0, 's', 0.5)],
+  opts: [num('marg', 'Angle margin', 5, 'deg either side', 1)],
+  compute(s, o) {
+    const b = base(), V = b.vLNs, I = Math.max(s.imin, 0.5) * b.IrT;
+    const phi = Math.acos(Math.min(1, Math.max(-1, s.pfs))) * R2D;
+    const sgn = s.dir === 'lead' ? +1 : -1;                 /* leading current leads V */
+    const mk = (a, name, detail, verdict, vt) => {
+      const v = P3(V, 0), i = P3(I, a), [t1, t2] = iTriples(i, 'T');
+      return { id: name, name, detail, expect: verdict,
+        expectSub: 'pf = ' + fmt(Math.abs(Math.cos(a * D2R)), 3) + ' ' + (a > 0 ? 'leading' : 'lagging'), verdict: vt,
+        channels: chans(v, t1, t2),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })),
+                  i: i.map((q, k) => ({ lab: 'I' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })) },
+        sheet: ['55', name, fmt(I, 3) + ' A @ ' + fmtA(a), fmt(V, 2) + ' V @ 0°', verdict] };
+    };
+    return {
+      readout: [{ k: 'Pickup pf', v: fmt(s.pfs, 3), u: s.dir }, { k: 'Angle', v: fmt(phi, 1), u: 'deg' },
+        { k: 'Test current', v: fmt(I, 3), u: 'A sec' }, { k: 'Voltage', v: fmt(V, 2), u: 'V sec' },
+        { k: 'Delay', v: fmt(s.dly, 1), u: 's' }],
+      points: [
+        mk(sgn * (phi + o.marg), 'Past the limit', fmt(o.marg, 0) + '° beyond the setting angle', 'OPERATE', 'op'),
+        mk(sgn * (phi - o.marg), 'Short of the limit', fmt(o.marg, 0) + '° inside the setting angle', 'RESTRAIN', 'no'),
+        mk(sgn * 90, 'Full VAR, no watts', 'Current in quadrature — power factor zero', 'OPERATE', 'op'),
+        mk(sgn * (phi + o.marg), 'Below minimum current', 'Same angle, current dropped under the ' + fmt(s.imin, 2) + ' × supervision', 'BLOCKED', 'no')
+      ].map((p, k) => k === 3 ? (() => {
+        const Ilow = s.imin * b.IrT * 0.8, v = P3(V, 0), i = P3(Ilow, sgn * (phi + o.marg)), [t1, t2] = iTriples(i, 'T');
+        p.channels = chans(v, t1, t2);
+        p.phasor.i = i.map((q, j) => ({ lab: 'I' + PH[j], cls: PHC[j], mag: q.m, ang: q.a }));
+        p.sheet[2] = fmt(Ilow, 3) + ' A @ ' + fmtA(sgn * (phi + o.marg));
+        return p;
+      })() : p),
+      notes: [
+        { lvl: 'note', lb: 'Sign', txt: 'Leading current — current ahead of voltage — is the underexcited machine absorbing VARs, which is the condition this element normally guards. Confirm the relay\'s own power-factor metering agrees on the sign before recording the result.' },
+        { lvl: 'note', lb: 'Minimum current', txt: 'Power factor is meaningless at no load, so the element is supervised by current. The last point proves that supervision rather than the angle.' }
+      ]
+    };
+  }
+});
+
+/* ================= 49  THERMAL OVERLOAD =========================== */
+reg({
+  ansi: '49', name: 'Stator thermal overload', group: 'Machine',
+  desc: 'Operate times from the IEC 60255-8 thermal replica, including the effect of prior load on the starting thermal state.',
+  fields: [num('ib', 'Base current Ib', 1.0, '×rated stator', 0.01), num('kf', 'k factor', 1.05, '', 0.01),
+    num('tau', 'Time constant τ', 15.0, 'minutes', 0.5), num('ip', 'Prior load', 0.8, '× Ib', 0.05), ESEL('T')],
+  opts: [txt('muls', 'Test multiples', '1.2, 1.5, 2, 3', '× k·Ib'), num('iang', 'Injection angle', -25, 'deg', 5)],
+  compute(s, o) {
+    const b = base(), e = s.e, Ibs = s.ib * b.Ir(e), Ith = s.kf * Ibs, tau = s.tau * 60;
+    const pts = multiplesOf(o.muls).map(M => {
+      const I = Ith * M, nu = I * I - Math.pow(s.ip * Ibs, 2), de = I * I - Ith * Ith;
+      const t = de > 0 && nu > 0 ? tau * Math.log(nu / de) : null;
+      const p = ocPoint('th' + M, 'Operate at ' + fmtX(M) + '× thermal setting',
+        'Applied ' + fmt(I, 3) + ' A sec · prior load ' + fmt(s.ip, 2) + '× Ib', I, o.iang, e,
+        t == null ? 'no operation' : fmt(t, 1) + ' s', t == null ? 'Below the k·Ib asymptote' : fmt(t / 60, 2) + ' minutes');
+      p.verdict = 'nu'; p.sheet = ['49', fmtX(M) + '× k·Ib', fmt(I, 3) + ' A', t == null ? '—' : fmt(t, 1) + ' s', 'TIME'];
+      return p;
+    });
+    return {
+      readout: [{ k: 'Base Ib', v: fmt(Ibs, 3), u: 'A sec' }, { k: 'k·Ib', v: fmt(Ith, 3), u: 'A sec' },
+        { k: 'τ', v: fmt(s.tau, 1), u: 'min' }, { k: 'Prior load', v: fmt(s.ip * Ibs, 3), u: 'A sec' }],
+      points: pts,
+      notes: [{ lvl: 'warn', lb: 'Long time constant', txt: 'A machine time constant of ' + fmt(s.tau, 0) + ' minutes means the replica needs roughly ' + fmt(5 * s.tau, 0) + ' minutes to decay between points. Reset the thermal memory in the relay between shots if it allows it — otherwise every point after the first reads short.' },
+        { lvl: 'note', lb: 'Model', txt: 't = τ · ln[(I² − Ip²) / (I² − (k·Ib)²)], the IEC 60255-8 replica. Confirm the relay uses this form rather than a discrete-step model before relying on the longer times.' }]
+    };
+  }
+});
+
+/* ================= GENERIC OVERCURRENT FACTORIES ================== */
+const Q_INFO = {
+  phase:  { txt: 'Operating quantity is the phase current itself.', k: 1 },
+  ground: { txt: 'Injected into the dedicated ground CT input.', k: 1 },
+  neutral:{ txt: 'A single-phase injection into one phase CT produces 3I0 equal to that current.', k: 1 },
+  negseq: { txt: 'A single-phase injection produces I2 = I/3, so the applied current is three times the setting.', k: 3 }
+};
+const PUSEL = sel('pu', 'Pickup unit', 'xCT', [['xCT', '×CT'], ['xIr', '×rated stator'], ['A_sec', 'A secondary'], ['A_pri', 'A primary']], '');
+
+function mkIOC(ansi, nm, q, dflt) {
+  return {
+    ansi, name: nm, group: 'Overcurrent',
+    desc: 'Definite-time instantaneous element. Pickup is bracketed either side, then a clean multiple is applied to time the delay.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01), PUSEL, num('dly', 'Delay', 0.05, 's', 0.01), ESEL('T')],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), num('tm', 'Timing multiple', 2, '× pickup', 0.5),
+      num('iang', 'Injection angle', -75, 'deg (lags V L1)', 5)],
+    compute(s, o) {
+      const b = base(), p = ocPickup(s, b), m = o.marg / 100, K = Q_INFO[q].k, pts = [];
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const pt = ocPoint('io' + f, 'Pickup — ' + rel + ' threshold',
+          fmt(f * 100, 0) + '% of setting · operating quantity ' + fmt(p.sec * f, 3) + ' A sec',
+          p.sec * f * K, o.iang, p.e, verdict, vt === 'op' ? 'Operate within ' + fmt(s.dly, 2) + ' s' : 'No operation');
+        pt.verdict = vt; pt.sheet = [ansi, 'Pickup ' + rel, fmt(p.sec * f * K, 3) + ' A @ ' + fmt(o.iang, 0) + '°', '—', verdict];
+        pts.push(pt);
+      });
+      const tp = ocPoint('iot', 'Timing at ' + fmtX(o.tm) + '× pickup', 'Step from prefault zero straight to the test value',
+        p.sec * o.tm * K, o.iang, p.e, fmt(s.dly, 3) + ' s', 'Measured from application of current to trip');
+      tp.verdict = 'nu'; tp.sheet = [ansi, 'Timing ' + fmtX(o.tm) + '×', fmt(p.sec * o.tm * K, 3) + ' A', fmt(s.dly, 3) + ' s', 'TIME'];
+      pts.push(tp);
+      const notes = [{ lvl: 'note', lb: 'Quantity', txt: Q_INFO[q].txt }];
+      if (q === 'negseq') notes.push({ lvl: 'warn', lb: '×3 factor', txt: 'The channel currents already carry the factor of three. A balanced set in reverse rotation gives I2 = I instead, if you would rather test that way.' });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 1), u: 'A pri' },
+          { k: 'CT ratio', v: b.ctPri(p.e) + ':' + b.ctSec(p.e), u: '' },
+          { k: 'Applied at 1×', v: fmt(p.sec * K, 3), u: 'A sec' }, { k: 'Delay', v: fmt(s.dly, 3), u: 's' }],
+        points: pts, notes
+      };
+    }
+  };
+}
+function mkTOC(ansi, nm, q, dflt, crv) {
+  return {
+    ansi, name: nm, group: 'Overcurrent',
+    desc: 'Inverse-time element. Pickup is bracketed, then operate time is predicted at each multiple from the selected curve equation.',
+    fields: [num('pkp', 'Pickup', dflt, '', 0.01), PUSEL,
+      sel('crv', 'Curve', crv || 'IEEE Very Inv', Object.keys(CURVES).map(k => [k, k]), ''),
+      num('tdm', 'Time dial / TDM', 0.20, '', 0.01), ESEL('T')],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), txt('muls', 'Timing multiples', '2, 3, 5', '× pickup'),
+      num('iang', 'Injection angle', -75, 'deg (lags V L1)', 5)],
+    compute(s, o) {
+      const b = base(), p = ocPickup(s, b), m = o.marg / 100, K = Q_INFO[q].k, pts = [];
+      [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+        const pt = ocPoint('to' + f, 'Pickup — ' + rel + ' threshold',
+          fmt(f * 100, 0) + '% of setting · operating quantity ' + fmt(p.sec * f, 3) + ' A sec',
+          p.sec * f * K, o.iang, p.e, verdict, vt === 'op' ? 'Long operate time — let the curve run out' : 'No operation');
+        pt.verdict = vt; pt.sheet = [ansi, 'Pickup ' + rel, fmt(p.sec * f * K, 3) + ' A', '—', verdict];
+        pts.push(pt);
+      });
+      multiplesOf(o.muls).forEach(M => {
+        const t = curveTime(s.crv, M, s.tdm);
+        const pt = ocPoint('t' + M, 'Timing at ' + fmtX(M) + '× pickup', s.crv + ' · TDM ' + fmt(s.tdm, 2),
+          p.sec * M * K, o.iang, p.e, t == null ? 'no operation' : fmt(t, 3) + ' s',
+          t == null ? 'Multiple is below the curve asymptote' : 'Predicted from the curve equation');
+        pt.verdict = 'nu'; pt.sheet = [ansi, 'Timing ' + fmtX(M) + '×', fmt(p.sec * M * K, 3) + ' A', t == null ? '—' : fmt(t, 3) + ' s', 'TIME'];
+        pts.push(pt);
+      });
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 3), u: 'A sec' }, { k: 'Pickup', v: fmt(p.pri, 1), u: 'A pri' },
+          { k: 'CT ratio', v: b.ctPri(p.e) + ':' + b.ctSec(p.e), u: '' }, { k: 'Curve', v: s.crv, u: '' },
+          { k: 't @ 2×', v: (curveTime(s.crv, 2, s.tdm) == null ? '—' : fmt(curveTime(s.crv, 2, s.tdm), 3)), u: 's' }],
+        points: pts,
+        notes: [{ lvl: 'note', lb: 'Quantity', txt: Q_INFO[q].txt },
+          { lvl: 'warn', lb: 'Curve constants', txt: 'Times come from the published ' + s.crv + ' equation. Constants have moved between firmware revisions — check the first timing point against the relay\'s own prediction before accepting the rest.' }]
+      };
+    }
+  };
+}
+reg(mkIOC('50P', 'Phase instantaneous OC', 'phase', 4.0));
+reg(mkTOC('51P', 'Phase time OC', 'phase', 1.10));
+reg(mkIOC('50G', 'Ground instantaneous OC', 'ground', 0.50));
+reg(mkTOC('51G', 'Ground time OC', 'ground', 0.20));
+reg(mkIOC('50N', 'Neutral instantaneous OC', 'neutral', 0.50));
+reg(mkTOC('51N', 'Neutral time OC', 'neutral', 0.20));
+
+/* ================= 67  DIRECTIONAL ================================ */
+reg({
+  ansi: '67', name: 'Directional supervision', group: 'Overcurrent',
+  desc: 'Locates the forward maximum-torque line and both boundaries, so the directional decision can be proved without touching the overcurrent settings underneath it.',
+  fields: [sel('kind', 'Element', 'P', [['P', '67P — phase, quadrature polarised'], ['N', '67N — ground, zero-sequence polarised']], ''),
+    num('eca', 'Characteristic angle (ECA)', 45, 'deg lag', 1),
+    num('imul', 'Test current', 2.0, '× the supervised pickup', 0.1),
+    num('pkp', 'Supervised pickup', 1.10, '×CT', 0.01),
+    num('vmin', 'Minimum polarising voltage', 3.0, 'V sec', 0.1), ESEL('T')],
+  opts: [num('bnd', 'Boundary offset', 90, 'deg from MTA', 1), num('marg', 'Boundary margin', 5, 'deg', 1)],
+  compute(s, o) {
+    const b = base(), e = s.e, gnd = s.kind === 'N';
+    const Isec = s.pkp * b.ctSec(e) * s.imul, mta = -s.eca;
+    const build = (aI, name, detail, verdict, vt) => {
+      const v = gnd ? [P(b.vLNs * 0.20, 0, 'faulted phase, collapsed'), P(b.vLNs, -120), P(b.vLNs, 120)] : P3(b.vLNs, 0);
+      const trip = [P(Isec, aI), P(0, 0), P(0, 0)], [t1, t2] = iTriples(trip, e);
+      return { id: name, name, detail, expect: verdict, expectSub: 'Current held at ' + fmt(s.imul, 1) + '× pickup', verdict: vt,
+        channels: chans(v, t1, t2),
+        phasor: { v: v.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: p.m, ang: p.a })),
+                  i: [{ lab: gnd ? '3I0' : 'I L1', cls: 'ch-l1', mag: Isec, ang: aI }] },
+        sheet: ['67' + s.kind, name, fmt(Isec, 3) + ' A @ ' + fmtA(aI), 'ECA ' + fmt(s.eca, 0) + '°', verdict] };
+    };
+    return {
+      readout: [{ k: 'Test current', v: fmt(Isec, 3), u: 'A sec' }, { k: 'MTA angle', v: fmtA(mta), u: '' },
+        { k: 'Operate zone', v: fmtA(mta - o.bnd) + ' … ' + fmtA(mta + o.bnd), u: '' },
+        { k: 'Polarising', v: gnd ? '−3V0' : 'V L2-L3', u: '' }],
+      points: [
+        build(mta, 'Forward maximum torque', 'Current at the characteristic angle — deepest into the operate zone.', 'FORWARD', 'op'),
+        build(wrap(mta + 180), 'Reverse maximum torque', 'Rotated 180° from MTA.', 'REVERSE', 'no'),
+        build(wrap(mta + o.bnd - o.marg), 'Boundary, leading side (inside)', fmt(o.marg, 0) + '° inside the boundary.', 'FORWARD', 'op'),
+        build(wrap(mta + o.bnd + o.marg), 'Boundary, leading side (outside)', fmt(o.marg, 0) + '° outside.', 'REVERSE', 'no'),
+        build(wrap(mta - o.bnd + o.marg), 'Boundary, lagging side (inside)', fmt(o.marg, 0) + '° inside the boundary.', 'FORWARD', 'op'),
+        build(wrap(mta - o.bnd - o.marg), 'Boundary, lagging side (outside)', fmt(o.marg, 0) + '° outside.', 'REVERSE', 'no')
+      ],
+      notes: [
+        { lvl: 'warn', lb: 'Convention', txt: 'ECA here is the angle by which the operating current lags its polarising reference at maximum forward torque, with angles quoted against V L1 at 0°. Manufacturers differ on the sign. Prove forward and reverse once and the four boundary points follow.' },
+        { lvl: 'note', lb: 'On a generator', txt: 'Forward on a machine relay usually means into the machine, which is the opposite of the feeder convention most people carry in their head. Confirm which way the CTs are wired before deciding a result is wrong.' }
+      ]
+    };
+  }
+});
+
+/* ================= VOLTAGE & FREQUENCY ============================ */
+const VUNIT = sel('vu', 'Pickup unit', 'xVT', [['xVT', '×VT (L-N nominal)'], ['V_sec', 'V secondary'], ['kV_pri', 'kV primary L-L']], '');
+
+function mkVolt(ansi, nm, over) {
+  return {
+    ansi, name: nm, group: 'Voltage & frequency',
+    desc: over ? 'Threshold bracketed from below, then a clean multiple for the definite-time run.'
+               : 'Bracketed at the threshold from above, then driven well below it for the timing run.',
+    fields: [num('vpkp', 'Pickup', over ? 1.10 : 0.85, '', 0.01), VUNIT, num('dly', 'Delay', over ? 1.0 : 2.0, 's', 0.1),
+      sel('mode', 'Phase logic', 'any', [['any', 'Any one phase'], ['all', 'All three phases']], ''),
+      num('block', 'Minimum operating V', 5, 'V sec', 0.5)],
+    opts: [num('marg', 'Margin either side', 5, '%', 1), num('tv', 'Timing voltage', over ? 1.25 : 0.6, '× pickup', 0.05)],
+    compute(s, o) {
+      const b = base(), p = vPickup(s, b), m = o.marg / 100;
+      const mk = (V, name, detail, verdict, vt, sub) => {
+        const v = s.mode === 'all' ? P3(V, 0) : [P(V, 0, over ? 'raised phase' : 'depressed phase'), P(b.vLNs, -120), P(b.vLNs, 120)];
+        return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+          channels: chans(v, nullTriple(), CFG.cmc === '6x' ? nullTriple() : null),
+          phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+          sheet: [ansi, name, fmt(V, 2) + ' V @ 0°', sub, verdict] };
+      };
+      const pts = [
+        mk(p.sec * (over ? 1 + m : 1 - m), 'Pickup — ' + (over ? 'above' : 'below') + ' threshold',
+          fmt((over ? 1 + m : 1 - m) * 100, 0) + '% of setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'),
+        mk(p.sec * (over ? 1 - m : 1 + m), 'Pickup — ' + (over ? 'below' : 'above') + ' threshold',
+          fmt((over ? 1 - m : 1 + m) * 100, 0) + '% of setting', 'RESTRAIN', 'no', 'No operation'),
+        mk(p.sec * o.tv, 'Timing at ' + fmtX(o.tv) + '× pickup', 'Step from nominal to the test level', fmt(s.dly, 2) + ' s', 'nu', 'Definite time')
+      ];
+      if (!over) pts.push(mk(Math.max(0, s.block * 0.8), 'Below minimum operating voltage',
+        'Proves the element blocks rather than operating on a dead machine', 'BLOCKED', 'no', 'Element inhibited'));
+      return {
+        readout: [{ k: 'Pickup', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Pickup', v: fmt(p.pri / 1000, 2), u: 'kV pri L-N' },
+          { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' }, { k: 'Timing level', v: fmt(p.sec * o.tv, 2), u: 'V sec' }],
+        points: pts,
+        notes: [{ lvl: 'note', lb: 'Start from nominal', txt: 'Every step starts from a healthy balanced prefault state. An element that has never seen nominal voltage may sit blocked and never pick up.' },
+          { lvl: 'note', lb: 'Phase logic', txt: s.mode === 'all' ? 'Set for all-three-phase logic, so the whole set moves together.' : 'Set for any-one-phase logic, so only V L1 moves and the healthy phases stay at nominal.' }]
+      };
+    }
+  };
+}
+reg(mkVolt('27', 'Undervoltage', false));
+reg(mkVolt('59', 'Overvoltage', true));
+
+/* ================= 47  NEGATIVE-SEQUENCE OVERVOLTAGE ============== */
+reg({
+  ansi: '47', name: 'Voltage unbalance / phase reversal', group: 'Voltage & frequency',
+  desc: 'Negative-sequence overvoltage. It catches a reversed phase sequence at commissioning and a blown VT fuse or open phase in service.',
+  fields: [num('vpkp', 'Pickup', 0.10, '×VT (V2)', 0.01), VUNIT, num('dly', 'Delay', 2.0, 's', 0.1)],
+  opts: [num('marg', 'Margin either side', 10, '%', 1),
+    sel('meth', 'Injection method', 'unb', [['unb', 'Unbalance one phase — V2 = ΔV/3'], ['rev', 'Reverse rotation — V2 = V']], '')],
+  compute(s, o) {
+    const b = base(), p = vPickup(s, b), m = o.marg / 100, pts = [];
+    [[1 + m, 'OPERATE', 'op', 'above'], [1 - m, 'RESTRAIN', 'no', 'below']].forEach(([f, verdict, vt, rel]) => {
+      const V2 = p.sec * f;
+      let v, det;
+      if (o.meth === 'rev') { v = [P(V2, 0), P(V2, 120), P(V2, -120)]; det = 'Balanced set in reverse rotation — every volt applied is negative sequence'; }
+      else { const dV = 3 * V2; v = [P(Math.max(0, b.vLNs - dV), 0, 'depressed by ' + fmt(dV, 2) + ' V'), P(b.vLNs, -120), P(b.vLNs, 120)];
+             det = 'V L1 dropped ' + fmt(dV, 2) + ' V, giving V2 = ' + fmt(V2, 2) + ' V'; }
+      pts.push({ id: 'u' + f, name: 'Pickup — ' + rel + ' threshold', detail: det,
+        expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 1) + ' s' : 'No operation', verdict: vt,
+        channels: chans(v, nullTriple(), null),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['47', 'Pickup ' + rel, fmt(v[0].m, 2) + ' / ' + fmt(v[1].m, 2) + ' / ' + fmt(v[2].m, 2) + ' V', 'V2 ' + fmt(V2, 2) + ' V', verdict] });
+    });
+    const vr = [P(b.vLNs, 0), P(b.vLNs, 120), P(b.vLNs, -120)];
+    pts.push({ id: 'rot', name: 'Full phase reversal', detail: 'Nominal balanced set with L2 and L3 exchanged — V2 equals the full phase voltage',
+      expect: 'OPERATE', expectSub: 'V2 = ' + fmt(b.vLNs, 2) + ' V, far above any sensible setting', verdict: 'op',
+      channels: chans(vr, nullTriple(), null),
+      phasor: { v: vr.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+      sheet: ['47', 'Phase reversal', fmt(b.vLNs, 2) + ' V reversed', 'V2 ' + fmt(b.vLNs, 2) + ' V', 'OPERATE'] });
+    return {
+      readout: [{ k: 'Pickup V2', v: fmt(p.sec, 2), u: 'V sec' }, { k: 'Nominal', v: fmt(b.vLNs, 2), u: 'V sec L-N' },
+        { k: 'Unbalance needed', v: fmt(3 * p.sec, 2), u: 'V on one phase' }, { k: 'Delay', v: fmt(s.dly, 1), u: 's' }],
+      points: pts,
+      notes: [{ lvl: o.meth === 'unb' ? 'warn' : 'note', lb: 'Method', txt: o.meth === 'unb'
+          ? 'Dropping one phase by ΔV gives V2 = ΔV/3, so the depression is three times the setting. It also produces the same amount of zero sequence — if 59N or a ground element is watching the same VTs it will see that too.'
+          : 'A reverse-rotation set is pure negative sequence with no zero-sequence content, so nothing else in the relay reacts. It is the cleaner way to test the threshold.' },
+        { lvl: 'note', lb: 'Commissioning value', txt: 'The phase-reversal point is worth running even when the threshold is already proved — it is the check that catches a VT set wired in the wrong rotation before the machine is first synchronised.' }]
+    };
+  }
+});
+
+/* ================= 81  FREQUENCY ================================== */
+reg({
+  ansi: '81', name: 'Under / over frequency', group: 'Voltage & frequency',
+  desc: 'Frequency stepped across the threshold with voltage held at nominal, since the element needs a healthy voltage to measure at all.',
+  fields: [sel('kind', 'Element', 'U', [['U', '81U — underfrequency'], ['O', '81O — overfrequency']], ''),
+    num('fpk', 'Pickup', 59.40, 'Hz', 0.01), num('dly', 'Delay', 0.30, 's', 0.01), num('vmin', 'Minimum voltage', 30, 'V sec', 1)],
+  opts: [num('dev', 'Test offset', 0.10, 'Hz either side', 0.01)],
+  compute(s, o) {
+    const b = base(), under = s.kind === 'U';
+    const mk = (ft, name, detail, verdict, vt, sub, Vlev) => {
+      const v = P3(Vlev == null ? b.vLNs : Vlev, 0).map(q => (q.f = ft, q));
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), null, ft),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['81' + s.kind, name, fmt(Vlev == null ? b.vLNs : Vlev, 2) + ' V', fmt(ft, 3) + ' Hz', verdict] };
+    };
+    const inF = under ? s.fpk - o.dev : s.fpk + o.dev, outF = under ? s.fpk + o.dev : s.fpk - o.dev;
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.fpk, 3), u: 'Hz' }, { k: 'Operate at', v: fmt(inF, 3), u: 'Hz' },
+        { k: 'Restrain at', v: fmt(outF, 3), u: 'Hz' }, { k: 'Nominal speed', v: fmt(b.rpm, 0), u: 'rpm' }],
+      points: [
+        mk(inF, 'Pickup — past threshold', fmt(o.dev, 3) + ' Hz beyond the setting', 'OPERATE', 'op', 'Operate after ' + fmt(s.dly, 2) + ' s'),
+        mk(outF, 'Pickup — short of threshold', fmt(o.dev, 3) + ' Hz on the healthy side', 'RESTRAIN', 'no', 'No operation'),
+        mk(inF, 'Timing', 'Step from ' + fmt(CFG.freq, 1) + ' Hz straight to ' + fmt(inF, 3) + ' Hz', fmt(s.dly, 3) + ' s', 'nu', 'Definite time'),
+        mk(inF, 'Below minimum voltage', 'Frequency past the setting but voltage under the ' + fmt(s.vmin, 0) + ' V supervision level', 'BLOCKED', 'no', 'Element inhibited', s.vmin * 0.8)
+      ],
+      notes: [{ lvl: 'note', lb: 'Step, do not ramp', txt: 'For the pickup points step the frequency rather than ramp it — a slow ramp measures the relay\'s tracking behaviour instead of its threshold.' },
+        { lvl: 'note', lb: 'Turbine limits', txt: 'Generator underfrequency settings usually mirror the turbine\'s own blade-resonance withstand bands. If the relay setting and the turbine curve disagree, that is a finding for the OEM, not something to resolve on the test set.' }]
+    };
+  }
+});
+
+/* ================= 81R  RATE OF CHANGE ============================ */
+reg({
+  ansi: '81R', name: 'Rate of change of frequency', group: 'Voltage & frequency',
+  desc: 'The element measures df/dt, so the test is a ramp rather than a step. Each point gives the ramp the CMC has to run and how long it takes.',
+  fields: [num('rate', 'Pickup', 1.50, 'Hz/s', 0.05),
+    sel('dir', 'Direction', 'fall', [['fall', 'Falling frequency'], ['rise', 'Rising frequency'], ['both', 'Either direction']], ''),
+    num('dly', 'Delay', 0.20, 's', 0.01), num('vmin', 'Minimum voltage', 30, 'V sec', 1),
+    num('span', 'Ramp span', 3.0, 'Hz of travel', 0.5)],
+  opts: [num('marg', 'Margin either side', 20, '%', 5)],
+  compute(s, o) {
+    const b = base(), m = o.marg / 100, sgn = s.dir === 'rise' ? +1 : -1;
+    const mk = (rate, name, verdict, vt) => {
+      const f2 = CFG.freq + sgn * s.span, dur = s.span / Math.max(1e-6, rate);
+      const v = P3(b.vLNs, 0).map(q => (q.f = CFG.freq, q));
+      return { id: name, name,
+        detail: 'Ramp ' + fmt(CFG.freq, 2) + ' → ' + fmt(f2, 2) + ' Hz at ' + fmt(rate, 3) + ' Hz/s · ' + fmt(dur, 2) + ' s of travel',
+        expect: verdict, expectSub: vt === 'op' ? 'Operate after ' + fmt(s.dly, 2) + ' s of sustained rate' : 'No operation', verdict: vt,
+        channels: chans(v, nullTriple(), null, CFG.freq).map(c => Object.assign({}, c, { note: 'ramp to ' + fmt(f2, 2) + ' Hz over ' + fmt(dur, 2) + ' s' })),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
+        sheet: ['81R', name, fmt(b.vLNs, 2) + ' V', fmt(rate, 3) + ' Hz/s over ' + fmt(dur, 2) + ' s', verdict] };
+    };
+    return {
+      readout: [{ k: 'Pickup', v: fmt(s.rate, 3), u: 'Hz/s' }, { k: 'Ramp span', v: fmt(s.span, 1), u: 'Hz' },
+        { k: 'Time at pickup', v: fmt(s.span / s.rate, 2), u: 's' }, { k: 'Delay', v: fmt(s.dly, 2), u: 's' }],
+      points: [
+        mk(s.rate * (1 + m), 'Rate above pickup', 'OPERATE', 'op'),
+        mk(s.rate * (1 - m), 'Rate below pickup', 'RESTRAIN', 'no'),
+        mk(s.rate * 3, 'Well above pickup', 'OPERATE', 'op')
+      ],
+      notes: [
+        { lvl: 'warn', lb: 'Ramp must outlast the delay', txt: 'The ramp has to hold the rate for longer than the ' + fmt(s.dly, 2) + ' s delay or the element never times out. At the pickup rate the ' + fmt(s.span, 1) + ' Hz span lasts ' + fmt(s.span / s.rate, 2) + ' s — widen the span on the settings panel if that is not comfortably longer than the delay.' },
+        { lvl: 'note', lb: 'Test module', txt: 'Build this in the CMC Ramping module with frequency as the ramped quantity. A state sequence of discrete frequency steps produces a very large instantaneous df/dt at each transition and will trip the element regardless of the setting.' }
+      ]
+    };
+  }
+});
+
+/* ================= 25  SYNCHROCHECK =============================== */
+reg({
+  ansi: '25', name: 'Synchrocheck', group: 'Voltage & frequency',
+  desc: 'Machine on the three-phase set, running bus on the auxiliary output. Each limit is crossed one at a time so a failure names its own cause.',
+  fields: [num('dv', 'Max voltage difference', 5, 'V sec', 0.5), num('da', 'Max angle difference', 10, 'deg', 1),
+    num('df', 'Max slip frequency', 0.05, 'Hz', 0.01), num('dead', 'Dead threshold', 20, 'V sec', 1),
+    num('live', 'Live threshold', 70, 'V sec', 1)],
+  opts: [num('marg', 'Margin either side', 20, '% of each limit', 5)],
+  compute(s, o) {
+    const b = base(), V = b.vLNs, m = o.marg / 100;
+    const mk = (name, detail, v4m, v4a, v4f, verdict, vt, sub) => {
+      const v = P3(V, 0);
+      return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
+        channels: chans(v, nullTriple(), null, CFG.freq, P(v4m, v4a, 'running bus' + (v4f !== CFG.freq ? ' — ' + fmt(v4f, 3) + ' Hz' : '')))
+          .map(c => c.ch === 'V 4' ? Object.assign(c, { freq: v4f }) : c),
+        phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a }))
+          .concat([{ lab: 'V4 bus', cls: 'ch-n', mag: v4m, ang: v4a }]), i: [] },
+        sheet: ['25', name, fmt(V, 2) + ' V machine', fmt(v4m, 2) + ' V @ ' + fmtA(v4a) + ' / ' + fmt(v4f, 3) + ' Hz', verdict] };
+    };
+    return {
+      readout: [{ k: 'Machine V', v: fmt(V, 2), u: 'V sec' }, { k: 'ΔV limit', v: fmt(s.dv, 1), u: 'V' },
+        { k: 'Δθ limit', v: fmt(s.da, 0), u: 'deg' }, { k: 'Δf limit', v: fmt(s.df, 3), u: 'Hz' }],
+      points: [
+        mk('In synchronism', 'All three differences well inside their limits', V, 0, CFG.freq, 'CLOSE PERMITTED', 'op', 'Δθ 0°, ΔV 0 V, Δf 0 Hz'),
+        mk('Angle just inside limit', 'Angle at ' + fmt((1 - m) * 100, 0) + '% of the setting', V, s.da * (1 - m), CFG.freq, 'CLOSE PERMITTED', 'op', 'Δθ ' + fmt(s.da * (1 - m), 1) + '°'),
+        mk('Angle just outside limit', 'Angle at ' + fmt((1 + m) * 100, 0) + '% of the setting', V, s.da * (1 + m), CFG.freq, 'BLOCKED', 'no', 'Δθ ' + fmt(s.da * (1 + m), 1) + '°'),
+        mk('Voltage difference outside limit', 'Angle matched, magnitude offset past ΔV', V - s.dv * (1 + m), 0, CFG.freq, 'BLOCKED', 'no', 'ΔV ' + fmt(s.dv * (1 + m), 2) + ' V'),
+        mk('Slip outside limit', 'Bus output run off frequency so the angle rotates', V, 0, CFG.freq + s.df * (1 + m), 'BLOCKED', 'no', 'Δf ' + fmt(s.df * (1 + m), 3) + ' Hz'),
+        mk('Dead bus, live machine', 'Bus collapsed below the dead threshold', s.dead * 0.5, 0, CFG.freq, 'PER DEAD-BUS LOGIC', 'nu', 'Depends on the dead/live scheme enabled')
+      ],
+      notes: [
+        { lvl: 'warn', lb: 'Tight limits', txt: 'Generator synchrocheck settings are far tighter than a feeder\'s — a few degrees and a few hundredths of a hertz. Confirm the CMC\'s own angle and frequency accuracy is better than the limits before treating a marginal result as a relay fault.' },
+        { lvl: 'note', lb: 'V4 output', txt: 'The running bus goes on the fourth voltage output. Independent frequency on that channel is what makes the slip test possible — set it in the State Sequencer rather than the fixed-state module.' },
+        { lvl: 'note', lb: 'Slip', txt: 'A slipping bus rotates continuously, so the element will permit closing each time the angle sweeps through the window. Judge that point on whether the permissive appears at the right angle, not on whether it appears at all.' }
+      ]
+    };
+  }
+});
+
+/* ==================================================================
+   STATE + PERSISTENCE
+   ================================================================== */
+const STORE = 'gen889.v1';
+let ST = { el: '40', set: {}, opt: {}, sheet: [], vec: null, pt: null };
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST })); } catch (e) {} }
+function load() {
+  try { const r = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); }
+  } catch (e) {}
+}
+const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
+function defaults(el) {
+  const s = {}, o = {};
+  el.fields.forEach(f => s[f.k] = f.d);
+  (el.opts || []).forEach(f => o[f.k] = f.d);
+  return { s, o };
+}
+function curSettings() {
+  const el = elByAnsi(ST.el), d = defaults(el);
+  return { el, s: Object.assign(d.s, ST.set[el.ansi] || {}), o: Object.assign(d.o, ST.opt[el.ansi] || {}) };
+}
+const $ = q => document.querySelector(q);
+const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const noteHTML = n => '<div class="note ' + (n.lvl === 'note' ? '' : n.lvl) + '"><span class="lb">' + n.lb + '</span><span>' + n.txt + '</span></div>';
+
+/* ==================================================================
+   RENDER — configuration
+   ================================================================== */
+function renderCfg() {
+  document.querySelectorAll('[data-cfg]').forEach(el => {
+    if (el !== document.activeElement) el.value = CFG[el.dataset.cfg];
+  });
+  const b = base();
+  $('#derived').innerHTML = [
+    ['Rated stator', fmt(b.Irp, 1), 'A primary'], ['Terminal end', fmt(b.IrT, 3), 'A sec'],
+    ['Neutral end', fmt(b.IrN, 3), 'A sec'], ['Rated output', fmt(CFG.mva * CFG.pf, 1), 'MW'],
+    ['Terminal CTR', fmt(b.ctrT, 1) + ':1', ''], ['Neutral CTR', fmt(b.ctrN, 1) + ':1', ''],
+    ['VT ratio', fmt(b.vtr, 1) + ':1', ''], ['Nominal secondary', fmt(b.vLNs, 2), 'V L-N'],
+    ['Grounding xfmr', fmt(b.ngtr, 1) + ':1', ''], ['Synchronous speed', fmt(b.rpm, 0), 'rpm']
+  ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
+
+  $('#derivedZ').innerHTML = [
+    ['Base impedance', fmt(b.Zbp, 3), 'Ω primary'], ['Base impedance', fmt(b.Zbs, 2), 'Ω secondary'],
+    ['Xd', fmt(b.zSec(CFG.xd), 2), 'Ω sec'], ["X'd", fmt(b.zSec(CFG.xdp), 2), 'Ω sec'],
+    ["X'd / 2", fmt(b.zSec(CFG.xdp / 2), 2), 'Ω sec'], ['X"d', fmt(b.zSec(CFG.xdpp), 2), 'Ω sec'],
+    ['X2', fmt(b.zSec(CFG.x2), 2), 'Ω sec'], ['Held for Z tests', fmt(CFG.zhold, 2), CFG.zsrc === 'I' ? 'A sec' : 'V sec']
+  ].map(([k, v, u]) => '<div><dt>' + k + '</dt><dd>' + v + (u ? '<small>' + u + '</small>' : '') + '</dd></div>').join('');
+
+  const n = [];
+  if (CFG.cttp === CFG.ctnp && CFG.ctts === CFG.ctns)
+    n.push({ lvl: 'good', lb: 'CT match', txt: 'Both ends of the machine are ' + CFG.cttp + ':' + CFG.ctts + '. A through condition gives equal and opposite secondary currents, which is what makes the 87G polarity check unambiguous.' });
+  else
+    n.push({ lvl: 'warn', lb: 'CT mismatch', txt: 'Terminal end ' + CFG.cttp + ':' + CFG.ctts + ' against neutral end ' + CFG.ctnp + ':' + CFG.ctns + '. The differential calculations correct for it, but confirm the relay has both ratios entered — this is a common source of a standing differential on a healthy machine.' });
+  if (CFG.cttp < b.Irp) n.push({ lvl: 'bad', lb: 'CT undersized', txt: 'The terminal CT primary (' + CFG.cttp + ' A) is below the rated stator current (' + fmt(b.Irp, 1) + ' A). Check the MVA base on the nameplate.' });
+  /* the LOE circle has to fit inside what the amplifier can deliver */
+  const zDeep = b.zSec(CFG.xdp / 2 + CFG.xd / 2);
+  const vNeed = CFG.zsrc === 'I' ? CFG.zhold * zDeep : null;
+  const iNeed = CFG.zsrc === 'V' ? CFG.zhold / Math.max(1e-9, zDeep) : null;
+  if (vNeed != null && vNeed > CFG.vmax)
+    n.push({ lvl: 'bad', lb: 'Z test range', txt: 'Holding ' + fmt(CFG.zhold, 1) + ' A puts ' + fmt(vNeed, 0) + ' V on the channels at the deepest 40 zone-2 impedance, past the ' + fmt(CFG.vmax, 0) + ' V limit. Lower the held current to about ' + fmt(CFG.vmax / zDeep * 0.9, 1) + ' A, or hold voltage instead.' });
+  else if (vNeed != null)
+    n.push({ lvl: 'note', lb: 'Z test range', txt: 'Holding ' + fmt(CFG.zhold, 1) + ' A needs up to ' + fmt(vNeed, 0) + ' V at the deepest 40 zone-2 impedance — inside the ' + fmt(CFG.vmax, 0) + ' V channel limit.' });
+  if (iNeed != null && iNeed > CFG.imax)
+    n.push({ lvl: 'bad', lb: 'Z test range', txt: 'Holding ' + fmt(CFG.zhold, 1) + ' V calls for ' + fmt(iNeed, 1) + ' A at small impedances, past the ' + fmt(CFG.imax, 1) + ' A limit. Hold current instead.' });
+  if (CFG.gnd === 'hr')
+    n.push({ lvl: 'note', lb: 'Stator ground', txt: 'High-resistance grounding limits fault current to a few amps primary, so 59N and 27TN together carry the stator ground duty and 87GN has little to see. The grounding transformer ratio of ' + fmt(b.ngtr, 1) + ':1 puts ' + fmt((CFG.kv * 1000 / Math.sqrt(3)) / b.ngtr, 1) + ' V on the relay for a solid terminal fault.' });
+  if (CFG.cmc !== '6x')
+    n.push({ lvl: 'warn', lb: 'Amp mode', txt: 'One current triple is configured. 87G drives both ends of the machine and needs the 6 × 12.5 A arrangement.' });
+  $('#cfgNotes').innerHTML = n.map(noteHTML).join('');
+  chipStrip();
+}
+function chipStrip() {
+  const b = base();
+  $('#topChips').innerHTML = [
+    ['<span class="dot"></span>' + CFG.mva + ' MVA', CFG.kv + ' kV · pf ' + fmt(CFG.pf, 2)],
+    ['Xd', fmt(CFG.xd, 2) + " · X'd " + fmt(CFG.xdp, 2) + ' pu'],
+    ['CT', CFG.cttp + ':' + CFG.ctts + ' · ' + CFG.ctnp + ':' + CFG.ctns],
+    ['Zbase', fmt(b.Zbs, 2) + ' Ω sec'],
+    ['CMC', CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A'],
+    ['f', CFG.freq + ' Hz · ' + CFG.rot]
+  ].map(([a, v]) => '<span class="chip">' + a + '<b>' + v + '</b></span>').join('');
+}
+
+/* ==================================================================
+   RENDER — element workspace
+   ================================================================== */
+function renderRail() {
+  const groups = [];
+  ELEMENTS.forEach(e => {
+    let g = groups.find(x => x.n === e.group);
+    if (!g) groups.push(g = { n: e.group, items: [] });
+    g.items.push(e);
+  });
+  $('#rail').innerHTML = groups.map(g =>
+    '<div class="rail-h">' + esc(g.n) + '</div>' + g.items.map(e =>
+      '<button class="rail-i" type="button" data-el="' + e.ansi + '" aria-current="' + (e.ansi === ST.el) + '">' +
+      '<span class="ansi">' + esc(e.ansi) + '</span><span class="nm">' + esc(e.name) + '</span></button>').join('')
+  ).join('');
+}
+function fieldHTML(f, v, ns) {
+  const id = ns + '_' + f.k;
+  let ctl;
+  if (f.t === 'sel') ctl = '<select id="' + id + '" data-' + ns + '="' + f.k + '">' +
+    f.opts.map(([val, lab]) => '<option value="' + esc(val) + '"' + (String(v) === String(val) ? ' selected' : '') + '>' + esc(lab) + '</option>').join('') + '</select>';
+  else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  /* step drives only the spinner increment; "any" keeps the browser from
+     rejecting a value that does not land on it, which a relay setting rarely
+     does. */
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  const wide = (f.t === 'sel' && f.opts.some(o => o[1].length > 22)) || f.t === 'txt';
+  return '<div class="f' + (wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
+    (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
+}
+
+/* keepForms: leave the settings inputs exactly as the user is typing them.
+   Rebuilding them mid-entry rewrote the field from the parsed number, so a
+   half-typed "0." became "0" and a decimal could never be completed. */
+function renderElement(keepForms) {
+  const { el, s, o } = curSettings();
+  document.querySelectorAll('.rail-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.el === el.ansi)));
+  $('#setHint').textContent = 'ANSI ' + el.ansi;
+  if (!keepForms) {
+    $('#setForm').innerHTML = el.fields.map(f => fieldHTML(f, s[f.k], 'set')).join('');
+    $('#optForm').innerHTML = (el.opts || []).map(f => fieldHTML(f, o[f.k], 'opt')).join('');
+  }
+
+  let R;
+  try { R = el.compute(s, o); }
+  catch (err) { $('#outPane').innerHTML = '<div class="note bad"><span class="lb">Error</span><span>' + esc(err.message) +
+    ' — check the settings above for a value that cannot be resolved (a zero ratio, a negative reactance, an empty list).</span></div>'; return; }
+
+  if (!ST.pt || !R.points.some(p => p.id === ST.pt)) ST.pt = R.points[0] && R.points[0].id;
+  const pt = R.points.find(p => p.id === ST.pt) || R.points[0];
+  const chNotes = pt ? checkChannels(pt.channels) : [];
+
+  /* impedance plot: element geometry plus every point that carries a Z */
+  let rxHTML = '';
+  const zPts = R.points.filter(p => p.z);
+  if (R.rx || zPts.length) {
+    const geo = { circles: (R.rx && R.rx.circles) || [], lines: (R.rx && R.rx.lines) || [], points: [] };
+    zPts.forEach(p => geo.points.push({ r: p.z.r, x: p.z.x,
+      cls: p.verdict === 'op' ? 'rx-op' : p.verdict === 'no' ? 'rx-no' : 'rx-nu', sel: p.id === ST.pt }));
+    rxHTML = '<div class="phbox"><div class="cap">R–X plane — secondary ohms</div>' + rxSVG(geo, 300) + '</div>';
+  }
+
+  $('#outPane').innerHTML =
+    '<div class="ehead"><span class="badge">' + esc(el.ansi) + '</span><div><h2>' + esc(el.name) + '</h2>' +
+      '<p class="desc">' + esc(el.desc) + '</p></div></div>' +
+    '<div class="blk"><div class="blk-h"><h3>Derived from settings</h3></div><dl class="readout">' +
+      R.readout.map(r => '<div><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) + (r.u ? '<small>' + esc(r.u) + '</small>' : '') + '</dd></div>').join('') + '</dl></div>' +
+    '<div class="blk"><div class="blk-h"><h3>Test points</h3><span class="hint">select a row to load its channels</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Step</th><th>What is applied</th><th>Expected</th></tr></thead><tbody>' +
+      R.points.map(p => {
+        const pk = Math.max(0, ...p.channels.filter(c => c.unit === 'A').map(c => c.mag));
+        const vk = Math.max(0, ...p.channels.filter(c => c.unit === 'V').map(c => c.mag));
+        const over = pk > CFG.imax + 1e-9 ? 'needs ' + fmt(pk, 1) + ' A — past the ' + fmt(CFG.imax, 1) + ' A channel limit'
+                   : vk > CFG.vmax + 1e-9 ? 'needs ' + fmt(vk, 0) + ' V — past the ' + fmt(CFG.vmax, 0) + ' V channel limit' : '';
+        return '<tr data-pt="' + esc(p.id) + '" style="cursor:pointer' + (p.id === ST.pt ? ';background:var(--accent-soft)' : '') + '">' +
+          '<td class="key">' + esc(p.name) + (over ? '<span class="sm" style="color:var(--fail)">' + over + '</span>' : '') + '</td>' +
+          '<td>' + esc(p.detail) + '</td>' +
+          '<td><span class="pill ' + (p.verdict || 'nu') + '">' + esc(p.expect) + '</span><span class="sm">' + esc(p.expectSub || '') + '</span></td></tr>';
+      }).join('') + '</tbody></table></div></div>' +
+    (pt ? '<div class="blk"><div class="chan"><div class="chan-h"><h3>CMC 356 channels</h3>' +
+      '<span class="cfg">' + esc(pt.name) + ' · ' + (CFG.cmc === '6x' ? '6 × 12.5 A' : CFG.cmc === '3x' ? '3 × 32 A' : '1 × 64 A') + '</span></div>' +
+      '<div class="tw"><table><thead><tr><th>Output</th><th class="n">Magnitude</th><th class="n">Angle</th><th class="n">Freq</th><th>Note</th></tr></thead><tbody>' +
+      pt.channels.map(c => '<tr><td class="chname ' + c.cls + '">' + esc(c.ch) + '</td>' +
+        '<td class="n">' + fmt(c.mag, c.unit === 'A' ? 3 : 2) + ' ' + c.unit + '</td>' +
+        '<td class="n">' + fmtA(c.ang) + '</td><td class="n">' + fmt(c.freq, 3) + ' Hz</td>' +
+        '<td>' + esc(c.note || '') + '</td></tr>').join('') + '</tbody></table></div></div></div>' : '') +
+    (pt ? '<div class="blk"><div class="blk-h"><h3>Applied vectors</h3><span class="hint">' + esc(pt.name) + '</span></div>' +
+      '<div class="plots"><div class="phbox"><div class="cap">Phasors</div>' + phasorSVG(pt.phasor, 280) + '</div>' + rxHTML + '</div>' +
+      '<div class="legend wide" style="margin-top:10px;">' + phasorLegend(pt.phasor) + '</div></div>' : '') +
+    '<div class="blk"><div class="blk-h"><h3>Before you inject</h3></div><div class="notes">' +
+      chNotes.concat(R.notes || []).map(noteHTML).join('') + '</div></div>';
+
+  $('#outPane').querySelectorAll('[data-pt]').forEach(tr =>
+    tr.addEventListener('click', () => { ST.pt = tr.dataset.pt; save(); renderElement(); }));
+  window.__lastResult = { el, R };
+}
+
+/* ==================================================================
+   RENDER — vector calculator
+   ================================================================== */
+/* A true through condition: the neutral end sits 180° from the terminal
+   end.  Same machine, so there is no phase shift to carry. */
+const through = (b, m1, m2, la) => ({
+  v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
+  i1: [[m1, la], [m1, la - 120], [m1, la + 120]],
+  i2: [[m2, la + 180], [m2, la + 60], [m2, la - 60]]
+});
+const PRESETS = {
+  'Rated load': b => through(b, b.IrT, b.IrN, -Math.acos(CFG.pf) * R2D),
+  'Underexcited': b => through(b, b.IrT * 0.8, b.IrN * 0.8, +25),
+  'Loss of field': b => {
+    /* apparent impedance driven into the fourth quadrant */
+    const Z = b.zSec(CFG.xdp / 2 + 0.5), I = b.IrT * 1.2, V = I * Z;
+    return { v: [[Math.min(V, 200), 0], [Math.min(V, 200), -120], [Math.min(V, 200), 120]],
+      i1: [[I, 90], [I, -30], [I, -150]], i2: [[0, 0], [0, 0], [0, 0]] };
+  },
+  'Motoring': b => through(b, b.IrT * 0.05, b.IrN * 0.05, 180),
+  'Through fault': b => through(b, b.IrT * 5, b.IrN * 5, -80),
+  'Internal fault': b => ({ v: [[b.vLNs * 0.3, 0], [b.vLNs * 0.3, -120], [b.vLNs * 0.3, 120]],
+    i1: [[b.IrT * 4, -80], [b.IrT * 4, -200], [b.IrT * 4, 40]], i2: [[0, 0], [0, 0], [0, 0]] }),
+  'Open phase': b => ({ v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
+    i1: [[0, 0], [b.IrT, -150], [b.IrT, 90]], i2: [[0, 0], [b.IrT, 30], [b.IrT, -90]] }),
+  'Reverse rotation': b => ({ v: [[b.vLNs, 0], [b.vLNs, 120], [b.vLNs, -120]],
+    i1: [[b.IrT, 0], [b.IrT, 120], [b.IrT, -120]], i2: [[0, 0], [0, 0], [0, 0]] })
+};
+function rowsHTML(id, vals) {
+  return vals.map((p, k) =>
+    '<div class="vin-row"><span class="lbl ' + PHC[k] + '">' + PH[k] + '</span>' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[0] + '" data-vec="' + id + '.' + k + '.0" aria-label="' + id + ' ' + PH[k] + ' magnitude">' +
+    '<input type="number" step="any" inputmode="decimal" value="' + p[1] + '" data-vec="' + id + '.' + k + '.1" aria-label="' + id + ' ' + PH[k] + ' angle"></div>').join('');
+}
+const r2 = a => a.map(p => [Math.round(p[0] * 1000) / 1000, Math.round(wrap(p[1]) * 10) / 10]);
+
+/* keepInputs: same reason as renderElement — do not rewrite the boxes the
+   user is typing into. */
+function renderVector(keepInputs) {
+  if (!ST.vec) ST.vec = PRESETS['Rated load'](base());
+  ST.vec = { v: r2(ST.vec.v), i1: r2(ST.vec.i1), i2: r2(ST.vec.i2) };
+  const V = ST.vec, b = base();
+  $('#presets').innerHTML = Object.keys(PRESETS).map(k => '<button class="pbtn" type="button" data-preset="' + esc(k) + '">' + esc(k) + '</button>').join('');
+  if (!keepInputs) {
+    $('#vIn').innerHTML = rowsHTML('v', V.v);
+    $('#i1In').innerHTML = rowsHTML('i1', V.i1);
+    $('#i2In').innerHTML = rowsHTML('i2', V.i2);
+  }
+
+  const Vp = V.v.map(p => pol(p[0], p[1])), I1 = V.i1.map(p => pol(p[0], p[1])), I2 = V.i2.map(p => pol(p[0], p[1]));
+  const ph = {
+    v: Vp.map((p, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) })),
+    i: I1.map((p, k) => ({ lab: 'IT ' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p) }))
+      .concat(I2.map((p, k) => ({ lab: 'IN ' + PH[k], cls: PHC[k], mag: mag(p), ang: ang(p), alt: true })))
+      .filter(x => x.mag > 1e-9)
+  };
+  $('#vecPhasor').innerHTML = phasorSVG(ph, 300);
+  $('#vecLegend').innerHTML = phasorLegend(ph);
+
+  const sv = seq(Vp[0], Vp[1], Vp[2]), s1 = seq(I1[0], I1[1], I1[2]), s2 = seq(I2[0], I2[1], I2[2]);
+  const Z1 = mag(s1.p) > 1e-9 ? div(sv.p, s1.p) : cx(NaN, NaN);
+
+  /* impedance plane: the measured Z1 against the machine's own reactances */
+  const zr = isFinite(Z1.re) ? Z1.re : 0, zx = isFinite(Z1.im) ? Z1.im : 0;
+  $('#vecRX').innerHTML = rxSVG({
+    circles: [{ r0: 0, x0: -(b.zSec(CFG.xdp / 2) + b.zSec(CFG.xd) / 2), rad: b.zSec(CFG.xd) / 2, cls: 'rx-char2' }],
+    lines: [], points: isFinite(Z1.re) ? [{ r: zr, x: zx, cls: 'rx-nu', sel: true, label: fmt(mag(Z1), 1) + 'Ω' }] : []
+  }, 300);
+
+  const rows = PH.map((nm, k) => {
+    const pT = scale(I1[k], b.ctrT / b.Irp), pN = scale(I2[k], b.ctrN / b.Irp);
+    return { nm, k, pT: mag(pT), pN: mag(pN), id: mag(add(pT, pN)), ir: Math.max(mag(pT), mag(pN)) };
+  });
+  $('#vecDiffTbl').innerHTML =
+    '<thead><tr><th>Phase</th><th class="n">IT pu</th><th class="n">IN pu</th><th class="n">Idiff pu</th><th class="n">Irest pu</th></tr></thead><tbody>' +
+    rows.map(r => '<tr><td class="chname ' + PHC[r.k] + '">' + r.nm + '</td><td class="n">' + fmt(r.pT, 3) + '</td><td class="n">' + fmt(r.pN, 3) +
+      '</td><td class="n">' + fmt(r.id, 3) + '</td><td class="n">' + fmt(r.ir, 3) + '</td></tr>').join('') +
+    '<tr class="grp"><td colspan="5">Same machine, no phase shift · restraint as max(|IT|,|IN|)</td></tr></tbody>';
+
+  const srow = (lab, c, u, cls) => '<tr><td class="chname ' + cls + '">' + lab + '</td><td class="n">' + fmt(mag(c), u === 'V' ? 2 : 3) + ' ' + u + '</td><td class="n">' + fmtA(ang(c)) + '</td></tr>';
+  $('#vecSeqTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Magnitude</th><th class="n">Angle</th></tr></thead><tbody>' +
+    '<tr class="grp"><td colspan="3">Voltage</td></tr>' + srow('V1', sv.p, 'V', 'ch-l2') + srow('V2', sv.n, 'V', 'ch-l1') + srow('3V0', scale(sv.z, 3), 'V', 'ch-n') +
+    '<tr class="grp"><td colspan="3">Current — terminal end</td></tr>' + srow('I1', s1.p, 'A', 'ch-l2') + srow('I2', s1.n, 'A', 'ch-l1') + srow('3I0', scale(s1.z, 3), 'A', 'ch-n') +
+    '<tr class="grp"><td colspan="3">Current — neutral end</td></tr>' + srow('I1', s2.p, 'A', 'ch-l2') + srow('I2', s2.n, 'A', 'ch-l1') + srow('3I0', scale(s2.z, 3), 'A', 'ch-n') +
+    '</tbody>';
+
+  let S = cx(0, 0);
+  for (let k = 0; k < 3; k++) S = add(S, mul(Vp[k], conj(I1[k])));
+  const Sm = mag(S), pf = Sm > 1e-9 ? S.re / Sm : 0, scaleP = b.vtr * b.ctrT;
+  const i2pu = mag(s1.n) / Math.max(1e-9, b.IrT), i1pu = mag(s1.p) / Math.max(1e-9, b.IrT);
+  const prow = (k, v, u) => '<tr><td class="key">' + k + '</td><td class="n">' + v + '</td><td class="ch-n">' + u + '</td></tr>';
+  $('#vecPwrTbl').innerHTML = '<thead><tr><th>Quantity</th><th class="n">Value</th><th>Unit</th></tr></thead><tbody>' +
+    prow('P — primary', fmt(S.re * scaleP / 1e6, 4), 'MW') + prow('Q — primary', fmt(S.im * scaleP / 1e6, 4), 'Mvar') +
+    prow('S — primary', fmt(Sm * scaleP / 1e6, 4), 'MVA') +
+    prow('Loading', fmt(100 * Sm * scaleP / 1e6 / CFG.mva, 1), '% of rating') +
+    prow('Power factor', fmt(Math.abs(pf), 4), (S.im >= 0 ? 'lagging' : 'leading')) +
+    prow('Direction', S.re >= 0 ? 'generating' : 'motoring', '') +
+    prow('Stator current', fmt(i1pu, 3), 'pu I1') + prow('Unbalance', fmt(i2pu, 4), 'pu I2') +
+    prow('Z1 magnitude', fmt(mag(Z1), 3), 'Ω sec') + prow('Z1 angle', fmtA(ang(Z1)), 'deg') +
+    prow('Z1', fmt(mag(Z1) / b.Zbs, 3), 'pu') +
+    '</tbody>';
+}
+
+/* ==================================================================
+   TEST SHEET
+   ================================================================== */
+const SHEAD = ['Element', 'Test step', 'Quantity 1', 'Quantity 2', 'Expected', 'Measured', 'Pass/Fail'];
+function renderSheet() {
+  const rows = ST.sheet || [];
+  $('#sheetCount').textContent = rows.length;
+  const hdr = '# 889-GEN test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+    '\n# ' + CFG.mva + ' MVA  ' + CFG.kv + ' kV  Xd ' + CFG.xd + "  X'd " + CFG.xdp +
+    '\t CT ' + CFG.cttp + ':' + CFG.ctts + ' / ' + CFG.ctnp + ':' + CFG.ctns +
+    '\t VT ' + CFG.vtp + ':' + CFG.vts + '\t Zbase ' + fmt(base().Zbs, 2) + ' ohm sec' +
+    '\t CMC ' + (CFG.cmc === '6x' ? '6x12.5A' : CFG.cmc === '3x' ? '3x32A' : '1x64A') + '\n\n';
+  $('#sheetOut').value = rows.length
+    ? hdr + SHEAD.join('\t') + '\n' + rows.map(r => r.concat(['', '']).slice(0, 7).join('\t')).join('\n')
+    : 'No test points collected yet.\n\nOpen the Elements tab, set an element up, then use "Add these test points to sheet".';
+}
+
+/* ==================================================================
+   METHOD
+   ================================================================== */
+function renderMethod() {
+  const b = base();
+  $('#methodDoc').innerHTML = `
+    <h2>How this tool arrives at its numbers</h2>
+    <p>Everything below is stated so the arithmetic can be checked by hand. It does not replace the relay
+       manual, the setting file or the machine data sheet &mdash; it replaces the conversion between them and
+       the test set.</p>
+
+    <h3>Reference frame</h3>
+    <p>All applied quantities are <strong>secondary</strong>, at the relay terminals, and all angles are quoted
+       against V&nbsp;L1 at 0&deg; with counter-clockwise positive &mdash; the same convention as the CMC&rsquo;s
+       own phasor display. Triple&nbsp;A feeds the terminal-end CTs, triple&nbsp;B the neutral-end CTs.</p>
+
+    <h3>Base quantities</h3>
+    <div class="eq">I rated primary = MVA / (&radic;3 &middot; kV)          = ${fmt(b.Irp, 1)} A
+Z base primary  = kV&sup2; / MVA                    = ${fmt(b.Zbp, 3)} &Omega;
+Z base secondary = Z base primary &middot; CTR / VTR  = ${fmt(b.Zbs, 2)} &Omega;
+V L-N nominal   = VT secondary / &radic;3            = ${fmt(b.vLNs, 2)} V</div>
+    <p>That last conversion is the one everything on the impedance plane rests on. A reactance quoted in per
+       unit on the machine base becomes <code>X(pu) &middot; Z base secondary</code> at the relay, so this
+       machine&rsquo;s Xd of ${fmt(CFG.xd, 2)}&nbsp;pu is ${fmt(b.zSec(CFG.xd), 2)}&nbsp;&Omega; as the relay
+       measures it.</p>
+
+    <h3>Placing an impedance</h3>
+    <p>A balanced three-phase set with voltage on 0&deg; and current on &minus;&ang;Z presents an apparent
+       positive-sequence impedance of exactly |Z|&ang;Z. One magnitude is held and the other follows:</p>
+    <div class="eq">hold current:  V = I &middot; |Z|
+hold voltage:  I = V / |Z|
+angles:        &ang;V = 0&deg;,  &ang;I = &minus;&ang;Z</div>
+    <p>Holding current is usually the better choice on a generator relay, because the impedances of interest
+       run from a fraction of an ohm out to tens of ohms and holding voltage would drive the current past the
+       amplifier at the small end. The Setup tab carries the choice and the held magnitude, and the
+       configuration checks flag when either limit is about to be crossed.</p>
+    <p>For a phase-to-phase loop the same idea applies to
+       <code>Z = (V L2 &minus; V L3) / (I L2 &minus; I L3)</code>: V&nbsp;L2 and V&nbsp;L3 are put equal and
+       opposite about 0&deg;, the two currents likewise, and the healthy phase is parked at +90&deg;.</p>
+
+    <h3>Loss of excitation &mdash; 40</h3>
+    <p>Offset mho below the R axis. With <em>offset</em> the distance from the origin down to the top of the
+       circle and <em>diameter</em> its size:</p>
+    <div class="eq">centre = ( 0 , &minus;(offset + diameter/2) )
+radius = diameter / 2
+boundary at &theta; = centre + radius&ang;&theta;</div>
+    <p>Zone&nbsp;1 is conventionally offset by X&prime;d/2 with a diameter of 1.0&nbsp;pu; zone&nbsp;2 keeps the
+       offset and opens the diameter to Xd. The characteristic sits below the axis because that is where the
+       machine goes when it loses field and starts drawing VARs &mdash; not because of anything about a fault.</p>
+
+    <h3>Distance backup &mdash; 21</h3>
+    <p>Mho through the origin with its diameter along the characteristic angle. Along a ray at &phi; the
+       boundary sits at <code>|Z| = reach &middot; cos(&phi; &minus; MTA)</code>, so a point placed at full
+       reach 30&deg; off the angle will not operate &mdash; the boundary there is 86.6% of the reach.</p>
+
+    <h3>Negative sequence &mdash; 46</h3>
+    <div class="eq">t = K / I2(pu)&sup2;</div>
+    <p>K is the machine&rsquo;s published short-time unbalance capability, off the generator data sheet. A
+       single-phase injection produces I2 = I/3, so the applied current is three times the intended I2; a
+       balanced set in reverse rotation gives I2 = I with no positive- or zero-sequence content and is the
+       cleaner test where the set can do it.</p>
+
+    <h3>Stator ground &mdash; 59N and 27TN</h3>
+    <p>A ground fault x% up from the neutral drives x% of the phase-neutral voltage across the grounding
+       transformer primary, so at the relay:</p>
+    <div class="eq">V neutral = (kV / &radic;3) &middot; (x/100) / NGT ratio
+terminal fault  &rarr; ${fmt((CFG.kv * 1000 / Math.sqrt(3)) / b.ngtr, 1)} V at the relay</div>
+    <p>That is why 59N goes blind near the neutral: the driving voltage falls to nothing. 27TN covers the
+       remaining band by watching the machine&rsquo;s own third-harmonic neutral voltage disappear, which is
+       the one element on the relay where <em>removing</em> a quantity is what makes it trip.</p>
+
+    <h3>Voltage-restrained overcurrent &mdash; 51V</h3>
+    <div class="eq">effective pickup = pickup &middot; clamp( V / V nominal , floor , 1.0 )</div>
+    <p>Timing multiples are taken against the effective pickup at each voltage, so &ldquo;2&times;&rdquo; means a
+       different current at every point in the table.</p>
+
+    <h3>Thermal and inverse-time</h3>
+    <div class="eq">IEEE C37.112   t = TDM &middot; [ A / (M^p &minus; 1) + B ]
+IEC 60255      t = TDM &middot; [ K / (M^E &minus; 1) ]
+IAC / ANSI     t = TDM &middot; [ A + B/(M&minus;C) + D/(M&minus;C)&sup2; + E/(M&minus;C)&sup3; ]
+Thermal 49     t = &tau; &middot; ln[ (I&sup2; &minus; Ip&sup2;) / (I&sup2; &minus; (k&middot;Ib)&sup2;) ]</div>
+
+    <h3>What this tool does not do</h3>
+    <ul>
+      <li><strong>64F field ground.</strong> The 889 detects it by injecting onto the field circuit through a
+          dedicated coupling module. There is nothing for a CMC to inject, so it is not modelled here &mdash;
+          that test belongs to the module&rsquo;s own procedure.</li>
+      <li><strong>60 VT and CT supervision.</strong> The logic varies enough between firmware revisions that a
+          generic model would mislead rather than help.</li>
+      <li><strong>Setting file import.</strong> Settings are entered by hand, which means they get read off the
+          relay once and checked.</li>
+      <li><strong>Saturation, burden and lead resistance.</strong> Channel warnings are about the
+          amplifier&rsquo;s limits, not about whether the CT circuit will behave.</li>
+    </ul>
+
+    <h3>Before the first use on a job</h3>
+    <ul>
+      <li>Enter the real machine, CT and VT data and confirm the derived rated current and base impedance
+          against the relay&rsquo;s own metering with load on.</li>
+      <li>Run one 51 timing point against the relay&rsquo;s predicted operate time. If they agree, the curve
+          constants here match your firmware.</li>
+      <li>Run the 87G through-fault point and confirm near-zero differential. That single test proves the two
+          CT ratios and, more importantly, the neutral-end CT polarity.</li>
+      <li>Measure the 40 boundary at two angles and check the two agree with one circle. If they do not, the
+          offset and diameter conventions in the relay are not the ones assumed here.</li>
+    </ul>`;
+}
+
+/* ==================================================================
+   EVENTS
+   ================================================================== */
+function setTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === id)));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === id));
+  if (id === 'v-vec') renderVector();
+  if (id === 'v-sheet') renderSheet();
+  if (id === 'v-meth') renderMethod();
+  if (id === 'v-setup') renderCfg();
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => setTab(t.dataset.view)));
+
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.cfg) {
+    const k = t.dataset.cfg, v = t.type === 'number' ? parseFloat(t.value) : t.value;
+    CFG[k] = (t.type === 'number' && !isFinite(v)) ? CFG[k] : v;
+    if (k === 'cmc') { CFG.imax = v === '6x' ? 12.5 : v === '3x' ? 32 : 64; const f = document.querySelector('[data-cfg="imax"]'); if (f) f.value = CFG.imax; }
+    save(); renderCfg(); renderElement();
+  } else if (t.dataset.set || t.dataset.opt) {
+    const ns = t.dataset.set ? 'set' : 'opt', k = t.dataset[ns], el = elByAnsi(ST.el);
+    ST[ns][el.ansi] = ST[ns][el.ansi] || {};
+    if (t.type === 'number') {
+      const v = parseFloat(t.value);
+      /* An empty box, a lone minus or a trailing point are all stages of
+         typing a number. Hold the last good value and let the entry finish. */
+      if (isFinite(v)) ST[ns][el.ansi][k] = v;
+    } else ST[ns][el.ansi][k] = t.value;
+    save();
+    renderElement(true);
+  } else if (t.dataset.vec) {
+    const [g, i, j] = t.dataset.vec.split('.'), v = parseFloat(t.value);
+    if (isFinite(v)) { ST.vec[g][+i][+j] = v; save(); }
+    renderVector(true);
+  }
+});
+document.addEventListener('click', e => {
+  const rail = e.target.closest('[data-el]');
+  if (rail) { ST.el = rail.dataset.el; ST.pt = null; save(); renderElement(); return; }
+  const pre = e.target.closest('[data-preset]');
+  if (pre) { ST.vec = PRESETS[pre.dataset.preset](base()); save(); renderVector(); return; }
+});
+$('#addSheet').addEventListener('click', () => {
+  const L = window.__lastResult;
+  if (!L) return;
+  L.R.points.forEach(p => p.sheet && ST.sheet.push(p.sheet.slice()));
+  save();
+  renderSheet();          /* keep the row count and the sheet itself current,
+                             rather than only once the tab is next opened */
+  const btn = $('#addSheet');
+  btn.textContent = L.R.points.length + ' points added — see Test sheet';
+  setTimeout(() => { btn.textContent = 'Add these test points to sheet'; }, 2200);
+});
+$('#copySheet').addEventListener('click', () => { const t = $('#sheetOut'); t.focus(); t.select(); try { document.execCommand('copy'); } catch (e) {} });
+$('#printSheet').addEventListener('click', () => window.print());
+$('#clearSheet').addEventListener('click', () => { ST.sheet = []; save(); renderSheet(); });
+$('#resetBtn').addEventListener('click', () => {
+  CFG = Object.assign({}, SAMPLE);
+  ST = { el: '40', set: {}, opt: {}, sheet: [], vec: null, pt: null };
+  save(); renderCfg(); renderRail(); renderElement();
+});
+$('#themeBtn').addEventListener('click', () => {
+  const r = document.documentElement, cur = r.getAttribute('data-theme');
+  const dark = cur ? cur === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.setAttribute('data-theme', dark ? 'light' : 'dark');
+  renderElement();
+  if ($('#v-vec').classList.contains('on')) renderVector();
+});
+
+/* ==================================================================
+   INIT
+   ================================================================== */
+load();
+renderCfg();
+renderRail();
+renderElement();
+</script>
+</body>
+</html>
