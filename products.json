@@ -33,8 +33,8 @@
       "file": "src/7sj85-sip.html",
       "tag": "7SJ85-SIP",
       "title": "Siemens SIPROTEC 5 7SJ85 overcurrent",
-      "reviewed": false,
-      "released": false
+      "reviewed": true,
+      "released": true
     },
     "7sd82": {
       "file": "src/7sd82-dif.html",
