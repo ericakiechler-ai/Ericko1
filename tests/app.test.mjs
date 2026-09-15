@@ -218,6 +218,33 @@ console.log('\n— Licence model: perpetual + maintenance —');
   fsp.unlinkSync(D + '/test-outside.html');
 }
 
+console.log('\n— Decimal entry (ported fix) —');
+{
+  const { p } = await page('845-VEC-northgate-power-services.html');
+  await p.locator('.rail-i[data-el="51P"]').click(); await p.waitForTimeout(200);
+  const f = p.locator('#set_pkp');
+  await f.click(); await f.press('Control+a');
+  for (const ch of ['0', '.', '7', '5']) { await f.press(ch); await p.waitForTimeout(60); }
+  ck('typing "0.75" one key at a time completes (field not rebuilt mid-entry)', await f.inputValue() === '0.75', await f.inputValue());
+  ck('field kept focus through the keystrokes', await p.evaluate(() => document.activeElement && document.activeElement.id === 'set_pkp'));
+  await p.waitForTimeout(200);
+  const ro = (await p.locator('#outPane .readout').textContent()).replace(/\s+/g,' ');
+  ck('readout reflects 0.75 xCT pickup = 3.750 A sec', ro.includes('3.750'), ro.slice(0,80));
+  // a half-typed value must hold the last good setting, never write NaN
+  await f.click(); await f.press('Control+a'); await f.press('Backspace'); await f.press('-'); await p.waitForTimeout(150);
+  ck('lone minus does not poison the setting (readout still finite)', !/NaN|undefined/.test(await p.locator('#outPane').textContent()));
+  // caption precision: a 2.75x timing multiple must read 2.75, not 2.8
+  await p.locator('#opt_muls').fill('2.75'); await p.waitForTimeout(250);
+  const names = (await p.locator('#outPane table tbody').first().textContent());
+  ck('caption shows the exact multiple 2.75, not a rounded 2.8', names.includes('2.75×') && !names.includes('2.8×'), names.slice(0,120));
+  await p.locator('.tab[data-view="v-vec"]').click(); await p.waitForTimeout(200);
+  const vf = p.locator('[data-vec="v.0.0"]');
+  await vf.click(); await vf.press('Control+a');
+  for (const ch of ['6','9','.','2','8']) { await vf.press(ch); await p.waitForTimeout(50); }
+  ck('vector input also survives decimal typing', await vf.inputValue() === '69.28', await vf.inputValue());
+  await p.close();
+}
+
 await b.close();
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
