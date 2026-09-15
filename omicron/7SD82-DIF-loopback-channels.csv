@@ -1,6 +1,6 @@
 # 7SD82-DIF-loopback — Siemens 7SD82 SIPROTEC 5 line differential
-# generated 2026-09-15 00:14 from 7SD82.html
-# configuration: kv=110; freq=50; len=15; type=cable; iref=600; ich=25; ctAp=600; ctAs=1; ctAstar=line; ctBp=600; ctBs=1; ctBstar=line; stage=loop; vtp=110000; vts=100; vtc=wye; comm=fibre; tprop=0.5; tasym=0.2; sync=pp; cmc=6x; imax=12.5; vmax=300
+# generated 2026-09-15 01:49 from src/7sd82-dif.html
+# configuration: kv=110; freq=50; rot=ABC; len=15; type=cable; iref=600; ich=25; ctAp=600; ctAs=1; ctAstar=line; ctBp=600; ctBs=1; ctBstar=line; stage=loop; vtp=110000; vts=100; vtc=wye; comm=fibre; tprop=0.5; tasym=0.2; sync=pp; cmc=6x; imax=12.5; vmax=300
 # All quantities are SECONDARY at the relay terminals. Angles in degrees, CCW positive, V L1 = 0.
 # Values shown are for the tool's sample configuration — re-generate after entering real station data.
 # Staging is loop. Steps marked "both ends" in CurrentNeededAt need current at the remote end;

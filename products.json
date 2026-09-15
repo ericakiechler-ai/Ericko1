@@ -40,8 +40,8 @@
       "file": "src/7sd82-dif.html",
       "tag": "7SD82-DIF",
       "title": "Siemens SIPROTEC 5 7SD82 line differential",
-      "reviewed": false,
-      "released": false
+      "reviewed": true,
+      "released": true
     }
   }
 }

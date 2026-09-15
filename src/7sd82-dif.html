@@ -22,9 +22,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>7SD82 Line Differential Test Calculator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>/*__FONTS__*/</style>
 <style>
 /* ============================================================
    TOKENS — light is the base; dark redefines tokens only.
@@ -355,9 +353,32 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
 .pfoot .pbody p:last-child{margin-bottom:0;}
 .pfoot .pbody strong{color:var(--ink-2);}
 @media print{.pfoot details{display:none;} .pfoot{border-top:1px solid #999;}}
+
+/* ---- licence bar ---------------------------------------------------- *
+   Always present, never dismissible. In evaluation it is the loudest thing
+   on the page; when licensed it is a quiet single line of provenance.      */
+.licbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:6px 18px; font-family:var(--f-body); font-size:11.5px;
+  border-bottom:1px solid var(--line); background:var(--surface-2); color:var(--ink-3);}
+.licbar .tag{font-family:var(--f-disp); text-transform:uppercase; letter-spacing:.1em;
+  font-weight:700; font-size:10px; padding:2px 7px; border-radius:3px;
+  background:var(--surface-3); color:var(--ink-2); white-space:nowrap;}
+.licbar b{color:var(--ink-2); font-weight:600;}
+.licbar.evat{background:var(--warn-bg); color:var(--ink); border-bottom-color:var(--warn);}
+.licbar.evat .tag{background:var(--warn); color:#fff;}
+.licbar.lic .tag{background:var(--accent); color:var(--accent-ink);}
+.licbar.lapsed .maint{color:var(--warn); font-weight:600;}
+@media print{.licbar{background:none !important; border-bottom:1px solid #999; color:#000;}
+  .licbar .tag{border:1px solid #000; background:none !important; color:#000 !important;}}
 </style>
 </head>
 <body>
+<!-- Signed licence. Replaced per customer by tools/make-licence.mjs. The
+     signature covers the payload only; editing either invalidates it. -->
+<script type="application/json" id="licData">{"p":"","s":""}</script>
+
+<div class="licbar" id="licBar"><span class="tag">Checking licence</span></div>
+
 <div class="shell">
 
   <header class="topbar">
@@ -399,6 +420,8 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
           <div class="grid2">
             <div class="f"><label for="cfg_kv">Nominal voltage</label><input id="cfg_kv" type="number" step="any" inputmode="decimal" data-cfg="kv"><span class="u">kV, line&ndash;line</span></div>
             <div class="f"><label for="cfg_freq">Nominal frequency</label><input id="cfg_freq" type="number" step="any" inputmode="decimal" data-cfg="freq"><span class="u">Hz</span></div>
+            <div class="f"><label for="cfg_rot">Phase rotation</label>
+              <select id="cfg_rot" data-cfg="rot"><option value="ABC">ABC</option><option value="ACB">ACB</option></select><span class="u">as configured in DIGSI</span></div>
             <div class="f"><label for="cfg_len">Line length</label><input id="cfg_len" type="number" step="any" inputmode="decimal" data-cfg="len"><span class="u">km</span></div>
             <div class="f"><label for="cfg_type">Line type</label>
               <select id="cfg_type" data-cfg="type"><option value="oh">Overhead</option><option value="cable">Cable</option><option value="mix">Mixed</option></select><span class="u">decides charging current</span></div>
@@ -466,6 +489,20 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
           </div>
         </div>
 
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><h3>Station file</h3><span class="hint">move this setup between machines</span></div>
+        <div class="sheet-tools">
+          <button class="tbtn" id="saveCfg" type="button">Save station to a file</button>
+          <button class="tbtn" id="loadCfg" type="button">Load station from a file</button>
+          <input type="file" id="cfgFile" accept=".json,application/json" hidden>
+          <span class="chip"><span class="dot"></span><b id="cfgName">unsaved</b></span>
+        </div>
+        <div class="note" style="margin-top:8px;"><span class="lb">Why</span>
+          <span>Your entries live in this browser only. Clearing browsing data erases them, and they do
+          not follow you to another machine. Save a station file once per line and you can reopen
+          it anywhere, hand it to a colleague on the same licence, or keep it with the job pack.</span></div>
       </div>
 
       <div class="blk">
@@ -587,19 +624,33 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
 <footer class="pfoot">
   <div class="prow">
     <span class="pname">7SD82-DIF</span>
-    <span>Siemens SIPROTEC 5 7SD82 line differential</span>
+    <span>Siemens SIPROTEC 5 7SD82 line differential protection</span>
     <span class="psep">|</span>
     <span>&copy; 2026 Eric Kiechler. All rights reserved.</span>
     <span class="psep">|</span>
-    <span>Licensed per user &mdash; not for redistribution.</span>
+    <span id="licFoot">Licensed per site &mdash; not for redistribution.</span>
+    <span class="psep">|</span>
+    <span id="verFoot">v__VERSION__ &middot; build __BUILD__</span>
   </div>
   <details>
     <summary>Licence, disclaimer and trademark notice</summary>
     <div class="pbody">
-      <p><strong>Licence.</strong> This file is licensed to one named user, who may install
-      it on the machines they personally use and may not redistribute, resell, sublicense or
-      publish it. A site or team licence covering named users at one location is available
-      separately. Nothing here transfers ownership of the software.</p>
+      <p><strong>Licence.</strong> This copy is licensed to the organisation and site named
+      in the bar at the top of the page, for use by up to the stated number of named users at
+      that location. Those users may install it on the machines they work from. It may not be
+      redistributed, resold, sublicensed, published, or shared outside the licensed site.
+      Additional sites and additional seats are licensed separately. Nothing here transfers
+      ownership of the software.</p>
+      <p><strong>Perpetual, with maintenance.</strong> The licence to use this software does
+      not expire. It covers every build released up to the maintenance date shown in the bar
+      above. When maintenance lapses, the builds you already hold remain fully licensed and
+      keep working; renewing maintenance entitles you to the builds released since. A build
+      dated after your maintenance term runs as an evaluation copy until maintenance is renewed.</p>
+      <p><strong>Provenance.</strong> The licence details shown above are cryptographically
+      signed and are reproduced on every test sheet this copy exports or prints. That is
+      deliberate: a test record should name the tool and the licence that produced it, so a
+      reviewer years later can tell where the numbers came from.</p>
+
       <p><strong>It is a calculator, not a relay.</strong> Every value shown is computed from
       settings typed in by its user. The tool does not read the device, does not know its
       firmware revision or its as-built wiring, and cannot tell whether the settings entered
@@ -629,8 +680,154 @@ svg.phasor, svg.gnd, svg.tl, svg.ln{display:block; width:100%; height:auto;}
   </details>
 </footer>
 
+<script>/*__ED25519__*/</script>
+
+<script>
+/* ==========================================================================
+   LICENCE  —  offline verification of a signed site/team licence.
+
+   The signature is Ed25519 over the canonical JSON payload. The public key
+   below is embedded at build time; the private key exists only on the
+   publisher's machine, so a licence naming an organisation cannot be forged
+   without it.
+
+   Two deliberate design decisions:
+
+   1. Verification NEVER changes a computed value. An unlicensed copy performs
+      exactly the same arithmetic as a licensed one. Degrading numbers in a
+      tool whose output is injected into live protection equipment would be
+      dangerous, and no commercial argument outweighs that. What the licence
+      controls is provenance: what the page says about itself, and what every
+      exported or printed test sheet is stamped with.
+
+   2. Licences are PERPETUAL WITH A MAINTENANCE TERM. `maint` is the date up to
+      which the customer is entitled to updates. A build dated on or before that
+      date is theirs to use forever, whether or not maintenance has since lapsed;
+      a build dated after it is not covered, and runs as evaluation. `expires`
+      is a separate, harder limit for time-limited or subscription licences: past
+      it the copy is not licensed at all.
+
+   3. Verification fails SAFE, not CLOSED. If the licence is absent, damaged,
+      expired, or the browser cannot do SHA-512, the tool still runs — as a
+      clearly marked evaluation copy. A licensed engineer standing in a
+      substation with no signal must never be locked out of their own tool by
+      a check that could not complete.
+   ========================================================================== */
+var LIC = (function () {
+  'use strict';
+  var PUBKEY = '__PUBKEY__';
+  var state = { ok: false, lapsed: false, checked: false, reason: 'checking', d: null };
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (!m) return iso;
+    var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return Number(m[3]) + ' ' + M[Number(m[2]) - 1] + ' ' + m[1];
+  }
+
+  /* One-line provenance string. Goes in the bar, the footer, and the header of
+     every exported test sheet — the same words in all three places. */
+  function line() {
+    if (!state.ok) return 'EVALUATION COPY — not licensed for commissioning work';
+    var d = state.d;
+    return 'Licensed to ' + d.org + (d.site ? ' — ' + d.site : '') +
+           ' · ' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') +
+           ' · Licence ' + d.id +
+           (d.expires ? ' · valid to ' + fmtDate(d.expires) : ' · perpetual') +
+           (d.maint ? ' · maintenance ' + (state.lapsed ? 'lapsed ' : 'to ') + fmtDate(d.maint) : '');
+  }
+
+  function paint() {
+    var bar = document.getElementById('licBar');
+    if (bar) {
+      bar.className = 'licbar ' + (state.ok ? (state.lapsed ? 'lic lapsed' : 'lic') : 'evat');
+      if (state.ok) {
+        var d = state.d;
+        bar.innerHTML = '<span class="tag">Licensed</span>' +
+          '<span><b>' + esc(d.org) + '</b>' + (d.site ? ' — ' + esc(d.site) : '') + '</span>' +
+          '<span>' + d.seats + ' seat' + (d.seats === 1 ? '' : 's') + '</span>' +
+          '<span>Licence ' + esc(d.id) + '</span>' +
+          '<span>' + (d.expires ? 'Valid to ' + fmtDate(d.expires) : 'Perpetual') + '</span>' +
+          (d.maint
+            ? (state.lapsed
+                ? '<span class="maint">Maintenance lapsed ' + fmtDate(d.maint) + ' — this version stays fully licensed; renew for updates</span>'
+                : '<span>Updates to ' + fmtDate(d.maint) + '</span>')
+            : '');
+      } else {
+        bar.innerHTML = '<span class="tag">Evaluation</span>' +
+          '<span><b>Not licensed for commissioning work.</b> Every calculation is live and correct, ' +
+          'but test sheets exported from this copy are stamped as evaluation output. ' +
+          (state.reason === 'expired'
+             ? 'This licence expired on ' + fmtDate(state.d && state.d.expires) + '.'
+             : state.reason === 'outside-maint'
+             ? 'This build (' + fmtDate(BUILD_DATE) + ') is newer than the maintenance term on your licence, which ended ' +
+               fmtDate(state.d && state.d.maint) + '. Builds released before that date remain fully licensed to you — renew maintenance to use this one.'
+             : state.reason === 'nocrypto'
+             ? 'The licence could not be checked in this browser — if you have bought a licence, this is a support issue, not a fault in your copy.'
+             : 'Contact the publisher for a site licence.') + '</span>';
+      }
+    }
+    var f = document.getElementById('licFoot');
+    if (f) f.textContent = line();
+  }
+
+  function boot() {
+    var el = document.getElementById('licData');
+    var blob;
+    try { blob = JSON.parse(el ? el.textContent : '{}'); } catch (e) { blob = {}; }
+    if (!blob || !blob.p || !blob.s) {
+      state.checked = true; state.reason = 'none'; paint(); return;
+    }
+    var payload, msg, sig, pub;
+    try {
+      msg = ED25519.b64ToBytes(blob.p);
+      sig = ED25519.b64ToBytes(blob.s);
+      pub = ED25519.b64ToBytes(PUBKEY);
+      payload = JSON.parse(new TextDecoder().decode(msg));
+    } catch (e) {
+      state.checked = true; state.reason = 'malformed'; paint(); return;
+    }
+    ED25519.verify(sig, msg, pub).then(function (good) {
+      state.checked = true;
+      if (!good) { state.reason = 'badsig'; paint(); return; }
+      state.d = payload;
+      /* Compare dates as strings — ISO dates sort correctly and this avoids
+         a timezone making a licence expire a day early somewhere. */
+      var today = new Date().toISOString().slice(0, 10);
+      if (payload.product !== '7SD82-DIF') { state.reason = 'wrongproduct'; paint(); return; }
+      /* Hard limit: a time-limited licence past its date is not a licence. */
+      if (payload.expires && payload.expires < today) { state.reason = 'expired'; paint(); return; }
+      /* Maintenance: the build must fall inside the term. Whether the term has
+         since lapsed only changes what the bar says, never whether it is licensed. */
+      if (payload.maint) {
+        if (BUILD_DATE > payload.maint) { state.reason = 'outside-maint'; paint(); return; }
+        state.lapsed = payload.maint < today;
+      }
+      state.ok = true; state.reason = 'ok'; paint();
+    }).catch(function () {
+      state.checked = true; state.reason = 'nocrypto'; paint();
+    });
+  }
+
+  return {
+    boot: boot,
+    line: line,
+    isLicensed: function () { return state.ok; },
+    /* Banner for the top of an exported sheet. */
+    stamp: function () {
+      return state.ok
+        ? '# ' + line()
+        : '# EVALUATION COPY — NOT FOR COMMISSIONING USE\n# Values are correct, but this copy is not licensed to produce test records.';
+    }
+  };
+})();
+</script>
+
 <script>
 "use strict";
+const VERSION = 'v__VERSION__ (__BUILD__)';
+const BUILD_DATE = '__BUILD__';   /* ISO date this file was built; compared against the licence's maintenance term */
 /* ==================================================================
    7SD82-DIF  -  SIPROTEC 5 line differential test-value calculator
    Siemens 7SD82  x  Omicron CMC 356
@@ -655,10 +852,18 @@ const mag   = x => Math.hypot(x.re, x.im);
 const ang   = x => (mag(x) < 1e-12 ? 0 : Math.atan2(x.im, x.re) * R2D);
 const wrap  = a => { let r = ((a + 180) % 360 + 360) % 360 - 180; return r === -180 ? 180 : r; };
 const A1 = pol(1, 120), A2 = pol(1, 240);
+/* Phase rotation, honoured everywhere a set is built by hand: the step from
+   L1 to L2 is -120° under ABC and +120° under ACB. */
+const rotS = () => (CFG.rot === 'ACB' ? +120 : -120);
+const rotA = () => [0, rotS(), -rotS()];
+/* Symmetrical components. Under ACB the device's positive sequence is the set
+   that steps +120°, so what the ABC operator calls "negative" is positive
+   there and the two are exchanged. */
 function seq(ia, ib, ic) {
-  return { z: scale(add(add(ia, ib), ic), 1 / 3),
-    p: scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3),
-    n: scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3) };
+  const z = scale(add(add(ia, ib), ic), 1 / 3);
+  const p = scale(add(add(ia, mul(A1, ib)), mul(A2, ic)), 1 / 3);
+  const n = scale(add(add(ia, mul(A2, ib)), mul(A1, ic)), 1 / 3);
+  return CFG.rot === 'ACB' ? { z, p: n, n: p } : { z, p, n };
 }
 const fmt  = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d));
 const fmtA = v => (!isFinite(v) ? '—' : (wrap(v) >= 0 ? '+' : '−') + Math.abs(wrap(v)).toFixed(1) + '°');
@@ -690,7 +895,7 @@ function curveTime(name, M, tdm) {
    CONFIGURATION — worked sample: 110 kV, 15 km cable, both ends 600:1
    ================================================================== */
 const SAMPLE = {
-  kv: 110, freq: 50, len: 15, type: 'cable', iref: 600, ich: 25,
+  kv: 110, freq: 50, rot: 'ABC', len: 15, type: 'cable', iref: 600, ich: 25,
   ctAp: 600, ctAs: 1, ctAstar: 'line',
   ctBp: 600, ctBs: 1, ctBstar: 'line', stage: 'local',
   vtp: 110000, vts: 100, vtc: 'wye',
@@ -737,7 +942,7 @@ function chans(v, iA, iB, f, v4) {
   return out;
 }
 const P  = (m, a, n) => ({ m, a, n });
-const P3 = (m, a) => [P(m, a), P(m, a - 120), P(m, a + 120)];
+const P3 = (m, a) => { const s = rotS(); return [P(m, a), P(m, a + s), P(m, a - s)]; };
 const nullTriple = () => [P(0, 0), P(0, 0), P(0, 0)];
 
 function checkChannels(list) {
@@ -984,8 +1189,9 @@ reg({
     num('thru', 'Through-current point', 8.0, 'pu — stability', 0.5)],
   compute(s, o) {
     const b = base(), m = o.marg / 100;
+    /* pickup is a floor under slope 1, which applies all the way to break 1;
+       the characteristic is continuous through both break points */
     const req = Ir => {
-      if (Ir <= s.br1) return s.pkp;
       if (Ir <= s.br2) return Math.max(s.pkp, (s.s1 / 100) * Ir);
       return Math.max(s.pkp, (s.s1 / 100) * s.br2 + (s.s2 / 100) * (Ir - s.br2));
     };
@@ -1498,7 +1704,7 @@ function mkVolt(ansi, nm, over, fg) {
     compute(s, o) {
       const b = base(), p = s.vpkp * b.vLNs, m = o.marg / 100;
       const mk = (V, name, detail, verdict, vt, sub) => {
-        const v = s.mode === 'all' ? P3(V, 0) : [P(V, 0, over ? 'raised phase' : 'depressed phase'), P(b.vLNs, -120), P(b.vLNs, 120)];
+        const v = s.mode === 'all' ? P3(V, 0) : [P(V, 0, over ? 'raised phase' : 'depressed phase'), P(b.vLNs, rotS()), P(b.vLNs, -rotS())];
         return { id: name, name, detail, expect: verdict, expectSub: sub, verdict: vt,
           channels: chans(v, nullTriple(), null),
           phasor: { v: v.map((q, k) => ({ lab: 'V' + PH[k], cls: PHC[k], mag: q.m, ang: q.a })), i: [] },
@@ -1559,8 +1765,9 @@ let ST = { el: '87L', set: {}, opt: {}, sheet: [], vec: null, pt: null };
 function save() { try { localStorage.setItem(STORE, JSON.stringify({ CFG, ST })); } catch (e) {} }
 function load() {
   try { const r = JSON.parse(localStorage.getItem(STORE) || 'null');
-    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); }
+    if (r && r.CFG) { CFG = Object.assign({}, SAMPLE, r.CFG); ST = Object.assign(ST, r.ST || {}); return true; }
   } catch (e) {}
+  return false;
 }
 const elByAnsi = a => ELEMENTS.find(e => e.ansi === a) || ELEMENTS[0];
 function defaults(el) {
@@ -1579,8 +1786,7 @@ function curSettings() {
 function charOf87L() {
   const el = elByAnsi('87L'), d = defaults(el);
   const s = Object.assign(d.s, ST.set['87L'] || {});
-  const req = Ir => Ir <= s.br1 ? s.pkp
-    : Ir <= s.br2 ? Math.max(s.pkp, (s.s1 / 100) * Ir)
+  const req = Ir => Ir <= s.br2 ? Math.max(s.pkp, (s.s1 / 100) * Ir)
     : Math.max(s.pkp, (s.s1 / 100) * s.br2 + (s.s2 / 100) * (Ir - s.br2));
   return { req, pkp: s.pkp, br1: s.br1, br2: s.br2, rst: s.rst };
 }
@@ -1634,7 +1840,7 @@ function chipStrip() {
     ['Iref', CFG.iref + ' A · 1 pu = ' + fmtI(b.irefA)],
     ['Ich', fmt(b.ichPu, 4) + ' pu'],
     ['Staging', { local: 'local only', loop: 'loop-back', e2e: 'end to end' }[CFG.stage]],
-    ['f', CFG.freq + ' Hz']
+    ['f', CFG.freq + ' Hz · ' + CFG.rot]
   ].map(([a, v]) => '<span class="chip">' + a + '<b>' + v + '</b></span>').join('');
 }
 
@@ -1662,7 +1868,7 @@ function fieldHTML(f, v, ns) {
   else if (f.t === 'txt') ctl = '<input id="' + id + '" type="text" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
   /* step drives only the spinner increment; "any" keeps the browser from
      rejecting a value that does not land on it. */
-  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
+  else ctl = '<input id="' + id + '" type="number" step="any" inputmode="decimal" value="' + esc(v) + '" data-' + ns + '="' + f.k + '">';
   const wide = (f.t === 'sel' && f.opts.some(o => o[1].length > 22)) || f.t === 'txt';
   return '<div class="f' + (wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(f.l) + '</label>' + ctl +
     (f.u ? '<span class="u">' + esc(f.u) + '</span>' : '') + '</div>';
@@ -1742,28 +1948,22 @@ function renderElement(keepForms) {
 /* ==================================================================
    RENDER — vector calculator
    ================================================================== */
+const set3 = (m, a) => { const s = rotS(); return [[m, a], [m, a + s], [m, a - s]]; };
 const PRESETS = {
   'Through load': b => { const I = b.irefA;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
-      i1: [[I, -25], [I, -145], [I, 95]], i2: [[I, 155], [I, 35], [I, -85]] }; },
+    return { v: set3(b.vLNs, 0), i1: set3(I, -25), i2: set3(I, 155) }; },
   'Through fault': b => { const I = b.irefA * 6;
-    return { v: [[b.vLNs * 0.6, 0], [b.vLNs * 0.6, -120], [b.vLNs * 0.6, 120]],
-      i1: [[I, -75], [I, -195], [I, 45]], i2: [[I, 105], [I, -15], [I, -135]] }; },
+    return { v: set3(b.vLNs * 0.6, 0), i1: set3(I, -75), i2: set3(I, 105) }; },
   'Internal fault — both ends': b => { const I = b.irefA * 3;
-    return { v: [[b.vLNs * 0.3, 0], [b.vLNs * 0.3, -120], [b.vLNs * 0.3, 120]],
-      i1: [[I, -75], [I, -195], [I, 45]], i2: [[I * 0.7, -75], [I * 0.7, -195], [I * 0.7, 45]] }; },
+    return { v: set3(b.vLNs * 0.3, 0), i1: set3(I, -75), i2: set3(I * 0.7, -75) }; },
   'Internal fault — one end': b => { const I = b.irefA * 3;
-    return { v: [[b.vLNs * 0.3, 0], [b.vLNs * 0.3, -120], [b.vLNs * 0.3, 120]],
-      i1: [[I, -75], [I, -195], [I, 45]], i2: [[0, 0], [0, 0], [0, 0]] }; },
-  'Charging current only': b => ({ v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
-    i1: [[b.ichA / 2, 90], [b.ichA / 2, -30], [b.ichA / 2, -150]],
-    i2: [[b.ichA / 2, 90], [b.ichA / 2, -30], [b.ichA / 2, -150]] }),
+    return { v: set3(b.vLNs * 0.3, 0), i1: set3(I, -75), i2: [[0, 0], [0, 0], [0, 0]] }; },
+  'Charging current only': b => ({ v: set3(b.vLNs, 0),
+    i1: set3(b.ichA / 2, 90), i2: set3(b.ichA / 2, 90) }),
   'End B polarity reversed': b => { const I = b.irefA * 4;
-    return { v: [[b.vLNs * 0.6, 0], [b.vLNs * 0.6, -120], [b.vLNs * 0.6, 120]],
-      i1: [[I, -75], [I, -195], [I, 45]], i2: [[I, -75], [I, -195], [I, 45]] }; },
+    return { v: set3(b.vLNs * 0.6, 0), i1: set3(I, -75), i2: set3(I, -75) }; },
   'End B quiescent': b => { const I = b.irefA;
-    return { v: [[b.vLNs, 0], [b.vLNs, -120], [b.vLNs, 120]],
-      i1: [[I, -25], [I, -145], [I, 95]], i2: [[0, 0], [0, 0], [0, 0]] }; }
+    return { v: set3(b.vLNs, 0), i1: set3(I, -25), i2: [[0, 0], [0, 0], [0, 0]] }; }
 };
 function rowsHTML(id, vals) {
   return vals.map((p, k) =>
@@ -1849,7 +2049,8 @@ const SHEAD = ['Function', 'Test step', 'End A', 'End B', 'Expected', 'Measured'
 function renderSheet() {
   const rows = ST.sheet || [], b = base();
   $('#sheetCount').textContent = rows.length;
-  const hdr = '# 7SD82-DIF test points\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
+  const hdr = LIC.stamp() + '\n' +
+    '# 7SD82-DIF ' + VERSION + '\t' + new Date().toISOString().slice(0, 16).replace('T', ' ') +
     '\n# ' + CFG.kv + ' kV  ' + CFG.len + ' km ' + CFG.type + '  Iref ' + CFG.iref + ' A  Ich ' + CFG.ich + ' A (' + fmt(b.ichPu, 4) + ' pu)' +
     '\t CT A ' + CFG.ctAp + ':' + CFG.ctAs + '  CT B ' + CFG.ctBp + ':' + CFG.ctBs +
     '\t staging ' + CFG.stage + '\t link ' + CFG.comm + ' ' + CFG.tprop + ' ms\n' +
@@ -1995,6 +2196,48 @@ $('#addSheet').addEventListener('click', () => {
 $('#copySheet').addEventListener('click', () => { const t = $('#sheetOut'); t.focus(); t.select(); try { document.execCommand('copy'); } catch (e) {} });
 $('#printSheet').addEventListener('click', () => window.print());
 $('#clearSheet').addEventListener('click', () => { ST.sheet = []; save(); renderSheet(); });
+/* ---- station file: export / import -------------------------------------
+   A station is just the CFG block. Saving it as plain JSON means it can be
+   read, diffed and kept in a job pack, rather than trapped in a browser. */
+function stationName() {
+  return (CFG.kv + 'kV-' + CFG.len + 'km-' + CFG.type)
+    .replace(/[^A-Za-z0-9.\-]+/g, '');
+}
+$('#saveCfg').addEventListener('click', () => {
+  const doc = { format: '7SD82-DIF station', v: 1, saved: new Date().toISOString(), station: CFG };
+  const blob = new Blob([JSON.stringify(doc, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '7SD82-DIF-' + stationName() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  $('#cfgName').textContent = a.download;
+});
+$('#loadCfg').addEventListener('click', () => $('#cfgFile').click());
+$('#cfgFile').addEventListener('change', ev => {
+  const f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    let doc;
+    try { doc = JSON.parse(rd.result); } catch (e) { doc = null; }
+    if (!doc || doc.format !== '7SD82-DIF station' || !doc.station) {
+      alert('That is not an 7SD82-DIF station file.\n\nExpected a .json saved by this tool. ' +
+            'Nothing has been changed.');
+      ev.target.value = ''; return;
+    }
+    /* Merge over the worked sample so a file written by an older version still
+       opens, with anything it does not carry left at the default. */
+    CFG = Object.assign({}, SAMPLE, doc.station);
+    ST.pt = null;
+    save(); renderCfg(); renderElement();
+    ST.vec = null; if ($('#v-vec').classList.contains('on')) renderVector();
+    $('#cfgName').textContent = f.name;
+    ev.target.value = '';
+  };
+  rd.readAsText(f);
+});
+
 $('#resetBtn').addEventListener('click', () => {
   CFG = Object.assign({}, SAMPLE);
   ST = { el: '87L', set: {}, opt: {}, sheet: [], vec: null, pt: null };
@@ -2007,7 +2250,13 @@ $('#themeBtn').addEventListener('click', () => {
   renderElement();
   if ($('#v-vec').classList.contains('on')) renderVector();
 });
-load(); renderCfg(); renderRail(); renderElement();
+/* Nothing saved means nothing has been entered: open on Setup, where the line
+   data, both CT sets and the staging go, rather than on results computed from
+   the sample. */
+const restored = load();
+renderCfg(); renderRail(); renderElement();
+if (!restored) setTab('v-setup');
+LIC.boot();          /* async; paints the bar when it resolves */
 </script>
 </body>
 </html>
