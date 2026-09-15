@@ -8,12 +8,12 @@ shippable product, issues licences, and holds the customer documentation.
 **One pipeline, licensed tool by tool.** `products.json` is the single gate: a
 tool is built into `dist/` and can be licensed only when it is `released`, and it
 is released only after the calculation review the 845 had. Today that is the
-845 alone.
+845 and the 850.
 
 | Tool | Relay | Reviewed | Released |
 |---|---|---|---|
 | `src/845-vec.html` | GE Multilin 845 transformer | ✅ | ✅ sellable |
-| `src/850-fdr.html` | GE Multilin 850 feeder | — | — |
+| `src/850-fdr.html` | GE Multilin 850 feeder | ✅ [record](docs/reviews/850-FDR.md) | ✅ sellable |
 | `src/869-mtr.html` | GE Multilin 869 motor | — | — |
 | `src/889-gen.html` | GE Multilin 889 generator | REF fix only | — |
 | `src/7sj85-sip.html` | Siemens SIPROTEC 5 7SJ85 | — | — |
@@ -41,7 +41,7 @@ been online, which is the environment it is actually used in.
 | `tools/make-licence.mjs` | Mints one signed licence and writes that customer's file. |
 | `tools/fetch-fonts.mjs` | Re-downloads and re-inlines the fonts. |
 | `build.mjs` | Produces `dist/845-VEC-unlicensed.html` and the customer guide. |
-| `tests/` | 49 checks: crypto correctness, licence behaviour, and the calculations. |
+| `tests/` | 97 checks: crypto correctness, licence behaviour, and the calculations. |
 | `docs/install-guide.src.html` | The customer-facing setup guide. |
 | `desktop/` | Tauri project for native Windows/macOS installers. **Not built here** — see its README. |
 | `keys/public-key.b64` | The public half. Committed — every build embeds it. |
