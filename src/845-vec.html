@@ -1294,8 +1294,9 @@ reg({
   ],
   compute(s, o) {
     const b = base(), sh = b.shift, marg = o.marg / 100;
+    /* pickup is a floor under slope 1, which applies all the way to break 1;
+       the characteristic is continuous through both break points */
     const req = Ir => {
-      if (Ir <= s.br1) return s.pkp;
       if (Ir <= s.br2) return Math.max(s.pkp, (s.s1 / 100) * Ir);
       return Math.max(s.pkp, (s.s1 / 100) * s.br2 + (s.s2 / 100) * (Ir - s.br2));
     };

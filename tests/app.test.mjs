@@ -73,6 +73,17 @@ console.log('\n— Licensed copy, file://, network blocked —');
   const over = await p.locator('#outPane .note.bad').count();
   ck('over-range is flagged rather than silently shipped', over > 0);
 
+  // ---- 87T: slope 1 applies below Break 1 (pickup is a floor, not the whole region) ----
+  await p.locator('.rail-i[data-el="87T"]').click();
+  await p.waitForTimeout(300);
+  await p.locator('#opt_rests').fill('1.6'); await p.locator('#opt_rests').dispatchEvent('input');
+  await p.waitForTimeout(300);
+  // sample: pickup 0.20 pu, slope 1 25%, break 1 2.0 pu -> at 1.6 pu restraint Idiff = 0.25 x 1.6 = 0.40, +10% = 0.44, IW2 = 1.16 pu
+  const t87 = (await p.locator('tr[data-pt="87-1.6-op"]').textContent()).replace(/\s+/g, ' ');
+  ck('87T at 1.6 pu restraint uses slope 1 (IW2 1.160 pu, was 1.380 with pickup only)', t87.includes('IW1 1.600 pu') && t87.includes('IW2 1.160 pu'), t87.slice(0, 120));
+  await p.locator('#opt_rests').fill('0.5, 1.5, 3.0, 7.0'); await p.locator('#opt_rests').dispatchEvent('input');
+  await p.waitForTimeout(200);
+
   // ---- test sheet carries the licence ----
   await p.locator('.rail-i[data-el="51P"]').click();
   await p.waitForTimeout(250);
